@@ -8,6 +8,8 @@ El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas
 
 Además de este sitio, los contenidos del curso y los recursos relacionados se comparten en la plataforma [UCR Global](https://global.ucr.ac.cr) de la [Universidad de Costa Rica](https://www.ucr.ac.cr/). 
 
+Este curso forma parte del [Programa de Capacitación, Actualización y Divulgación de la Escuela de Geografía (PROCADI)](https://geografia.fcs.ucr.ac.cr/index.php/es/accion-social/procadi), iniciativa orientada a fortalecer el vínculo entre la universidad y la sociedad mediante la extensión docente.
+
 # Objetivos {.unnumbered}
 
 Al finalizar el curso, el estudiantado será capaz de:
