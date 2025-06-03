@@ -1,0 +1,37 @@
+# Bienvenida {.unnumbered}
+
+Este es un curso introductorio al procesamiento de datos geográficos mediante el lenguaje de programación R. También se estudian herramientas para facilitar la reproducibilidad de los procedimientos y la comunicación de las soluciones a través de Internet y otros medios.
+
+Los estudiantes no requieren experiencia previa en programación de computadoras. Se recomienda que cuenten con conocimentos básicos de datos geoespaciales y sistemas de información geográfica.
+
+El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas con ejercicios de programación en las que los estudiantes aplican en diversos escenarios de procesamiento de datos las habilidades y conocimientos aprendidos. Tanto las lecciones teóricas como las prácticas se imparten de manera presencial, con apoyo de medios virtuales.
+
+Además de este sitio, los contenidos del curso y los recursos relacionados se comparten en la plataforma [UCR Global](https://global.ucr.ac.cr) de la [Universidad de Costa Rica](https://www.ucr.ac.cr/). 
+
+# Objetivos {.unnumbered}
+
+Al finalizar el curso, el estudiantado será capaz de:
+
+1. Aplicar el pensamiento computacional para resolver problemas mediante el lenguaje de programación R.
+2. Utilizar un enfoque de ciencia de datos para importar, procesar y visualizar datos.
+3. Desarrollar soluciones reproducibles a problemas computacionales.
+4. Programar gráficos estadísticos.
+5. Procesar datos geográficos.
+6. Desarrollar documentos y aplicaciones interactivas que incluyan visualizaciones como tablas, gráficos estadísticos y mapas, entre otras.
+
+# Programa {.unnumbered}
+
+[Programa del curso](programa-curso-sigenr-2025-i.pdf)
+
+# Información de contacto {.unnumbered}
+
+Si tiene alguna pregunta o comentario sobre este curso, por favor contacte a:
+
+> Manuel Vargas - manuel.vargas_d\@ucr.ac.cr\
+> Profesor\
+> Universidad de Costa Rica,\
+> Ciudad Universitaria Rodrigo Facio,\
+> San Pedro de Montes de Oca,\
+> Costa Rica.
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" alt="Licencia de Creative Commons" style="border-width:0"/></a><br />Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.

@@ -1,0 +1,28 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Sistemas de Información Geográfica en R"
+  author: "Manuel Vargas"
+  date: "2025-06-03"
+
+  chapters:
+    - index.qmd
+    - text: "Programa del curso"
+      href: programa-curso-sigenr-2025-i.pdf
+    - part: "I Introducción a la programación de computadoras y a la ciencia de datos"
+      chapters:
+        - 01-introduccion-programacion-computadoras.qmd
+        - 02-introduccion-ciencia-datos.qmd
+    - part: "II El lenguaje de programación R"
+      chapters:
+        - 03-r.qmd
+bibliography: referencias.bib
+csl: apa-6th-edition.csl
+
+format:
+  html:
+    lang: es
+    theme: cosmo
+    toc-expand: 5

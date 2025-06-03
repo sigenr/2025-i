@@ -1,0 +1,1943 @@
+# R - lenguaje de programación para análisis estadístico {#sec-pencom}
+
+En este capítulo se introduce el lenguaje de programación R, sus tipos de datos, sus estructuras de control y sus funciones para generación de gráficos estadísticos.
+
+## Resumen
+
+R es un lenguaje de programación y un entorno para graficación y análisis estadístico. Como lenguaje, es interpretado, multiplataforma, de tipado dinámico y multiparadigma. Es un proyecto de software libre que se comparte mediante una licencia GNU GPL.
+
+El código de R se estructura en funciones, las cuales pueden distribuirse en paquetes. Cada paquete contiene un conjunto de funciones relacionadas. Algunos paquetes están incorporados en la instalación base de R y otros deben instalarse separadamente.
+
+La instación base de R incluye una gran variedad de funciones que permiten crear gráficos estadísticos como diagramas de dispersión, histogramas y gráficos de barras, entre otros.
+
+R puede manejar diversos tipos de datos básicos, como números, textos y valores lógicos, entre otros. También tipos de datos compuestos, como factores y data frames. Al igual que otros lenguajes de programación, cuenta con estructuras de control como condicionales y ciclos.
+
+## Trabajo previo
+
+### Lecturas
+
+Chang, Winston (2018). *R graphics cookbook: Practical recipes for visualizing data* (2nd ed.) (capítulo 2). O’Reilly. <https://r-graphics.org/>
+
+Grolemund, G., & Wickham, H. (2014). *Hands-On Programming with R: Write Your Own Functions And Simulations* (capítulos 1 - 12). O'Reilly Media. <https://rstudio-education.github.io/hopr/>
+
+## Introducción
+
+[R](https://www.r-project.org/) es un lenguaje de programación y un entorno enfocado en graficación y en análisis estadístico. Fue creado por Ross Ihaka y Robert Gentleman en la Universidad de Auckland, Nueva Zelanda, en 1993. Es ampliamente utilizado en diversas áreas de investigación, entre las que pueden mencionarse [aprendizaje automático (*machine learning*)](https://es.wikipedia.org/wiki/Aprendizaje_autom%C3%A1tico), [ciencia de datos (*data science*)](https://es.wikipedia.org/wiki/Ciencia_de_datos) y [*big data*](https://es.wikipedia.org/wiki/Macrodatos), con aplicaciones en campos como agricultura, biomedicina, bioinformática, finanzas, hidrología, teledetección y geografía entre muchos otros. 
+
+Algunas de las principales características del lenguaje de programación R son:
+
+-   Es [interpretado](https://es.wikipedia.org/wiki/Int%C3%A9rprete_(inform%C3%A1tica)): las instrucciones se traducen una por una a [lenguaje máquina](https://es.wikipedia.org/wiki/Lenguaje_de_m%C3%A1quina), a diferencia de los [lenguajes compilados](https://es.wikipedia.org/wiki/Compilador), que traducen de manera conjunta las instrucciones de una unidad completa (ej. un programa o una biblioteca). Los lenguajes interpretados tienden a ser más lentos que los compilados, pero también son más flexibles.
+-   Es [multiplataforma](https://es.wikipedia.org/wiki/Multiplataforma): puede ejecutarse en los sistemas operativos más populares (ej. Microsoft Windows, macOS, Linux).
+-   Tiene un [sistema de tipos de datos dinámico](https://es.wikipedia.org/wiki/Tipado_din%C3%A1mico): las variables pueden tomar diferentes tipos de datos (ej. textuales, numéricos) durante la ejecución del programa, a diferencia del caso de un [sistema de tipos de datos estático](https://es.wikipedia.org/wiki/Sistema_de_tipos#Tipado_est%C3%A1tico), en el que las variables de un programa solo pueden tener un tipo de datos.
+-   Soporta varios [paradigmas de programación](https://es.wikipedia.org/wiki/Paradigma_de_programaci%C3%B3n): los paradigmas son estilos o enfoques teóricos de programación. R soporta los paradigmas de [programación funcional](https://es.wikipedia.org/wiki/Programaci%C3%B3n_funcional), [programación orientada a objetos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos), [programación imperativa](https://es.wikipedia.org/wiki/Programaci%C3%B3n_imperativa) y [programación procedimental](https://es.wikipedia.org/wiki/Programaci%C3%B3n_por_procedimientos).
+
+R es un proyecto de [software libre](https://es.wikipedia.org/wiki/Software_libre) que se comparte mediante una licencia [GNU General Public Licence (GNU GPL)](https://es.wikipedia.org/wiki/GNU_General_Public_License). Esta característica permite que la funcionalidad original de R pueda ser ampliada mediante bibliotecas o paquetes desarrollados por la comunidad de programadores.
+
+La [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/) es una red mundial distribuida de servidores que albergan el código y la documentación oficial de R y sus paquetes. Las [*tasks views*](https://cran.r-project.org/web/views/) de CRAN categorizan la funcionalidad de R de acuerdo con temáticas determinadas.
+
+Para escribir programas en R puede utilizarse una interfaz de línea de comandos, un editor de texto (ej. [Visual Studio Code](https://code.visualstudio.com/)) o un ambiente de desarrollo integrados (IDE, en inglés *Integrated Development Environment*) como [RStudio](https://rstudio.com/).
+
+## El ambiente de desarrollo integrado RStudio
+[RStudio](https://posit.co/download/rstudio-desktop/) es el IDE más popular para el lenguaje R. Está disponible en una versión de escritorio (RStudio Desktop) y en una versión para servidor (RStudio Server). Esta última permite la conexión de varios usuarios a través de un navegador web. RStudio se ofrece también como un servicio en la nube, a través de [Posit Cloud](https://posit.cloud/). La @fig-interfaz-rstudio muestra la interfaz de RStudio.
+
+![Interfaz del ambiente de desarrollo integrado RStudio.](img/rstudio-interfaz.png){#fig-interfaz-rstudio .lightbox fig-alt="Interfaz del ambiente de desarrollo integrado RStudio" fig-align="center"}
+
+Además de edición de código fuente, RStudio contiene capacidades para depurar código y visualizar datos en formatos tabulares, gráficos y de mapas.
+
+**Ejercicios**
+
+1. Instale en su computadora:
+
+    a. [Sistema base del lenguaje R](https://cloud.r-project.org/).  
+    b. [RStudio Desktop](https://posit.co/download/rstudio-desktop/).
+
+2. Cree un usuario en [Posit Cloud](https://posit.cloud/), para así poder usar RStudio en la nube.
+
+3. Cree un programa (*script*) de R en RStudio (con la opción de menú *File - New File - R Script*) y escriba y ejecute el código utilizado en el capítulo anterior para generar un gráfico que muestre el [promedio de estatura de personas adultas por sexo](https://gf0604-procesamientodatosgeograficos.github.io/2025-i/02-introduccion-ciencia-datos.html#promedio-de-estatura-de-personas-adultas-por-sexo-1).
+
+## Conceptos fundamentales
+
+### Representación de datos
+
+#### Objetos
+
+En R, prácticamente todo se maneja a través de objetos. Un **objeto** es cualquier entidad que se guarda en memoria y que R puede reconocer, manipular y procesar. Por ejemplo, un vector, una matriz, un data frame, una lista o incluso una función, son todos objetos en R. Los objetos en R pueden ser de muchos tipos, algunos básicos como números, caracteres y lógicos y otros compuestos como matrices y listas que permiten manejar varios valores conjuntamente.
+
+Por ejemplo, el siguiente bloque de código crea un objeto de tipo [vector](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Vector-objects) con el operador de asignación `<-`. Un vector es una secuencia de elementos del mismo tipo.
+
+```{r}
+#| label: ejemplo-objetos-vectores
+
+# Crear un vector de números primos
+primos <- c(2, 3, 5, 7, 11)
+
+# Mostrar el vector
+print(primos)
+```
+
+Por su parte, una matriz es una estructura de datos bidimensional en la que todos los elementos deben ser del mismo tipo, al igual que en un vector. Una matriz puede considerarse una colección de vectores organizados en filas y columnas.
+
+```{r}
+#| label: ejemplo-objetos-matrices
+
+# Crear vectores
+v1 <- c(1, 2, 3)
+v2 <- c(4, 5, 6)
+
+# Combinar vectores como columnas de una matriz
+m <- cbind(v1, v2)
+
+# Mostrar la matriz
+print(m)
+```
+
+Uno de los tipos de objetos fundamentales en R para el manejo y análisis de datos es el [data frame](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Data-frame-objects). Un data frame es una estructura rectangular de filas y columnas, similar a una tabla de datos (ej. las de las hojas de cálculo), en la que cada fila corresponde a una observación y cada columna a una variable. Las columnas pueden ser de diferentes tipos: números, caracteres, lógicos y muchos otros. Las columnas (o las filas) de un data frame pueden considerarse vectores, todos del mismo tamaño.
+
+```{r}
+#| label: ejemplo-objetos-dataframes
+
+# Crear vectores
+peso <- c(70, 65, 80, 55, 90)         # en kilogramos
+estatura <- c(1.75, 1.68, 1.82, 1.60, 1.90)  # en metros
+
+# Crear dataframe
+medidas <- data.frame(peso, estatura)
+
+# Mostrar el dataframe
+print(medidas)
+```
+
+Las columnas de un data frame pueden retornarse como vectores mediante el operador `$`.
+
+```{r}
+#| label: ejemplo-objetos-dataframes-operador-dolar
+
+# Columna (vector) correspondiente a la estatura
+medidas$peso
+```
+
+Los data frames permiten realizar operaciones sobre los datos como creación de subconjuntos, ordenamientos, filtrados, cálculos estadísticos (promedio, desviación estándar, mínimo, máximo, etc.) y muchas otras. 
+
+Los vectores, las matrices y los data frames se estudiarán con más detalle en este capítulo junto con otros tipos y estructuras de datos de R.
+
+#### Conjuntos de datos para ejemplos y pruebas
+
+Para efectos de pruebas y ejemplos, la distribución base de R incorpora varios conjuntos de datos que pueden listarse con la función [data()](https://rdrr.io/r/utils/data.html). Para obtener información acerca de un conjunto de datos en particular, puede utilizarse el operador `?`.
+
+```{r}
+#| label: funcion-data
+#| eval: false
+
+# Información sobre todos los conjuntos de datos incorporados en la distribución base de R
+data()
+
+# Información sobre el cojunto de datos "cars"
+?cars
+
+# Información sobre el cojunto de datos "mtcars"
+?mtcars
+
+# Información sobre el cojunto de datos "iris"
+?iris
+
+# Visualización de iris
+View(iris)
+```
+
+Además, existen muchos sitios en Internet que brindan acceso a conjuntos de datos que pueden utilizarse para pruebas. Por ejemplo:
+
+- [Kaggle - conjuntos de datos](https://www.kaggle.com/datasets)
+- [Banco Mundial - indicadores](https://data.worldbank.org/indicator)
+
+### Funciones
+
+#### Concepto
+
+R, al igual que otros lenguajes de programación, estructura su funcionalidad en unidades de [código fuente](https://es.wikipedia.org/wiki/C%C3%B3digo_fuente) llamadas [funciones](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Functions). Cada función realiza una tarea específica como, por ejemplo, un cálculo matemático o el procesamiento de una hilera de texto.
+
+Una función tiene un nombre y, opcionalmente, un conjunto de argumentos que especifican los datos de entrada que procesa la función. Los argumentos se escriben entre paréntesis redondos (`()`) y estos siempre deben incluirse, aún en el caso de que la función no tenga ningún argumento. Si la función tiene varios argumentos, deben separarse mediante comas (`,`).  Por lo general, las funciones retornan un valor como salida. 
+
+#### Ejemplos
+
+La función [print()](https://rdrr.io/r/base/print.html) recibe como argumento un valor (ej. un texto o un número) para imprimirlo en la pantalla. En el siguiente fragmento de código en R, se utiliza `print()` para imprimir la hilera ["Hola mundo"](https://es.wikipedia.org/wiki/Hola_mundo). Nótese el uso del símbolo `#` para comentarios (i.e. texto que no es código ejecutable).
+
+```{r}
+#| label: funcion-print
+
+# Impresión de una hilera de caracteres
+print("Hola mundo")
+```
+
+La función [mean()](https://rdrr.io/r/base/mean.html) retorna la media aritmética del argumento de entrada. En el siguiente ejemplo, se calcula la media de los números de un vector creado a su vez con la función [c()](https://rdrr.io/r/base/c.html).
+
+```{r}
+#| label: funcion-mean
+
+# Media aritmética
+mean(c(2, 4, 5, 9))
+```
+La función [getwd()](https://rdrr.io/r/base/getwd.html) (*get working directory*) retorna la ruta del directorio de trabajo de la sesión actual de R. Este es el directorio en el cual R espera encontrar, por ejemplo, archivos de datos.
+
+```{r}
+#| label: funcion-getwd
+
+# Impresión del directorio de trabajo
+getwd()
+```
+La función [setwd()](https://rdrr.io/r/base/getwd.html) (*set working directory*) establece la ruta del directorio de trabajo de la sesión actual de R. Como argumento, recibe una hilera de texto con la ruta.
+
+**Note las barras utilizadas para separar los subdirectorios: / (no \\)**
+
+```{r}
+#| label: funcion-setwd
+#| eval: false
+
+# Especificación del directorio de trabajo (la ruta debe existir)
+setwd("C:/Users/mfvargas")
+```
+
+**Ejercicios**  
+
+1.  Obtenga la ruta de su directorio de trabajo con la función `getwd()` y anótela.  
+2.  Cambie la ruta de su directorio de trabajo con la función `setwd()` a cualquier otro directorio en el que tenga derechos de escritura. Verifique el cambio usando nuevamente `getwd()`.  
+3. Con la función [create.file()](https://rdrr.io/r/base/files.html), cree un archivo llamado `hola.R` y escriba ahí el programa ["Hola mundo"](https://es.wikipedia.org/wiki/Hola_mundo): `cat("Hola mundo")`  
+4. Ejecute su programa con los botones **Run** y **Source** de RStudio.  
+5. Cambie nuevamente su directorio de trabajo a la ruta que anotó en el paso 1. Copie ahí su programa y ejecútelo nuevamente.  
+
+#### Argumentos
+
+Los argumentos de las funciones tienen nombres que pueden especificarse, en caso de ser necesario, al llamar la función. Los nombres de los argumentos de una función pueden omitirse cuando el orden y la posición de esos argumentos son suficientes para identificarlos. Si se desea cambiar el orden o que el código sea más claro, se pueden indicar los nombres de los argumentos.
+
+En el siguiente ejemplo, se utilizan los argumentos `x`, `xlab` y `ylab` de la función [plot()](https://rdrr.io/r/graphics/plot.default.html), de la instalación básica de R, para especificar la fuente de datos y las etiquetas de los ejes `x` e `y` de un [gráfico de dispersión](https://es.wikipedia.org/wiki/Diagrama_de_dispersi%C3%B3n).
+
+```{r}
+#| label: plot-cars
+
+# Gráfico de dispersón del conjunto de datos "cars" con etiquetas en los ejes x e y
+plot(
+  x=cars$speed,
+  y=cars$dist,
+  xlab="Velocidad (mph)", 
+  ylab="Distancia requerida para frenar (pies)"
+)
+```
+
+**Ejercicios**
+
+1.  Estudie la documentación de la función `plot()` y agregue al gráfico anterior:  
+
+    a.  Un título.  
+    b.  Un subtítulo.
+
+#### Ayuda
+
+Para obtener ayuda sobre una función desde la línea de comandos de R, puede utilizarse un signo de pregunta (`?`) seguido del nombre de la función o bien la función [help()](https://rdrr.io/r/utils/help.html). Por ejemplo:
+
+```{r}
+#| label: funcion-help
+#| eval: false
+
+# Ayuda de la función setwd()
+?setwd
+help(setwd)
+```
+
+También puede utilizarse la función [apropos()](https://rdrr.io/r/utils/apropos.html), para buscar funciones por palabras clave.
+
+```{r}
+#| label: funcion-apropos
+
+# Búsqueda, por palabras clave, de funciones relacionadas con "mean" (media aritmética). Note las comillas ("").
+apropos("mean")
+```
+
+La función [example()](https://rdrr.io/r/utils/example.html) presenta ejemplos sobre el uso de una función.
+
+```{r eval=TRUE}
+# Ejemplos de uso de la función mean()
+example("mean")
+```
+
+Por otra parte, el sitio [All R Documentation](https://rdrr.io/r/) reúne documentación de funciones de una gran cantidad de paquetes de R. 
+
+También puede obtenerse ayuda en buscadores de Internet, como [Google](https://www.google.com/), o en sitios de preguntas y respuestas para programadores, como [Stack Overflow](https://stackoverflow.com/).
+
+### Paquetes
+
+Las funciones de R se distribuyen en [paquetes](https://en.wikipedia.org/wiki/R_package). Cada paquete contiene un conjunto de funciones relacionadas. También hay paquetes que contienen datos (ej. los resultados de un censo).
+
+Para utilizar un paquete, primero debe cargarse (en la memoria del computador) con la función [library()](https://rdrr.io/r/base/library.html).
+
+```{r}
+#| label: funcion-library
+
+# Carga del paquete stats
+library(stats)
+```
+
+Algunos paquetes están contenidos en la distribución base de R. Otros deben instalarse con la función [install.packages()](https://rdrr.io/r/utils/install.packages.html).
+
+En el siguiente ejemplo, se instala el paquete [titanic](https://cran.r-project.org/package=titanic), el cual contiene información sobre los pasajeros durante el viaje inaugural del transatlántico [RMS Titanic](https://es.wikipedia.org/wiki/RMS_Titanic), resumida según el estatus económico (clase), sexo, edad y supervivencia de cada pasajero.
+
+```{r}
+#| label: funcion-install.packages
+#| eval: false
+
+# Instalación del paquete titanic (note las comillas)
+install.packages("titanic")
+```
+
+Seguidamente, el paquete `titanic` se carga con la función `library()`.
+
+```{r}
+#| label: funcion-library-titanic
+#| message: false
+
+# Carga de titanic
+library(titanic)
+```
+
+### Visualización de datos
+
+#### La función `View()`
+
+El conjunto de datos `titanic_train` puede observarse, con sus observaciones y variables, con la función [View()](https://rdrr.io/r/utils/View.html), la cual permite visualizar un conjunto de datos en una tabla.
+
+```{r}
+#| label: funcion-view
+#| eval: false
+
+# Visualización del conjunto de datos titanic_train
+View(titanic_train)
+```
+
+Este conjunto de datos se utiliza para entrenar modelos de [aprendizaje automático (*machine learning*)](https://es.wikipedia.org/wiki/Aprendizaje_autom%C3%A1tico) para que realicen predicciones (ej. la supervivencia o muerte de un pasajero con base en variables como edad, clase, sexo y otras). Las predicciones del modelo se evalúan con `titanic_test`, el conjunto de datos de evaluación.
+
+#### Funciones básicas de graficación estadística
+
+La instalación básica de R, la cual incluye el paquete [base](https://rdrr.io/r/base/base-package.html) y el paquete [graphics](https://rdrr.io/r/graphics/graphics-package.html), ofrece una gran variedad de funciones para elaborar gráficos estadísticos. Esta funcionalidad se enriquece gracias al aporte de paquetes elaborados por terceros, los cuales se estudiarán posteriormente en este curso. Entre los tipos de gráficos que pueden elaborarse con la instalación básica de R están los gráficos de dispersión, los gráficos de barras, los gráficos de pastel y los histogramas.
+
+##### Gráficos de barras
+
+Un [gráfico de barras](https://es.wikipedia.org/wiki/Diagrama_de_barras) permite representar variables de un conjunto de datos mediante barras rectangulares de longitud proporcional a los valores representados. Los gráficos de barras se utilizan principalmente para representar datos que involucran variables categóricas. Permiten comparar fácilmente cantidades o números asociados a diferentes categorías. Por ejemplo, se puede usar un gráfico de barras para mostrar la cantidad de ventas de diferentes tipos de productos, la población en diferentes ciudades, o las puntuaciones obtenidas por estudiantes en diferentes materias.
+
+El siguiente gráfico de barras muestra la cantidad de pasajeros por clase en `titanic_train`, mediante la función [barplot()](https://rdrr.io/r/graphics/barplot.html), una de las funciones de [graficación básica de R](https://r-graph-gallery.com/base-R.html). Esta función recibe como argumento los valores que se desea representar en las barras, por lo que antes se utiliza la función [table()](https://rdrr.io/r/base/table.html) para generar una [tabla de contingencia](https://es.wikipedia.org/wiki/Tabla_de_contingencia) con las cantidades de pasajeros que viajaban en cada clase.
+
+```{r}
+#| label: tabla-titanic-clase
+#| collapse: true
+
+# Cantidades de pasajeros por clase
+pasajeros_por_clase <- table(titanic_train$Pclass)
+
+# Despliegue
+pasajeros_por_clase
+```
+
+```{r}
+#| label: barplot-titanic-clase
+#| collapse: true
+
+# Gráfico de barras por clase de pasajero
+barplot(
+  height = pasajeros_por_clase,
+  main = "Cantidad de pasajeros por clase en el Titanic",
+  xlab = "Clase",
+  ylab = "Cantidad de pasajeros"  
+)
+```
+
+La cantidad de pasajeros en cada clase puede subdividirse en fallecidos y sobrevivientes.
+
+```{r}
+#| label: tabla-titanic-clase-sobrevivencia
+#| collapse: true
+
+# Cantidades de pasajeros fallecidos y sobrevivientes por clase
+# (0 corresponde a fallecidos y 1 a sobrevivientes)
+pasajeros_por_clase_sobrevivencia <- 
+  table(titanic_train$Survived, titanic_train$Pclass)
+
+# Despliegue
+pasajeros_por_clase_sobrevivencia
+```
+
+El siguiente gráfico de barras apiladas muestra la distribución de pasajeros sobrevivientes y fallecidos en cada clase.
+
+```{r}
+#| label: barplot-apilado-titanic-clase-sobrevivencia
+#| collapse: true
+
+# Gráfico de barras apiladas
+barplot(
+  height = pasajeros_por_clase_sobrevivencia,
+  main = "Cantidad de pasajeros fallecidos y sobrevivientes por clase",
+  xlab = "Clase",
+  ylab = "Cantidad de pasajeros",
+  col = topo.colors(2)
+)
+
+# Leyenda
+legend(
+  x = "topleft",
+  inset = 0.03,
+  legend = c("Fallecidos", "Sobrevivientes"),
+  fill = topo.colors(2),
+  horiz = TRUE
+)
+```
+
+La misma información se muestra seguidamente en un gráfico de barras agrupadas. Note el uso del argumento `beside`.
+
+```{r}
+#| label: barplot-agrupado-titanic-clase-sobrevivencia
+#| collapse: true
+
+# Gráfico de barras agrupadas
+barplot(
+  height = pasajeros_por_clase_sobrevivencia,
+  main = "Cantidad de pasajeros fallecidos y sobrevivientes por clase",
+  xlab = "Clase",
+  ylab = "Cantidad de pasajeros",  
+  col = topo.colors(2),
+  beside = TRUE
+)
+
+# Leyenda
+legend(
+  x = "topleft",
+  inset = 0.03,
+  legend = c("Fallecidos", "Sobrevivientes"),
+  fill = topo.colors(2),
+  horiz = TRUE
+)
+```
+
+##### Gráficos de pastel
+
+Los [gráficos de pastel](https://es.wikipedia.org/wiki/Gr%C3%A1fico_circular) se utilizan para mostrar proporciones o porcentajes, representando la composición de un todo. Son especialmente útiles para resaltar cómo se divide un conjunto en categorías, donde cada segmento del pastel (*slice* o "rebanada") representa la proporción o porcentaje de esa categoría dentro del total. Por lo tanto, son más adecuados para visualizar datos categóricos o cualitativos, no para datos numéricos continuos.
+
+La cantidad de pasajeros por clase en `titanic_train` también puede mostrarse en un gráfico de pastel, mediante la función [pie](https://rdrr.io/r/graphics/pie.html) de la instalación básica de R.
+
+```{r}
+#| label: pie-titanic-clase
+#| collapse: true
+
+# Gráfico de pastel por clase de pasajero
+pie(
+  x = pasajeros_por_clase, 
+  main = "Distribución de pasajeros por clase en el Titanic",
+  labels = paste(names(pasajeros_por_clase), ":", pasajeros_por_clase)
+)
+```
+
+##### Histogramas
+
+Un [histograma](https://es.wikipedia.org/wiki/Histograma) es una representación gráfica de la distribución de una variable numérica en forma de barras (en este caso, llamadas en inglés *bins*). La longitud de cada barra representa la frecuencia de un rango de valores de la variable.
+
+En la instalación básica de R, los histogramas se implementan mendiante la función [hist()](https://rdrr.io/r/graphics/hist.html).
+
+```{r}
+#| label: hist-titanic-edad
+#| collapse: true
+
+hist(
+  x = titanic_train$Age, 
+  breaks = 8,
+  main = "Distribución de la edad de los pasajeros del Titanic", 
+  xlab = "Edad", 
+  ylab = "Frecuencia"
+)
+```
+
+**Ejercicios**  
+
+1. Muestre la distribución de pasajeros fallecidos y sobrevivientes por sexo en un gráfico de barras apiladas.  
+2. Muestre la distribución de pasajeros fallecidos y sobrevivientes por sexo en un gráfico de barras agrupadas.
+3. Guarde los gráficos en un archivo PDF (puede consultar [Saving plots to a file with pdf(), jpeg() and png()](https://bookdown.org/ndphillips/YaRrr/saving-plots-to-a-file-with-pdf-jpeg-and-png.html)).
+
+### Manipulación de datos
+
+En esta sección se estudian varias operaciones para manipular data frames mediante la sintaxis y las funciones base de R:
+
+- Creación de subconjuntos.
+- Ordenamiento.
+- Creación y modificación de columnas.
+- Agrupación y sumarización.
+
+Para ilustrar las operaciones, se utiliza el conjunto de datos [Netflix Movies and TV Shows](https://www.kaggle.com/datasets/shivamb/netflix-shows).
+
+```{r}
+#| label: importacion-netflix
+#| warning: false
+#| message: false
+
+# Importar el CSV desde el repositorio del curso en GitHub
+netflix <- read.csv(
+  file = "https://raw.githubusercontent.com/gf0604-procesamientodatosgeograficos/2025-i/refs/heads/main/datos/netflix/netflix_titles.csv"
+)
+```
+
+#### Creación de subconjuntos
+
+A esta operación se le llama también "filtrado de datos". Se implementa con la sintaxis `dataframe[filas, columnas]`.
+
+Las filas y las columnas pueden especificarse mediante vectores, como en los siguientes ejemplos.
+
+```{r}
+#| label: filtrado-01-netflix
+#| warning: false
+#| message: false
+
+# Subconjunto de las 5 primeras filas y todas las columnas
+primeras_filas <- netflix[1:5, ]
+
+# Despliegue
+print(primeras_filas)
+```
+
+```{r}
+#| label: filtrado-02-netflix
+#| warning: false
+#| message: false
+
+# Subconjunto de las 5 primeras filas y las 3 primeras columnas
+primeras_filas <- netflix[1:5, 1:3]
+
+# Despliegue
+print(primeras_filas)
+```
+
+```{r}
+#| label: filtrado-03-netflix
+#| warning: false
+#| message: false
+
+# Subconjunto de las 5 primeras filas y 
+# las columnas show_id, type, title, director y country
+primeras_filas <- netflix[
+  1:5, 
+  c("show_id", "type", "title", "director", "country")
+]
+
+# Despliegue
+print(primeras_filas)
+```
+
+Las filas a filtrar también pueden especificarse mediante expresiones lógicas.
+
+```{r}
+#| label: filtrado-04-netflix
+#| warning: false
+#| message: false
+
+# Películas dirigidas por Clint Eastwood
+eastwood <- netflix[
+  netflix$director == "Clint Eastwood", 
+  c("show_id", "type", "title", "director", "release_year")
+]
+
+# Despliegue
+print(eastwood)
+```
+
+Nótese el uso de `$` para especificar la columna y del operador de comparación `==` (igualdad).
+
+```{r}
+#| label: filtrado-05-netflix
+#| warning: false
+#| message: false
+
+# Películas dirigidas por Clint Eastwood y estrenadas a partir del año 2000
+eastwood_2000 <- netflix[
+  netflix$director == "Clint Eastwood" & netflix$release_year >= 2000, 
+  c("show_id", "type", "title", "director", "release_year")
+]
+
+# Despliegue
+print(eastwood_2000)
+```
+
+El operador lógico `&` (*AND*) especifica que ambas expresiones lógicas deben cumplirse (ser verdaderas).
+
+#### Ordenamiento
+
+La función [order()](https://rdrr.io/r/base/order.html) permite ordenar un data frame según una o varias columnas, al retornar los índices de las filas en el orden deseado.
+
+```{r}
+#| label: ordenamiento-01-netflix
+#| warning: false
+#| message: false
+
+# Ordenar las películas dirigidas por Clint Eastwood
+# por orden descendente de año de estreno
+eastwood_ordenado <- eastwood[
+  order(eastwood$release_year, decreasing = TRUE), 
+]
+
+# Despliegue
+print(eastwood_ordenado)
+```
+
+#### Creación y modificación de columnas
+
+En un data frame, una columna puede crearse o modificarse con los operadores `$` y `<-`.
+
+```{r}
+#| label: creacion-columnas-01
+#| warning: false
+#| message: false
+
+# Vector de valores de sexo
+vector_sexo <- c(
+  "mujer", "hombre", "mujer", "mujer", "mujer", "hombre", "mujer", "hombre", "hombre", "hombre"
+)
+
+# Vector de peso en kilogramos
+vector_peso_kg <- c(
+  51.0, 98.5, 91.6, 60.6, 59.1, 59.2, 65.2, 76.2, 71.6, 64.6
+)
+
+# Definir un data frame
+personas <- data.frame(
+  sexo = vector_sexo,
+  peso_kg = vector_peso_kg
+)
+
+# Agregar una nueva columna para el peso en libras
+personas$peso_lb <- personas$peso_kg * 2.205
+
+# Despliegue
+print(personas)
+```
+
+#### Agrupación y sumarización
+
+La distribución base de R permite agrupar y sumarizar datos de varias formas.
+
+Por ejemplo, la función [table()](https://rdrr.io/r/base/table.html) cuenta la cantidad de filas correspondientes a cada valor de una variable categórica.
+
+```{r}
+#| label: agrupacion-01-a
+#| warning: false
+#| message: false
+
+# Cantidad de películas o series por clasificación
+netflix_conteo_x_clasificacion <- table(netflix$rating)
+
+# Despliegue
+print(netflix_conteo_x_clasificacion)
+```
+
+La tabla que retorna `table()` puede convertirse a un data frame con la función [as.data.frame()](https://rdrr.io/r/base/as.data.frame.html) para ordenarse o procesarse de alguna otra forma.
+
+```{r}
+#| label: agrupacion-01-b
+#| warning: false
+#| message: false
+
+# Convertir a data frame
+netflix_conteo_x_clasificacion_df <- as.data.frame(
+  x = netflix_conteo_x_clasificacion
+)
+
+# Renombrar las columnas
+names(netflix_conteo_x_clasificacion_df) <- c(
+  "rating", "count"
+)
+
+# Ordenar
+netflix_conteo_x_clasificacion_df_ordenado <- netflix_conteo_x_clasificacion_df[
+  order(netflix_conteo_x_clasificacion_df$count, decreasing = TRUE),
+]
+
+# Despliegue de las 10 clasificaciones más frecuentes
+print(netflix_conteo_x_clasificacion_df_ordenado[1:10, ])
+```
+
+Por su parte, la función [aggregate()](https://rdrr.io/r/stats/aggregate.html) calcula estadísticas (ej. promedios, mínimos, máximos) para grupos formados con base en los valores de una o varias variables categóricas.
+
+```{r}
+#| label: agrupacion-02
+#| warning: false
+#| message: false
+
+# Promedio de peso en kg por sexo
+promedio_estatura_x_sexo <- aggregate(
+  data = personas,
+  peso_kg ~ sexo,
+  FUN = mean,
+  na.rm = TRUE # para eliminar valores NA (vacíos)
+)
+
+# Despliegue
+print(promedio_estatura_x_sexo)
+```
+
+La "fórmula" `peso_kg ~ sexo` se utiliza para indicar cómo se deben agrupar los datos:
+
+- El símbolo `~` se lee como "en función de".
+- A la izquierda está la variable dependiente (`peso_kg`), la que se quiere resumir o analizar.
+- A la derecha está la variable independiente (`sexo`), la que se usa para agrupar.
+
+#### Ejemplo
+
+El siguiente programa ejemplifica algunas de las funciones de manipulación de datos y graficación de la distribución base de R. En las salidas, se utilizan las funciones [pdf()](https://rdrr.io/r/grDevices/pdf.html) y [dev.off()](https://rdrr.io/cran/rasterpdf/man/dev.off.html) para almacenar los gráficos en un archivo PDF.
+
+```r
+#
+# Análisis de datos de la Encuesta Nacional de Salud y Nutrición (NHANES)
+#
+
+# ENTRADA
+
+# Importar datos de NHANES (National Health and Nutrition Examination Survey)
+nhanes <- read.csv(
+  file = "https://raw.githubusercontent.com/gf0604-procesamientodatosgeograficos/2025-i/refs/heads/main/datos/nchs/nhanes.csv"
+)
+
+
+# PROCESAMIENTO
+
+# 1. Obtener cantidades de personas por nivel de educación formal
+
+# Agrupar y contar por nivel de educación formal
+cantidad_x_educacion <- table(nhanes$Education)
+
+# Convertir a data frame
+cantidad_x_educacion <- as.data.frame(
+  cantidad_x_educacion
+)
+
+# Renombrar las columnas
+names(cantidad_x_educacion) <- c("educacion", "cantidad")
+
+# Ordenar por cantidad
+cantidad_x_educacion <- cantidad_x_educacion[
+  order(cantidad_x_educacion$c, decreasing = TRUE),
+]
+
+# 2. Obtener datos de estatura y peso de mujeres
+
+# Filtrar datos de estatura y peso de mujeres
+mujeres <- nhanes[nhanes$Gender == "female", c("Height", "Weight")]
+
+
+# SALIDA
+
+# Abrir archivo PDF
+pdf("analisis-nhanes-graficos.pdf", width = 12, height = 6)
+# Márgenes (arriba, izquierda, abajo, derecha)
+par(mar = c(4, 7, 4, 2))
+
+# 1. Gráfico de barras: Cantidad de personas por nivel de educación formal
+barplot(
+  height = cantidad_x_educacion$cantidad,
+  names.arg = cantidad_x_educacion$educacion,
+  main = "Cantidad de personas por nivel de educación formal",
+  xlab = "Nivel de educación formal",
+  ylab = "Cantidad de personas",
+  las = 1,
+  cex.names = 0.9,
+  col = "black"
+)
+
+# 2. Gráfico de dispersión: estatura vs. peso de mujeres
+plot(
+  x = mujeres$Height,
+  y = mujeres$Weight,
+  main = "Estatura vs. peso de mujeres",
+  xlab = "Estatura (cm)",
+  ylab = "Peso (kg)",
+  pch = 19,
+  col = "red"
+)
+
+# Cerrar archivo PDF
+dev.off()
+```
+
+### Tipos de datos
+
+R puede trabajar con varios [tipos de datos básicos](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Basic-types), entre los que están números, caracteres (i.e. textos) y lógicos. También puede trabajar con [tipos compuestos](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-compound-objects), como factores y *data frames*.
+
+Como se mencionó, R proporciona acceso a los datos a través de objetos. Un objeto es una entidad que tiene asociadas propiedades (i.e. datos) y métodos (i.e. funciones) para manipular esas propiedades. Un objeto puede ser, por ejemplo, un número, una hilera de texto, un vector o una matriz. R también permite que el programador defina sus propios objetos.
+
+Hay muchas formas de crear objetos en R. Una de las más sencillas es con los operadores de asignación. Estos son `=` y `<-` (o `->`). Por ejemplo, las siguientes sentencias crean un número, un texto y un vector.
+
+```{r}
+#| label: operador-asignacion
+#| collapse: true
+
+# Número
+x <- 10
+x
+
+# Otro número
+20 -> y
+y
+
+# Hilera de caracteres
+nombre <- 'Manuel'
+nombre
+
+# Vector de hileras de caracteres
+dias <- c('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')
+dias
+```
+
+Tanto `x`, como `nombre` como `dias` son variables. Una variable es una etiqueta que se le asigna a un objeto. Una variable debe comenzar con una letra.
+
+El tipo de un objeto puede consultarse con la función [typeof()](https://rdrr.io/r/base/typeof.html). Por ejemplo:
+
+```{r}
+#| label: funcion-typeof
+#| collapse: true
+
+typeof(x)
+typeof(y)
+typeof(nombre)
+typeof(dias)
+```
+
+A continuación, se describen con más detalle algunos de los tipos de datos utilizados en el lenguaje R.
+
+#### Tipos básicos
+
+R define [seis tipos de datos básicos](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Basic-types). En esta sección, se describen los más utilizados durante este curso.
+
+##### Números
+
+Pueden ser enteros (`integer`) o decimales (`double`). Se utilizan en diversos tipos de operaciones, incluyendo las aritméticas (ej. suma, resta, multiplicación, división).
+
+```{r}
+#| label: tipos-numericos
+#| collapse: true
+
+# Declaración de variables numéricas
+x <- 5
+y <- 0.5
+
+# Suma
+x + y
+
+# Tipos de datos numéricos
+typeof(x)
+typeof(y)
+typeof(x + y)
+```
+
+Nótese que al declararse una variable numérica, ya sea que tenga o no punto decimal, R la considera por defecto de tipo `double`. Para que se considere de tipo `integer`, debe utilizarse el sufijo `L` o la función `as.integer()`.
+
+```{r}
+#| label: tipo-entero
+#| collapse: true
+
+# Números enteros
+x <- 10L
+y <- as.integer(15)
+
+# Multiplicación
+x * y
+
+# Tipos de datos enteros
+typeof(x)
+typeof(y)
+typeof(x * y)
+```
+
+##### Caracteres
+
+Se utilizan para representar textos. Deben estar entre comillas simples (`''`) o dobles (`""`).
+
+```{r}
+#| label: tipos-caracter
+#| collapse: true
+
+# Hileras de caracteres
+nombre <- "María"
+apellido <- "Pérez"
+
+# Concatenación mediante la función paste()
+paste(nombre, apellido)
+```
+
+##### Lógicos
+
+Los objetos lógicos (también llamados *booleanos*) tienen dos posibles valores: verdadero (`TRUE`) o falso (`FALSE`).
+
+```{r}
+#| label: tipos-logico
+#| collapse: true
+
+# Variable lógica
+a <- 1 < 2
+a
+
+# Variable lógica
+b <- 1 > 2
+b
+```
+
+Las expresiones lógicas pueden combinarse con operadores como:
+
+-   `&` (Y, en inglés *AND*)
+-   `|` (O, en inglés *OR*)
+-   `!` (NO, en inglés *NOT*)
+
+```{r}
+#| label: operadores-logicos
+#| collapse: true
+
+# Operador lógico AND
+(1 < 2) & (3 < 4)
+
+# Operador lógico OR
+(2 + 2 == 5) | (20 <= 10)
+
+# Operador lógico NOT
+!(2 + 2 == 5)
+```
+
+##### Vectores
+
+Un [vector](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Vector-objects) es una estructura unidimensional que combina objetos del mismo tipo. 
+
+###### Definición
+
+Los vectores pueden definirse de varias formas como, por ejemplo, con la función [c()](https://rdrr.io/r/base/c.html) (del inglés _combine_):
+
+```{r}
+#| label: definicion-vectores-c
+#| collapse: true
+
+# Definición de un vector de números
+vector_numeros <- c(1, 7, 32, 45, 57)
+vector_numeros
+
+# Definición de un vector de hileras de caracteres
+vector_nombres <- c("Álvaro", "Ana", "Berta", "Bernardo")
+vector_nombres
+```
+
+Los vectores también pueden crearse con el operador `:`, el cual especifica una secuencia (i.e. una lista ordenada):
+
+```{r}
+#| label: definicion-vectores-secuencias
+#| collapse: true
+
+# Definición de un vector de números con la secuencia de 1 a 10
+vector_secuencia <- 1:10
+vector_secuencia
+
+# Definición de un vector de números con la secuencia de -5 a 5
+vector_secuencia <- -5:5
+vector_secuencia
+
+# Definición de un vector de números con la secuencia de -0.5 a 3.7
+vector_secuencia <- -0.5:3.7
+vector_secuencia
+```
+
+La función [seq()](https://rdrr.io/r/base/seq.html) también crea un vector con base en una secuencia y permite especificar argumentos como un valor de incremento y la longitud de la secuencia.
+
+```{r}
+#| label: definicion-vectores-seq
+#| collapse: true
+
+# Definición de un vector de números en secuencia de 1 a 10
+vector_secuencia <- seq(1, 10)
+vector_secuencia
+
+# Definición de un vector de números en secuencia de 0.5 a 15.3, con incremento de 2
+vector_secuencia <- seq(from=0.5, to=15.3, by=2)
+vector_secuencia
+
+# Definición de un vector de números en secuencia de 1.5 a 9.4, con longitud de 4
+vector_secuencia <- seq(from=1.5, to=9.4, length.out=4)
+vector_secuencia
+```
+
+###### Indexación
+
+Los elementos de un vector se acceden a través de sus [índices](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Indexing) (i.e. posiciones). La primera posición corresponde al índice 1, la segunda al índice 2 y así sucesivamente. Los índices se especifican entre paréntesis cuadrados (`[]`), ya sea para una posición específica o para un rango de posiciones. También es posible especificar los índices que se desea excluir.
+
+```{r}
+#| label: indexacion-vectores
+#| collapse: true
+
+# Vector de nombres de países
+paises <- c("Argentina", "Francia", "China", "Australia", "México")
+paises
+
+# Elemento en el índice 3
+paises[3]
+```
+
+El operador `:` puede utilizarse para especificar un rango de índices:
+
+```{r}
+#| label: indexacion-vectores-secuencias
+#| collapse: true
+
+# Elementos entre los índices 2 y 4 (2, 3 y 4)
+paises[2:4]
+```
+
+Con la función `c()`, es posible especificar un conjunto de índices particulares:
+
+```{r}
+#| label: indexacion-vectores-c
+#| collapse: true
+
+# Elementos entre los índices 1, 4 y 5
+paises[c(1, 4, 5)]
+```
+
+Los números negativos pueden usarse para excluir índices:
+
+```{r}
+#| label: indexacion-vectores-c-exclusion
+#| collapse: true
+
+# Exclusión de los índices 3 y 4
+paises[c(-3, -4)]
+```
+
+Los valores lógicos `TRUE` y `FALSE` también pueden usarse para incluir y excluir índices de un vector:
+
+```{r}
+#| label: indexacion-vectores-c-exclusion-logicos
+#| collapse: true
+
+# Se incluyen los índices 1, 2 y 4; y se excluyen los índices 3 y 5
+paises[c(TRUE, TRUE, FALSE, TRUE, FALSE)]
+```
+
+###### Operaciones
+
+En los vectores pueden aplicarse operaciones aritméticas:
+
+```{r}
+#| label: operaciones-aritmeticas-vectores
+#| collapse: true
+
+a <- c(1, 3, 5, 7)
+b <- c(2, 4, 6, 8)
+
+# Suma de vectores
+a + b
+
+# Multiplicación de vectores
+a * b
+```
+
+Y también pueden realizarse operaciones relacionales:
+
+```{r}
+#| label: operaciones-relacionales-vectores
+#| collapse: true
+
+# Comparación con el operador <
+a < b
+```
+
+##### Matrices
+
+Una matriz es una estructura bidimensional de filas y columnas.
+
+###### Definición
+
+Las matrices se definen mediante la función [matrix()](https://rdrr.io/r/base/matrix.html).
+
+```{r}
+#| label: definicion-matrices
+#| collapse: true
+
+# Definición de una matriz de 3 x 3 con elementos de la secuencia 1:9 distribuidos en las columnas
+m <- matrix(1:9, nrow=3, ncol=3)
+m
+
+# Definición de una matriz de 3 x 3 con elementos de la secuencia 1:9 distribuidos en las filas
+m <- matrix(1:9, nrow=3, ncol=3, byrow=TRUE)
+m
+
+# Definición de una matriz de 3 x 2 con nombres para las filas y las columnas
+datos <- c(18, 500, 25, 1000, 30, 2000)
+filas <- c("Ana", "Mario", "Laura")
+columnas <- c("Edad", "Salario")
+
+m <- matrix(datos, nrow=3, ncol=2, byrow=TRUE, dimnames=list(filas, columnas))
+m
+```
+
+La función [list()](https://rdrr.io/r/base/list.html) se utiliza, en este caso, para combinar vectores. En general, se usa para combinar datos de cualquier tipo.
+
+###### Indexación
+
+La indexación de matrices es similar a la de vectores, pero deben especificarse índices tanto para filas como para columnas.
+
+```{r}
+#| label: indexacion-matrices
+#| collapse: true
+
+# Elemento en la posición [2,2] (segunda fila, segunda columna)
+m[2, 2]
+
+# Elementos de la primera fila
+m[1,]
+
+# Elementos de la segunda columna
+m[, 2]
+
+# Elementos de las filas 1 y 2
+m[1:2, ]
+
+# Elementos de la fila "Mario"
+m["Mario", ]
+
+# Elementos de la columna "Salario"
+m[, "Salario"]
+```
+
+###### Operaciones
+
+De manera similar a los vectores, en las matrices pueden realizarse operaciones aritméticas y relacionales.
+
+```{r}
+#| label: operaciones-matrices
+#| collapse: true
+
+a <- matrix(1:4, nrow=2, ncol=2)
+a
+
+b <- matrix(5:8, nrow=2, ncol=2)
+b
+
+# Suma de matrices
+a + b
+
+# Multiplicación de matrices
+a * b
+
+# Comparación de matrices con el operador >
+a > b
+```
+
+#### Tipos compuestos
+
+##### Data Frames
+
+Un [data frame](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Data-frame-objects) es una estructura bidimensional similar a lo que comúnmente se conoce como una tabla. Sus filas corresponden a las [observaciones](https://es.wikipedia.org/wiki/Observaci%C3%B3n) de un conjunto de datos y sus columnas a las [variables](https://es.wikipedia.org/wiki/Variable_estad%C3%ADstica). Internamente, se componen de varios vectores, factores y/o matrices de la misma longitud.  La definición de un data frame puede incluir nombres para cada observación y para cada variable. Los data frames implementan un conjunto de funciones similares a las de una hoja electrónica o una tabla de una base de datos relacional. Son fundamentales para el manejo de datos en R.
+
+###### Definición
+
+La función [data.frame()](https://rdrr.io/r/base/data.frame.html) crea un data frame a partir de vectores que serán las columnas del data frame.
+
+```{r}
+#| label: definicion-dataframes
+#| collapse: true
+
+# Vector de nombres de países
+paises <-
+  c("Panamá",
+    "Costa Rica",
+    "Nicaragua",
+    "El Salvador",
+    "Honduras",
+    "Guatemala",
+    "Belice")
+
+# Vector de cantidades de habitantes de cada país (en millones)
+poblaciones <- c(4.1, 5.0, 6.2, 6.4, 9.2, 16.9, 0.3)
+
+# Creación de un data frame a partir de los dos vectores
+poblaciones_paises <- 
+  data.frame(
+    pais = paises, 
+    poblacion = poblaciones
+  )
+
+# Impresión del data frame
+poblaciones_paises
+```
+
+###### Indexación
+
+Los datos de un data frame pueden accederse principalmente de dos formas. La primera es mediante la misma sintaxis `[fila, columna]` que se utiliza en las matrices.
+
+```{r}
+#| label: code-indexacion-dataframes
+#| collapse: true
+
+# Fila 1
+poblaciones_paises[1, ]
+
+# Filas 1, 5 y 7
+poblaciones_paises[c(1, 5, 7), ]
+
+# Columna 2
+poblaciones_paises[, 2]
+
+# Fila 1, columna 2
+poblaciones_paises[1, 2]
+
+# Filas 1:4, columna 2
+poblaciones_paises[1:4, 2]
+```
+
+Además, mediante el operador `$`, es posible acceder a las columnas (i.e. variables) del data frame.
+
+```{r}
+#| label: code-indexacion-dataframes-columnas
+#| collapse: true
+
+# Columna de nombres de países
+poblaciones_paises$pais
+
+# Modificación de los valores de toda una columna
+poblaciones_paises_2 <- poblaciones_paises # copia del dataframe original
+poblaciones_paises_2$poblacion = poblaciones_paises$poblacion*2
+poblaciones_paises_2
+```
+
+La notación de paréntesis cuadrados (`[]`) y el signo de dólar (`$`) también permite crear subconjuntos con base en expresiones lógicas.
+
+```{r subconjuntos-expresion-logica}
+# Ejemplos de uso de la notación $
+
+# Países con población mayor a 6 millones de habitantes
+poblaciones_paises[poblaciones_paises$poblacion > 6,]
+```
+
+###### Operaciones
+
+R proporciona una gran variedad de funciones para manejar data frames. Las siguientes son algunas de las más utilizadas.
+
+La función [read.table()](https://rdrr.io/r/utils/read.table.html) lee los datos contenidos en un archivo de texto y los retorna en un data frame. [read.csv()](https://rdrr.io/r/utils/read.table.html) es una función derivada, con valores por defecto orientados a los archivos de valores separados por comas (CSV, *Comma Separated Values*). Como argumento principal, `read.csv()` recibe la ruta del archivo CSV, el cual puede encontrarse en un disco local, en la Web o en otra ubicación.
+
+```{r}
+#| label: funcion-readcsv
+#| collapse: true
+
+# Lectura de archivo CSV ubicado en la Web
+covid <-
+  read.csv(
+    "https://raw.githubusercontent.com/pf0953-programacionr/2022-ii/main/datos/cepredenac/covid/covid-20210422.csv"
+  )
+
+# Despliegue de los datos del data frame
+covid
+```
+
+La función [str()](https://rdrr.io/r/utils/str.html) despliega la estructura de un data frame u otro objeto R.
+
+```{r}
+#| label: funcion-str
+
+# Estructura del data frame
+str(poblaciones_paises)
+```
+
+La función [summary()](https://rdrr.io/r/base/summary.html) proporciona un resumen de los contenidos de un data frame:
+
+```{r}
+#| label: funcion-summary
+
+# Resumen de los contenidos del data frame
+summary(poblaciones_paises)
+```
+
+La función [View()](https://rdrr.io/r/utils/View.html) invoca un visor de datos que permite visualizar un objeto R en un formato de tabla en una hoja de cálculo. Ejecute en su computadora la siguiente línea de código para apreciar el funcionamiento de ```View()```.
+
+```{r}
+#| label: funcion-view2
+#| eval: false
+
+# Vista de los casos de COVID-19
+View(covid, "Casos de COVID-19 en Centramérica")
+```
+
+##### Factores
+
+Los [factores](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Factors) se utilizan para representar [datos categóricos](https://es.wikipedia.org/wiki/Variable_categ%C3%B3rica). Un factor corresponde a un conjunto de categorías correspondientes a un concepto (ej. ["Sí", "No"], ["Casado", "Soltero"], ["Alto", "Medio", "Bajo"]). 
+
+Internamente, los factores se representan en R como números enteros con etiquetas asociadas. A pesar de que los factores parecen (y pueden funcionar como) hileras de caracteres, en realidad son números y debe tenerse cuidado de no manejarlos como caracteres.
+
+Los elementos de un factor se denominan niveles (*levels*) y, por defecto, se almacenan en orden alfabético.
+
+###### Definición
+
+Un factor se crea con la función [factor()](https://rdrr.io/r/base/factor.html).
+
+```{r}
+#| label: definicion-factores
+#| collapse: true
+
+# Factor de valores de sexo
+sexo <- factor(c("Masculino", "Femenino", "Femenino", "Masculino"))
+```
+
+###### Operaciones
+
+R proporciona una gran variedad de funciones para manejar factores. Seguidamente, se ejemplifican algunas de estas.
+
+```{r}
+#| label: operaciones-factores
+#| collapse: true
+
+# Etiquetas de los niveles
+levels(sexo)
+
+# Cantidad de niveles
+nlevels(sexo)
+
+# Conteo de elementos de cada uno de los niveles del factor
+table(sexo)
+```
+
+#### Otros
+
+##### Fechas
+
+Las fechas se manejan en R mediante un tipo especial que permite realizar operaciones como diferencias, agrupamientos y otras. Internamente, una fecha en R se almacena como un número que representa la cantidad de días transcurridos desde el 1 de enero de 1970 (1970-01-01).
+
+###### Operaciones
+
+La función [Sys.Date()](https://rdrr.io/r/base/Sys.time.html) retorna la fecha actual.
+
+```{r}
+#| label: fechas-operaciones
+#| collapse: true
+
+# Fecha actual
+fecha_actual <- Sys.Date()
+fecha_actual
+
+# Tipo de datos
+typeof(fecha_actual)
+
+# Clase
+class(fecha_actual)
+```
+
+La función [as.Date()](https://rdrr.io/r/base/as.Date.html) convierte datos entre los tipos fecha y carácter, de acuerdo con un formato. El formato que se usa por defecto (y el recomendado) es el que corresponde a la norma [ISO 8601](https://es.wikipedia.org/wiki/ISO_8601) (ej. 2023-12-03), pero pueden emplearse otros también.
+
+```{r}
+#| label: funcion-asdate
+
+# Conversión de fecha en formato año-mes-día
+fecha_caracter_01 <- "2020-01-01"
+fecha_01 <- as.Date(fecha_caracter_01, format="%Y-%m-%d")
+fecha_01
+
+# Conversión de fecha en formato día/mes/año
+fecha_caracter_02 <- "31/01/2020"
+fecha_02 <- as.Date(fecha_caracter_02, format="%d/%m/%Y")
+fecha_02
+
+# Diferencia entre fechas
+fecha_02 - fecha_01
+```
+
+Hay una lista de formatos de fechas en [Date Formats in R - R-bloggers](https://www.r-bloggers.com/date-formats-in-r/).
+
+### Definición de funciones
+
+Además de todas las funciones disponibles en la distribución base de R y en sus diferentes paquetes, R permite que los programadores definan sus propias funciones.
+
+Toda función tiene tres partes esenciales:
+
+* Un nombre.
+* Un conjunto de argumentos.
+* Un conjunto de líneas de código, también llamado *el cuerpo* de la función.
+
+Para programar una función, debe definirse cada una de esas partes por medio de la palabra reservada `function` [function()](https://rdrr.io/r/base/function.html).
+
+Por ejemplo, la siguiente función calcula la nota final de un curso con base en los argumentos correspondientes a los promedios de exámenes, proyectos y tareas.
+
+```{r}
+#| label: funcion-notafinal
+#| collapse: true
+
+# Función que calcula la nota final de un curso
+nota_final <- function(promedio_examenes,
+                       promedio_proyectos,
+                       promedio_tareas) {
+  factor_examenes <- promedio_examenes * 0.5
+  factor_proyectos <- promedio_proyectos * 0.4
+  factor_tareas <- promedio_tareas * 0.1
+  
+  return(factor_examenes + factor_proyectos + factor_tareas)
+}
+```
+
+La función [return()](https://rdrr.io/r/base/function.html) es la que define el valor de retorno de la función. Si no se incluye, la función retorna la última expresión evaluada.
+
+Ahora que está definida, la función `nota_final()` puede ser "llamada", con diferentes argumentos:
+
+```{r}
+#| label: funcion-notafinal-argumentos
+#| collapse: true
+
+# Si ni se incluyen los nombres de los argumentos, 
+# la función asume que se ingresan en el mismo orden en el que fueron definidos
+nota_final(100, 50, 0)
+
+# El uso de los nombres de argumentos 
+# permite modificar su orden
+nota_final(promedio_examenes =  100, promedio_tareas =  0, promedio_proyectos = 50)
+```
+
+Si se desea darle al usuario la opción de omitir algunos argumentos, se les puede asignar un valor por defecto.
+
+Seguidamente, la función `nota_final()` se redefine asignando valores por defecto a algunos de los argumentos:
+
+```{r}
+#| label: code-notafinal-argumentos-defecto
+#| collapse: true
+
+# Redefinición de la función nota final,
+# con valores por defecto para los argumentos
+nota_final <- function(promedio_examenes,
+                       promedio_proyectos = 0,
+                       promedio_tareas = 0) {
+  factor_examenes <- promedio_examenes * 0.5
+  factor_proyectos <- promedio_proyectos * 0.4
+  factor_tareas <- promedio_tareas * 0.1
+  
+  # Al no llamarse a la función return(), se retorna la última expresión:
+  factor_examenes + factor_proyectos + factor_tareas
+}
+
+# Se utiliza el valor por defecto (0) para el argumento promedio_tareas
+nota_final(promedio_examenes = 100, promedio_proyectos = 50)
+
+# Se llama la función usando la posición del primer argumento y el nombre del segundo
+nota_final(100, promedio_proyectos = 50)
+```
+
+**Ejercicios**  
+
+1. Defina una función con nombre `celsius_a_fahrenheit()` que reciba como argumento una cantidad en grados Celsius y retorne el equivalente en grados Fahrenheit.  
+2. Defina una función con nombre `fahrenheit_a_celsius()` que reciba como argumento una cantidad en grados Fahrenheit y retorne el equivalente en grados Celsius.  
+3. Defina una función con nombre `imc()` para calcular el [índice de masa corporal (IMC)](https://es.wikipedia.org/wiki/%C3%8Dndice_de_masa_corporal) de una persona con base en su peso (en kilogramos) y su estatura (en metros).
+
+### Condicionales
+
+Las sentencias condicionales evalúan una expresión lógica (i.e. condición) y ejecutan, o no, un bloque de intrucciones dependiendo de si la expresión es verdadera (`TRUE`) o falsa (`FALSE`). Permiten que los programas "tomen decisiones" y varíen su curso de acción.
+
+[Los condicionales en R](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#if) se implementa mediante la sentencia `if` y sus cláusulas `else` y `else if`.
+
+#### La sentencia `if`
+
+La sentencia [if](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#if) evalúa una condición (i.e. una expresión lógica) y ejecuta un bloque de instrucciones, si es verdadera. El bloque se delimita con los caracteres de "llaves": `{}`. 
+
+```{r}
+#| label: code-if
+#| eval: false
+
+# Sintaxis de la sentencia if
+if (condicion) {
+  # bloque de instrucciones a ejecutar si la condicion es verdadera
+}
+```
+
+Por ejemplo:
+
+```{r}
+#| label: code-if-ejemplo
+#| collapse: true
+
+# Edad de una persona
+edad <- 25
+
+# Se utiliza la sentencia if para determinar 
+# si la persona es adulta
+if (edad >= 18) {
+  print("Adulto")
+}
+```
+
+Ya sea que se ejecute o no el bloque del `if`, el programa continúa con las instrucciones que siguen al bloque, si las hay.
+
+#### La cláusula `else`
+
+Una sentencia `if` puede ir seguida de una cláusula `else`, la cual define un bloque que se ejecuta si la condición es falsa. Por ejemplo:
+
+```{r}
+#| label: code-else
+
+edad <- 15
+
+if (edad >= 18) {
+  print("Adulto")
+} else {
+  print("Menor")
+}
+```
+
+#### La cláusula `else if`
+
+Una sentencia `if` también puede ir seguida de una o varias cláusulas `else if`, las cuales evalúan condiciones adicionales.
+
+```{r}
+#| label: code-else-if
+
+edad <- 70
+
+if (edad < 18) {
+  print("Menor")
+} else if (edad < 65) {
+  print("Adulto")
+} else {
+  print("Adulto mayor")
+}
+```
+
+Las cláusulas `else if` deben escribirse antes de la cláusula `else`, la cual es siempre la última, si es que está presente. Tanto las cláusulas `else if` como la cláusula `else` son opcionales.
+
+**Ejercicios**  
+
+1. Defina una función con nombre `interpretacion_imc()` que reciba como argumento un número correspondiente al índice de masa corporal (IMC) de una persona.  Debe retornar una hilera de caracteres correspondiente a la interpretación del IMC ("Bajo peso", "Normal", "Sobrepeso", "Obesidad"), de acuerdo con la tabla disponible en [Índice de masa corporal - Wikipedia](https://es.wikipedia.org/wiki/%C3%8Dndice_de_masa_corporal#Interpretaci%C3%B3n).
+
+### Ciclos
+
+Los ciclos permiten ejecutar tareas de manera repetitiva en un programa. Algunos ciclos se ejecutan una cantidad definida de veces, mientras que otros lo hacen mientras se cumple una condición lógica. Pueden usarse en combinación con sentencias que terminan anticipadamente el ciclo o que omiten algunas de sus iteraciones.
+
+[Los ciclos en R](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#Looping) se implementan mediante las sentencias `for`, `while` y `repeat`, en combinación con las sentencias `break` y `next`.
+
+R provee varias funciones que implementan ciclos de manera implícita, tales como [apply()](https://rdrr.io/r/base/apply.html), [tapply()](https://rdrr.io/r/base/tapply.html) y [lapply()](https://rdrr.io/r/base/lapply.html). Adicionalmente, hay muchas operaciones (ej. las aritméticas) que están "vectorizadas", por lo que no es necesario utilizarlas en ciclos. El uso de código vectorizado es muy recomendado en R, por ser muy eficiente.
+
+#### La sentencia `for`
+
+La sentencia [for](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#for) repite las instrucciones contenidas en un bloque para cada uno de los elementos de un vector o lista. En cada iteración (i.e. cada "vuelta" del ciclo), el valor del elemento que está siendo procesado se almacena en una variable.
+
+```{r}
+#| label: ciclos-for
+#| eval: false
+
+# Sintaxis de la sentencia for
+for (variable in vector) {
+  # bloque de instrucciones
+}
+```
+
+Por ejemplo, el siguiente bloque de código utiliza un ciclo de tipo `for` para recorrer un vector de nombres e imprimir un saludo para cada uno.
+
+```{r}
+#| label: for-ejemplo-1
+#| collapse: true
+
+# Vector con nombres de personas
+vector_nombres <- c("Andrés", "Beatriz", "Carlos", "Marta", "Pedro", "Sara")
+
+# Recorrido del vector
+for (nombre in vector_nombres) {
+  cat("Hola", nombre, "\n")
+}
+```
+
+En el siguiente ejemplo, se utiliza otro ciclo `for` para recorrer un vector de números y sumar sus elementos.
+
+```{r}
+#| label: for-ejemplo-2
+#| collapse: true
+
+# Vector de números
+vector_numeros <- c(29.6, -36.81, 31.85, 25.71, 90.2, 0.4)
+
+# Variable para la suma de los números
+suma <- 0
+
+# Recorrido del vector
+for (x in vector_numeros) {
+  suma <- suma + x
+}
+
+# Impresión de la suma
+cat("Suma:", suma)
+```
+
+Seguidamente, se utiliza dos `for` "anidados" para sumar los elementos de cada una de las columnas de una matriz.
+
+```{r}
+#| label: for-ejemplo-3
+#| collapse: true
+
+# Matriz de números
+matriz_numeros <- matrix(1:12, nrow=3, ncol=4)
+matriz_numeros
+
+# Ciclo externo para recorrer las columnas de la matriz
+for (j in 1:ncol(matriz_numeros)) {
+  suma_columna <- 0
+  # Ciclo interno para recorrer las elementos de cada columna
+  for (i in 1:nrow(matriz_numeros)) {
+    suma_columna <- suma_columna + matriz_numeros[i, j]
+  }
+  print(suma_columna)
+}
+```
+
+**Ejercicios**  
+
+1. Utilice un ciclo `for` para recorrer el vector `vector_numeros` y calcular el promedio de sus elementos.  
+2. Utilice dos ciclos `for` anidados para recorrer la matriz `vector_numeros` y calcular el promedio de cada una de sus columnas.
+
+#### La sentencia `while`
+La sentencia [while](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#while) evalúa una condición (i.e. una expresión lógica) en cada iteración de un ciclo y ejecuta las intrucciones del bloque mientras la condición sea verdadera. Generalmente, en algún momento la condición se vuelve falsa y así finaliza el ciclo.
+
+```{r}
+#| label: ciclos-while
+#| eval: false
+
+# Sintaxis de la sentencia while
+while (condicion) {
+  # bloque de instrucciones 
+}
+```
+
+En el siguiente ejemplo, se utiliza un ciclo `while` para preguntarle al usuario cuál es la [respuesta definitiva al sentido de la vida, el universo y todo lo demás](https://en.wikipedia.org/wiki/42_(number)#The_Hitchhiker's_Guide_to_the_Galaxy) y se continúa haciendo la pregunta hasta que responda correctamente:
+
+```{r}
+#| label: funcion-readline
+#| eval: false
+
+# Función para leer una respuesta desde la pantalla
+leer_respuesta <- function() {
+  readline(prompt="¿Cual es la respuesta definitiva al sentido de la vida, el universo y todo lo demás? ")
+}
+
+# Si la respuesta es incorrecta, se repite la pregunta hasta que el usuario conteste correctamente
+while (leer_respuesta() != "42") {   
+  print("¡Su respuesta es incorrecta!")
+}
+```
+
+**Ejercicios**  
+
+1. Utilice un ciclo `while` para implementar el cálculo del promedio de los elementos de un vector. Sugerencia: utilice la función [length()](https://rdrr.io/r/base/length.html) para obtener la longitud del vector y así saber cuando terminar de recorrerlo.
+
+<!--
+
+**ESTAS SECCIONES SE COLOCAN TEMPORALMENTE ENTRE COMENTARIOS**
+
+#### La sentencia `repeat`
+La sentencia [repeat](https://cran.r-project.org/doc/manuals/r-devel/R-lang.html#repeat) implementa un ciclo que se repite indefinidamente. Puede interrumpirse con una sentencia  `break`.
+
+```{r}
+#| label: ciclos-repeat
+#| eval: false
+
+# Sintaxis de la sentencia repeat
+repeat {
+  # bloque de instrucciones 
+}
+```
+
+Los ciclos `repeat` tienen una estructura más sencilla que los `while`. Algo que los diferencia es que los bloques de los ciclos `repeat` se ejecutan al menos una vez.
+
+En el siguiente ejemplo, se utiliza un ciclo `repeat` para implementar la pregunta y lectura de la respuesta que anteriormente se implementó con un ciclo `while`.
+
+```{r}
+#| label: repeat-ejemplo
+#| collapse: true
+#| eval: false
+
+# Función para leer una respuesta desde la pantalla
+leer_respuesta <- function() {
+  readline(prompt="¿Cual es la respuesta definitiva al sentido de la vida, el universo y todo lo demás? ")
+}
+
+# Ciclo para imprimir la pregunta y leer la respuesta hasta que esta sea correcta
+repeat {
+  respuesta <- leer_respuesta()
+  if (respuesta != "42") {
+    # Respuesta incorrecta
+    print("¡Su respuesta es incorrecta!")
+  } else {
+    # Respuesta correcta. Se interrumpe el ciclo.
+    break
+  }
+}
+```
+
+#### Las sentencias `break` y `next`
+La sentencia `break` interrumpe un ciclo. La ejecución del programa continúa con la instrucción siguiente al bloque del ciclo.
+
+En el siguiente ciclo `for`, se suman uno a uno los números de un vector, pero se usa un `break` para interrumpir el ciclo cuando el acumulado es mayor que 100.
+
+```{r}
+#| label: ciclos-break
+#| collapse: true
+
+vector_numeros <- c(17, 23, 37, 41, 52, 64, 75)
+
+acumulado <- 0
+
+for (x in vector_numeros) {
+  acumulado <- acumulado + x
+  cat("Acumulado:", acumulado, "\n")
+  if (acumulado >= 100) {
+    cat("Se superó el límite de 100 en el acumulado")
+    break
+  }
+}
+```
+
+Por su parte, la sentencia `next` retorna el control al principio del bloque.  Las instrucciones que hay después del `next` no se ejecutan. La siguiente iteración del ciclo (si la hay), se inicia entonces.
+
+El siguiente ciclo recorre un vector de números. Se utiliza la sentencia `next` para "saltar" los números impares y sumar solo los pares.
+
+```{r}
+#| label: ciclos-next
+#| collapse: true
+
+vector_numeros <- c(17, 23, 37, 41, 52, 64, 75)
+
+suma_pares <- 0
+
+for (x in vector_numeros) {
+  if (x %% 2 == 0) {
+    # Número par: se suma
+    suma_pares <- suma_pares + x
+  } else {
+    # Número impar: se "salta" al siguiente número
+    next
+  }
+}
+
+cat("Suma de los números pares:", suma_pares)
+```
+
+#### La familia de funciones `apply()`
+Esta es una familia de funciones que manipulan subconjuntos de datos obtenidos a partir de matrices, listas y data frames, los cuales son recorridos de una forma repetitiva. Pueden funcionar como una alternativa a los ciclos y aplicar funciones en los subconjuntos de datos como, por ejemplo, funciones estadísticas en las columnas de una matriz o de un data frame. Su uso es muy recomendado por su eficiencia, flexibilidad y simplicidad.
+
+Entre estas funciones, pueden mencionarse [apply()](https://rdrr.io/r/base/apply.html), [lapply()](https://rdrr.io/r/base/lapply.html), [sapply()](https://rdrr.io/cran/functools/man/Sapply.html), [vapply()](https://rdrr.io/cran/functools/man/Vapply.html), [mapply()](https://rdrr.io/r/base/mapply.html), [rapply()](https://rdrr.io/r/base/rapply.html) y [tapply()](https://rdrr.io/r/base/tapply.html).
+
+##### La función `apply()`
+La función [apply()](https://rdrr.io/r/base/apply.html) toma como entrada un arreglo o una matriz y aplica alguna función sobre sus filas o columnas.
+
+La sintaxis de la función es:
+
+```{r}
+#| label: funcion-apply
+#| eval: false
+
+# Sintaxis de la función apply()
+apply(X, MARGIN, FUN, ...)
+```
+
+En donde:  
+- `X`: es un arreglo o matriz.  
+- `MARGIN`: `MARGIN = 1` significa que la función actúa en las filas, `MARGIN = 2` significa que la función actúa en las columnas y `MARGIN = c(1, 2)` significa que la función actúa en las filas y en las columnas.  
+- `FUN`: es la función que se aplicará a cada uno de los elementos de `X`.
+
+En el siguiente ejemplo, se utiliza la función `apply()` para sumar los elementos de las columnas de una matriz.
+
+```{r}
+#| label: funcion-apply-ejemplo
+
+m <- matrix(1:12, nrow=3, ncol=4)
+m
+
+# Suma de las columnas
+apply(m, 2, sum)
+```
+
+**Ejercicios**  
+1. Utilice la función `apply()` para obtener el promedio de los elementos de cada columna de la matriz del ejemplo anterior.
+
+##### La función `lapply()`
+La función [lapply()](https://rdrr.io/r/base/lapply.html) toma como entrada un vector o lista y retorna una lista de la misma longitud en la que cada uno de sus elementos es el resultado de aplicar una función al vector o lista de entrada.
+
+La sintaxis de la función es:
+
+```{r}
+#| label: funcion-lapply
+#| eval: false
+
+# Sintaxis de la función lapply()
+lapply(X, FUN, ...)
+```
+
+En donde:  
+- `X`: es un vector o lista.  
+- `FUN`: es la función que se aplicará a cada elemento de X. Algunas funciones predefinidas que pueden utilizarse incluyen `mean()`, `median()`, `sum()`, `min()` y `max()`. También pueden usarse funciones definidas por el usuario.
+
+En los siguientes ejemplos, se utiliza `lapply()` para aplicar diferentes funciones a un vector de nombres de personas.
+
+```{r}
+#| label: funcion-lapply-ejemplo
+
+nombres <- c("Andrés", "Beatriz", "Carlos", "Marta", "Pedro", "Sara")
+
+# Los nombres de la lista se transforman a minúscula
+nombres_en_minuscula <- lapply(nombres, tolower)
+nombres_en_minuscula
+
+# Se genera un saludo para cada nombre
+nombres_con_saludo <- lapply(nombres, function(arg1, arg2) paste(arg1, arg2), arg1="Hola")
+nombres_con_saludo
+```
+
+##### La función `tapply()`  
+La función [tapply()](https://rdrr.io/r/base/tapply.html) aplica una función a cada nivel de un factor.
+
+La sintaxis de la función es:
+
+```{r}
+#| label: code-tapply
+#| eval: false
+
+# Sintaxis de la función tapply()
+tapply(X, INDEX, FUN)
+```
+
+En donde:  
+- `X`: es un objeto, tipicamente un vector.  
+- `INDEX`: es una lista que contiene un factor.  
+- `FUN`: es la función que se aplicará a cada elemento de `X`.
+
+En el siguiente ejemplo, se utiliza `tapply()` para calcular la mediana del ancho del sépalo para cada especie del conjunto de datos `iris`.
+
+```{r}
+#| label: code-tapply-ejemplo
+
+data(iris)
+tapply(iris$Sepal.Width, iris$Species, median)
+```
+
+**Ejercicios**  
+1. Utilice la función `tapply()` para obtener el promedio de las longitudes de los pétalos para cada especie del conjunto de datos `iris`.
+
+#### Vectorización
+En R, muchas operaciones y funciones pueden ser vectorizadas, lo que significa que pueden aplicarse a los elementos de un vector sin necesidad de iterar uno por uno en estos. 
+
+Por ejemplo, considérese el siguiente fragmento de código no vectorizado, que utiliza un ciclo para convertir los números de un vector a sus valores absolutos:
+
+```{r}
+#| label: vectorizacion-ejemplo-01
+#| collapse: true
+
+vector_numeros <- c(23, -17, 34, 0, -12, 55)
+
+for (i in 1:length(vector_numeros)) {
+  if (vector_numeros[i] < 0) {
+    vector_numeros[i] <- -vector_numeros[i]
+  }
+}
+
+vector_numeros
+```
+
+El siguiente fragmento de código realiza la misma tarea, pero de forma vectorizada:
+
+```{r}
+#| label: vectorizacion-ejemplo-02
+#| collapse: true
+
+vector_numeros <- c(23, -17, 34, 0, -12, 55)
+
+# Se usa una expresión lógica para seleccionar los elementos del vector < 0
+negativos <- vector_numeros < 0
+negativos
+
+# Se cambian los elementos seleccionados en el paso anterior sin utilizar el for
+vector_numeros[negativos] <- vector_numeros[negativos] * -1
+
+vector_numeros
+```
+
+**Ejercicios**  
+1. Utilice código vectorizado para implementar una función que reciba como argumento un vector de números y retorne el mismo vector con los elementos impares (solo los impares) elevados al cuadrado.
+
+### Ejemplo de programa que utiliza funciones, condicionales y ciclos
+El siguiente programa solicita al usuario diferentes datos de varias personas:
+
+- Nombre.
+- Masa (kg).
+- Estatura (m).
+
+Esta entrada de datos se implementa a través de un ciclo, el cual finaliza cuando el usuario indica que no desea ingresar más datos.
+
+Por medio de funciones, se calcula el índice de masa corporal (IMC) de cada persona y la interpretación de si se considera bajo, normal o sobrepeso. 
+
+Al final, se imprime el promedio de los IMC calculados.
+
+```{r}
+#| label: programa-funciones-ciclos-condicionales
+#| eval: false
+
+# Función para calcular el IMC
+imc <- function(masa, estatura) {
+  return(masa / estatura^2)
+}
+
+# Función para interpretar el IMC
+imc_interpretacion <- function(imc) {
+  if (imc < 18.5) {
+    return("bajo")
+  } else if (imc < 25) {
+    return("normal")
+  } else {
+    return("sobrepeso")
+  }
+}
+
+# Vector para almacenar los IMC y luego calcular el promedio
+imcs <- c()
+
+# Variable para almacenar la respuesta del usuario a la pregunta
+# de si desea ingresar datos de otra persona
+respuesta <- "s"
+
+# Ciclo para solicitar datos
+while (respuesta == "s") {
+  nombre <- readline(prompt = "Nombre de la persona: ")
+  masa <- as.numeric(readline(prompt = "Masa (kg) de la persona: "))
+  estatura <- as.numeric(readline(prompt = "Estatura (m) de la persona: "))
+  
+  # Cálculo del IMC
+  valor_imc <- imc(masa, estatura)
+  interpretacion_imc <- imc_interpretacion(valor_imc)
+  
+  # Despliegue de resultados
+  print(
+    cat(
+      nombre, "tiene un IMC de", valor_imc, 
+      "lo cual es considerado", interpretacion_imc
+    )
+  )
+  
+  # Almacenamiento del valor del IMC
+  imcs <- c(imcs, valor_imc)
+  
+  # Preguntar si desea continuar
+  respuesta <- readline(prompt = "¿Desea calcular el IMC de otra persona? (s/n): ")
+}
+
+# Mostrar el promedio de los IMC calculados
+if (length(imcs) > 0) {
+  promedio_imc <- mean(imcs)
+  print(cat("El promedio de los IMC calculados es:", promedio_imc))
+} else {
+  print(cat("No se calcularon IMC"))
+}
+```
+
+-->
+
+## Recursos de interés
+*Find Open Datasets and Machine Learning Projects | Kaggle*. (s. f.). Recuperado 24 de abril de 2022, de [https://www.kaggle.com/datasets](https://www.kaggle.com/datasets)
+
+*Indicators | Data*. (s.f.). Recuperado 11 de septiembre de 2022, de [https://data.worldbank.org/indicator](https://data.worldbank.org/indicator)
+
+*Newest «r» Questions*. (s. f.). Stack Overflow. Recuperado 24 de abril de 2022, de [https://stackoverflow.com/questions/tagged/r](https://stackoverflow.com/questions/tagged/r)
+
+*Papers with Code—Machine Learning Datasets*. (s.f.). Recuperado 11 de septiembre de 2022, de [https://paperswithcode.com/datasets](https://paperswithcode.com/datasets)
+
+*R Language Definition*. (s. f.). Recuperado 24 de abril de 2022, de [https://cran.r-project.org/doc/manuals/r-release/R-lang.html](https://cran.r-project.org/doc/manuals/r-release/R-lang.html)
+
+*R Package Documentation*. (s.f.). Recuperado 11 de septiembre de 2022, de [https://rdrr.io/](https://rdrr.io/)
