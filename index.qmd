@@ -4,7 +4,7 @@ Este es un curso introductorio al procesamiento de datos geográficos mediante e
 
 Los estudiantes no requieren experiencia previa en programación de computadoras. Se recomienda que cuenten con conocimentos básicos de datos geoespaciales y sistemas de información geográfica.
 
-El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas con ejercicios de programación en las que los estudiantes aplican en diversos escenarios de procesamiento de datos las habilidades y conocimientos aprendidos. Tanto las lecciones teóricas como las prácticas se imparten de manera presencial, con apoyo de medios virtuales.
+El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas con ejercicios de programación en las que los estudiantes aplican en diversos escenarios de procesamiento de datos las habilidades y conocimientos aprendidos. Tanto las lecciones teóricas como las prácticas se imparten virtualmente.
 
 Además de este sitio, los contenidos del curso y los recursos relacionados se comparten en la plataforma [UCR Global](https://global.ucr.ac.cr) de la [Universidad de Costa Rica](https://www.ucr.ac.cr/). 
 
