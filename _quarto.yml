@@ -18,6 +18,8 @@ book:
     - part: "II El lenguaje de programación R"
       chapters:
         - 03-r.qmd
+        - 04-tidyverse.qmd
+        - 05-dplyr.qmd
 bibliography: referencias.bib
 csl: apa-6th-edition.csl
 

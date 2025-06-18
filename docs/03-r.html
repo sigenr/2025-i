@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; R - lenguaje de programación para análisis estadístico – SIG en R</title>
+<title>3&nbsp; R - lenguaje de programación para análisis estadístico – Sistemas de Información Geográfica en R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./04-tidyverse.html" rel="next">
 <link href="./02-introduccion-ciencia-datos.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -132,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">SIG en R</a> 
+      <a href="./">Sistemas de Información Geográfica en R</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -150,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./gf0604-procesamientodatosgeograficos-g001-2025-i.pdf" class="sidebar-item-text sidebar-link">
+  <a href="./programa-curso-sigenr-2025-i.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Programa del curso</span></a>
   </div>
 </li>
@@ -190,6 +191,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./03-r.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R - lenguaje de programación para análisis estadístico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tidyverse - colección de paquetes para ciencia de datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">dplyr - gramática para manipulación de datos</span></span></a>
   </div>
 </li>
       </ul>
@@ -282,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="el-ambiente-de-desarrollo-integrado-rstudio" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="el-ambiente-de-desarrollo-integrado-rstudio"><span class="header-section-number">3.4</span> El ambiente de desarrollo integrado RStudio</h2>
 <p><a href="https://posit.co/download/rstudio-desktop/">RStudio</a> es el IDE más popular para el lenguaje R. Está disponible en una versión de escritorio (RStudio Desktop) y en una versión para servidor (RStudio Server). Esta última permite la conexión de varios usuarios a través de un navegador web. RStudio se ofrece también como un servicio en la nube, a través de <a href="https://posit.cloud/">Posit Cloud</a>. La <a href="#fig-interfaz-rstudio" class="quarto-xref">Figura&nbsp;<span>3.1</span></a> muestra la interfaz de RStudio.</p>
-<div id="fig-interfaz-rstudio" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Interfaz del ambiente de desarrollo integrado RStudio">
+<div id="fig-interfaz-rstudio" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" alt="Interfaz del ambiente de desarrollo integrado RStudio" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-interfaz-rstudio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <a href="img/rstudio-interfaz.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;3.1: Interfaz del ambiente de desarrollo integrado RStudio."><img src="img/rstudio-interfaz.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Interfaz del ambiente de desarrollo integrado RStudio"></a>
@@ -302,7 +315,7 @@ Figura&nbsp;3.1: Interfaz del ambiente de desarrollo integrado RStudio.
 <li><a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a>.</li>
 </ol></li>
 <li><p>Cree un usuario en <a href="https://posit.cloud/">Posit Cloud</a>, para así poder usar RStudio en la nube.</p></li>
-<li><p>Cree un programa (<em>script</em>) de R en RStudio (con la opción de menú <em>File - New File - R Script</em>) y escriba y ejecute el código utilizado en el capítulo anterior para generar un gráfico que muestre el <a href="https://gf0604-procesamientodatosgeograficos.github.io/2025-i/02-introduccion-ciencia-datos.html#promedio-de-estatura-de-personas-adultas-por-sexo-1">promedio de estatura de personas adultas por sexo</a>.</p></li>
+<li><p>Cree un programa (<em>script</em>) de R en RStudio (con la opción de menú <em>File - New File - R Script</em>) y escriba y ejecute el código utilizado en el capítulo anterior para generar un gráfico que muestre el <a href="https://sigenr.github.io/2025-i/02-introduccion-ciencia-datos.html#promedio-de-estatura-de-personas-adultas-por-sexo-1">promedio de estatura de personas adultas por sexo</a>.</p></li>
 </ol>
 </section>
 <section id="conceptos-fundamentales" class="level2" data-number="3.5">
@@ -713,7 +726,7 @@ mean&gt; c(xm, mean(x, trim = 0.10))
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importar el CSV desde el repositorio del curso en GitHub</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>netflix <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"https://raw.githubusercontent.com/gf0604-procesamientodatosgeograficos/2025-i/refs/heads/main/datos/netflix/netflix_titles.csv"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"https://raw.githubusercontent.com/sigenr/2025-i/refs/heads/main/datos/netflix/netflix_titles.csv"</span></span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="creación-de-subconjuntos" class="level4" data-number="3.5.5.1">
@@ -989,7 +1002,7 @@ TV-Y7-FV       UR
 <span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Importar datos de NHANES (National Health and Nutrition Examination Survey)</span></span>
 <span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>nhanes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"https://raw.githubusercontent.com/gf0604-procesamientodatosgeograficos/2025-i/refs/heads/main/datos/nchs/nhanes.csv"</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"https://raw.githubusercontent.com/sigenr/2025-i/refs/heads/main/datos/nchs/nhanes.csv"</span></span>
 <span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
@@ -1607,7 +1620,7 @@ TV-Y7-FV       UR
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fecha actual</span></span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>fecha_actual <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>fecha_actual</span>
-<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "2025-06-03"</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "2025-06-18"</span></span>
 <span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Tipo de datos</span></span>
 <span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(fecha_actual)</span>
@@ -2832,6 +2845,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./04-tidyverse.html" class="pagination-link" aria-label="Tidyverse - colección de paquetes para ciencia de datos">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tidyverse - colección de paquetes para ciencia de datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
