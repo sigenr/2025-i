@@ -20,6 +20,11 @@ book:
         - 03-r.qmd
         - 04-tidyverse.qmd
         - 05-dplyr.qmd
+    - part: "III Herramientas para investigación reproducible y desarrollo colaborativo"
+      chapters:
+        - 06-markdown.qmd
+        - 07-git.qmd
+        - 08-quarto.qmd
 bibliography: referencias.bib
 csl: apa-6th-edition.csl
 

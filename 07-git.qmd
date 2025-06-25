@@ -1,0 +1,62 @@
+# Git - sistema de control de versiones {#sec-pencom}
+
+En este capítulo se introduce el sistema de control de versiones Git, el cual permite llevar un control de los cambios que se realizan en diversos tipos de archivos, incluyendo los que se efectúan en el código fuente durante el proceso de desarrollo de software.
+
+## Resumen
+
+Un sistema de control de versiones es una herramienta que ayuda a gestionar y registrar todos los cambios realizados en los archivos de un proyecto a lo largo del tiempo. De esta manera, se puede llevar un historial de modificaciones y, si es necesario, regresar a versiones anteriores, comparar diferentes etapas o ramas del proyecto y coordinar el trabajo de múltiples colaboradores.
+
+Git es un sistema de control de versiones muy popular que trabaja en forma distribuida. Cada colaborador posee una copia completa del repositorio del proyecto (conteniendo todas las versiones de los archivos) en su propia computadora. Gracias a esta arquitectura distribuida, cada colaborador puede trabajar de forma "desconectada" (ej. sin conexión a una red local o a Internet) y sincronizar sus archivos con un repositorio remoto mediante las operaciones **_push_** (para "subir" archivos) y **_pull_** (para "bajar" archivos).
+
+## Trabajo previo
+
+### Instalación de software
+Instale en su computadora el sistema [Git](https://git-scm.com/downloads)  
+
+### Tutoriales
+
+Abba, Ihechikara Vincent (2021). *Git and GitHub Tutorial – Version Control for Beginners*. freeCodeCamp.Org. [https://www.freecodecamp.org/news/git-and-github-for-beginners/](https://www.freecodecamp.org/news/git-and-github-for-beginners/)
+
+## Introducción
+
+[Git](https://git-scm.com/) es un sistema de [control de versiones](https://es.wikipedia.org/wiki/Control_de_versiones) diseñado para "rastrear" cambios en el código fuente durante el proceso de desarrollo de software. Sin embargo, puede ser utilizado para llevar el control de los cambios en cualquier conjunto de archivos (ej. [documentación](https://guides.github.com/features/wikis/), [música](https://techcrunch.com/2013/10/09/splice-music/)). 
+
+Un sistema de control de versiones proporciona, entre otras ventajas:
+
+* La capacidad de recuperar versiones anteriores de los archivos.
+* La capacidad de integrar modificaciones efectuadas por varias personas en el mismo conjunto de archivos.
+* La capacidad de mantener varias "ramas" (_branches_) de un producto (ej. "estable", "evaluación", "inestable", como en el caso de [Debian Linux](https://www.debian.org/releases/), [GRASS GIS](https://grass.osgeo.org/download/software/sources/) y muchos otros proyectos de software libre).
+* Facilidades para mantener redundancia y respaldos de los archivos (ej. [Programa de respaldos de GitHub](https://archiveprogram.github.com/)). Esta es una facilidad que implementan algunos servicios en la nube.
+
+Git fue diseñado por Linus Torvalds en 2005 durante del desarrollo del _kernel_ del sistema operativo Linux. Se caracteriza por ser un [sistema de control de versiones distribuido](https://es.wikipedia.org/wiki/Control_de_versiones_distribuido), lo que significa que el código fuente puede estar alojado en la estación de trabajo de cualquier miembro del equipo de desarrollo. No requiere un repositorio "central", pero también puede trabajar de esa forma.
+
+El protocolo de Git es utilizado en varios sitios que proveen servicios de alojamiento de software, entre los que están [SourceForge](https://sourceforge.net/), [Bitbucket](https://bitbucket.org/), [GitLab](https://about.gitlab.com/) y [GitHub](https://github.com/).
+
+## Operaciones de Git
+
+Desde el punto de vista de un usuario de Git (ej. un programador), Git se utiliza para sincronizar la versión local (i.e. en una computadora personal) de un conjunto de archivos, llamado proyecto o repositorio, con la versión que está alojada en un sistema remoto (ej. GitHub). Cada repositorio se almacena en un directorio (carpeta) del sistema operativo. La sincronización se realiza principalmente a través de dos operaciones:
+
+* **_push_**: para "subir" al repositorio remoto los cambios realizados en el repositorio local. Esta operación se realiza mediante el comando [git push](https://git-scm.com/docs/git-push). Es probable que el sistema remoto le solicite al usuario algún tipo de autenticación (ej. nombre de usuario y clave).
+* **_pull_**: para "bajar" al repositorio local los cambios realizados en el repositorio remoto. Esta operación se realiza mediante el comando [git pull](https://git-scm.com/docs/git-pull).
+
+Las operaciones _push_ y _pull_ se ilustran en la @fig-git-push-pull.
+
+![Operaciones _push_ y _pull_. Imagen de [Melinda Higgins](https://www.coursera.org/learn/reproducible-templates-analysis/lecture/NGbQv/git-and-github-part-1).](img/git-push-pull.png){#fig-git-push-pull .lightbox fig-alt="Operaciones push y pull" fig-align="center"}
+
+## Ejercicios
+
+1. En la interfaz de usuario de GitHub, realice un ***Fork*** (bifurcación) del repositorio [https://github.com/gf0604-procesamientodatosgeograficos/2025-i-mundo-mascota](https://github.com/gf0604-procesamientodatosgeograficos/2025-i-mundo-mascota) a su cuenta personal. La operación **fork** es una copia de un repositorio a otra cuenta. Así, es posible modificar libremente el repositorio copiado, pero con la posibilidad de integrar cambios del repositorio original, o viceversa. El botón para realizar la operación **fork** se encuentra en la parte superior derecha de la interfaz de usuario de GitHub.
+
+2. Con la opción de menú de RStudio *File - New Project - Version Control - Git*, realice un **clone** (clonación) del repositorio que bifurcó en el paso 1 a su computadora local. La operación **clone** en Git (y GitHub) sirve para crear una copia completa de un repositorio que está alojado en línea, por ejemplo en GitHub, a una computadora local. Para realizar esta operación, debe haber instalado el sistema Git en su computadora.
+
+3. Realice cambios en el repositorio clonado, súbalos (**push**) a su repostorio en GitHub y publíquelos en un sitio en GitHub Pages, como en los ejercicios que realizó en el capítulo sobre Markdown.
+
+## Recursos de interés
+
+*Git*. (s. f.). Recuperado 28 de agosto de 2022, de [https://git-scm.com/](https://git-scm.com/)
+
+*GitHub Archive Program*. (s. f.). GitHub Archive Program. Recuperado 10 de abril de 2022, de [https://archiveprogram.github.com/](https://archiveprogram.github.com/)
+
+Higgins, M. (s. f.). *Reproducible Templates for Analysis and Dissemination*. Coursera. Recuperado 11 de abril de 2022, de [https://www.coursera.org/learn/reproducible-templates-analysis](https://www.coursera.org/learn/reproducible-templates-analysis)
+
+Klavins, S. (2020). *Version Control part 1*. Medium. [https://stevenklavins94.medium.com/version-control-part-1-c5f1b43127f6](https://stevenklavins94.medium.com/version-control-part-1-c5f1b43127f6)

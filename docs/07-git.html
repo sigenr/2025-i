@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Manuel Vargas">
 
-<title>Sistemas de Información Geográfica en R</title>
+<title>7&nbsp; Git - sistema de control de versiones – Sistemas de Información Geográfica en R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./programa-curso-sigenr-2025-i.pdf" rel="next">
+<link href="./08-quarto.html" rel="next">
+<link href="./06-markdown.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -41,6 +41,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-72d6f479b1bbd4b353ed65bf78bcf884.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -81,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Bienvenida</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-markdown.html">III Herramientas para investigación reproducible y desarrollo colaborativo</a></li><li class="breadcrumb-item"><a href="./07-git.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Git - sistema de control de versiones</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -108,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bienvenida</span></a>
   </div>
 </li>
@@ -187,7 +190,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-git.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-git.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Git - sistema de control de versiones</span></span></a>
   </div>
 </li>
@@ -209,38 +212,32 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#bienvenida" id="toc-bienvenida" class="nav-link active" data-scroll-target="#bienvenida">Bienvenida</a></li>
-  <li><a href="#objetivos" id="toc-objetivos" class="nav-link" data-scroll-target="#objetivos">Objetivos</a></li>
-  <li><a href="#programa" id="toc-programa" class="nav-link" data-scroll-target="#programa">Programa</a></li>
-  <li><a href="#información-de-contacto" id="toc-información-de-contacto" class="nav-link" data-scroll-target="#información-de-contacto">Información de contacto</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link active" data-scroll-target="#resumen"><span class="header-section-number">7.1</span> Resumen</a></li>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link" data-scroll-target="#trabajo-previo"><span class="header-section-number">7.2</span> Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#instalación-de-software" id="toc-instalación-de-software" class="nav-link" data-scroll-target="#instalación-de-software"><span class="header-section-number">7.2.1</span> Instalación de software</a></li>
+  <li><a href="#tutoriales" id="toc-tutoriales" class="nav-link" data-scroll-target="#tutoriales"><span class="header-section-number">7.2.2</span> Tutoriales</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción"><span class="header-section-number">7.3</span> Introducción</a></li>
+  <li><a href="#operaciones-de-git" id="toc-operaciones-de-git" class="nav-link" data-scroll-target="#operaciones-de-git"><span class="header-section-number">7.4</span> Operaciones de Git</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">7.5</span> Ejercicios</a></li>
+  <li><a href="#recursos-de-interés" id="toc-recursos-de-interés" class="nav-link" data-scroll-target="#recursos-de-interés"><span class="header-section-number">7.6</span> Recursos de interés</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-markdown.html">III Herramientas para investigación reproducible y desarrollo colaborativo</a></li><li class="breadcrumb-item"><a href="./07-git.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Git - sistema de control de versiones</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Sistemas de Información Geográfica en R</h1>
+<h1 class="title"><span id="sec-pencom" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Git - sistema de control de versiones</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Autor/a</div>
-    <div class="quarto-title-meta-contents">
-             <p>Manuel Vargas </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Fecha de publicación</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">3 de junio de 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -250,42 +247,69 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="bienvenida" class="level1 unnumbered">
-<h1 class="unnumbered">Bienvenida</h1>
-<p>Este es un curso introductorio al procesamiento de datos geográficos mediante el lenguaje de programación R. También se estudian herramientas para facilitar la reproducibilidad de los procedimientos y la comunicación de las soluciones a través de Internet y otros medios.</p>
-<p>Los estudiantes no requieren experiencia previa en programación de computadoras. Se recomienda que cuenten con conocimentos básicos de datos geoespaciales y sistemas de información geográfica.</p>
-<p>El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas con ejercicios de programación en las que los estudiantes aplican en diversos escenarios de procesamiento de datos las habilidades y conocimientos aprendidos. Tanto las lecciones teóricas como las prácticas se imparten virtualmente.</p>
-<p>Además de este sitio, los contenidos del curso y los recursos relacionados se comparten en la plataforma <a href="https://global.ucr.ac.cr">UCR Global</a> de la <a href="https://www.ucr.ac.cr/">Universidad de Costa Rica</a>.</p>
-<p>Este curso forma parte del <a href="https://geografia.fcs.ucr.ac.cr/index.php/es/accion-social/procadi">Programa de Capacitación, Actualización y Divulgación de la Escuela de Geografía (PROCADI)</a>, iniciativa orientada a fortalecer el vínculo entre la universidad y la sociedad mediante la extensión docente.</p>
+<p>En este capítulo se introduce el sistema de control de versiones Git, el cual permite llevar un control de los cambios que se realizan en diversos tipos de archivos, incluyendo los que se efectúan en el código fuente durante el proceso de desarrollo de software.</p>
+<section id="resumen" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="resumen"><span class="header-section-number">7.1</span> Resumen</h2>
+<p>Un sistema de control de versiones es una herramienta que ayuda a gestionar y registrar todos los cambios realizados en los archivos de un proyecto a lo largo del tiempo. De esta manera, se puede llevar un historial de modificaciones y, si es necesario, regresar a versiones anteriores, comparar diferentes etapas o ramas del proyecto y coordinar el trabajo de múltiples colaboradores.</p>
+<p>Git es un sistema de control de versiones muy popular que trabaja en forma distribuida. Cada colaborador posee una copia completa del repositorio del proyecto (conteniendo todas las versiones de los archivos) en su propia computadora. Gracias a esta arquitectura distribuida, cada colaborador puede trabajar de forma “desconectada” (ej. sin conexión a una red local o a Internet) y sincronizar sus archivos con un repositorio remoto mediante las operaciones <strong><em>push</em></strong> (para “subir” archivos) y <strong><em>pull</em></strong> (para “bajar” archivos).</p>
 </section>
-<section id="objetivos" class="level1 unnumbered">
-<h1 class="unnumbered">Objetivos</h1>
-<p>Al finalizar el curso, el estudiantado será capaz de:</p>
+<section id="trabajo-previo" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="trabajo-previo"><span class="header-section-number">7.2</span> Trabajo previo</h2>
+<section id="instalación-de-software" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="instalación-de-software"><span class="header-section-number">7.2.1</span> Instalación de software</h3>
+<p>Instale en su computadora el sistema <a href="https://git-scm.com/downloads">Git</a></p>
+</section>
+<section id="tutoriales" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="tutoriales"><span class="header-section-number">7.2.2</span> Tutoriales</h3>
+<p>Abba, Ihechikara Vincent (2021). <em>Git and GitHub Tutorial – Version Control for Beginners</em>. freeCodeCamp.Org. <a href="https://www.freecodecamp.org/news/git-and-github-for-beginners/">https://www.freecodecamp.org/news/git-and-github-for-beginners/</a></p>
+</section>
+</section>
+<section id="introducción" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="introducción"><span class="header-section-number">7.3</span> Introducción</h2>
+<p><a href="https://git-scm.com/">Git</a> es un sistema de <a href="https://es.wikipedia.org/wiki/Control_de_versiones">control de versiones</a> diseñado para “rastrear” cambios en el código fuente durante el proceso de desarrollo de software. Sin embargo, puede ser utilizado para llevar el control de los cambios en cualquier conjunto de archivos (ej. <a href="https://guides.github.com/features/wikis/">documentación</a>, <a href="https://techcrunch.com/2013/10/09/splice-music/">música</a>).</p>
+<p>Un sistema de control de versiones proporciona, entre otras ventajas:</p>
+<ul>
+<li>La capacidad de recuperar versiones anteriores de los archivos.</li>
+<li>La capacidad de integrar modificaciones efectuadas por varias personas en el mismo conjunto de archivos.</li>
+<li>La capacidad de mantener varias “ramas” (<em>branches</em>) de un producto (ej. “estable”, “evaluación”, “inestable”, como en el caso de <a href="https://www.debian.org/releases/">Debian Linux</a>, <a href="https://grass.osgeo.org/download/software/sources/">GRASS GIS</a> y muchos otros proyectos de software libre).</li>
+<li>Facilidades para mantener redundancia y respaldos de los archivos (ej. <a href="https://archiveprogram.github.com/">Programa de respaldos de GitHub</a>). Esta es una facilidad que implementan algunos servicios en la nube.</li>
+</ul>
+<p>Git fue diseñado por Linus Torvalds en 2005 durante del desarrollo del <em>kernel</em> del sistema operativo Linux. Se caracteriza por ser un <a href="https://es.wikipedia.org/wiki/Control_de_versiones_distribuido">sistema de control de versiones distribuido</a>, lo que significa que el código fuente puede estar alojado en la estación de trabajo de cualquier miembro del equipo de desarrollo. No requiere un repositorio “central”, pero también puede trabajar de esa forma.</p>
+<p>El protocolo de Git es utilizado en varios sitios que proveen servicios de alojamiento de software, entre los que están <a href="https://sourceforge.net/">SourceForge</a>, <a href="https://bitbucket.org/">Bitbucket</a>, <a href="https://about.gitlab.com/">GitLab</a> y <a href="https://github.com/">GitHub</a>.</p>
+</section>
+<section id="operaciones-de-git" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="operaciones-de-git"><span class="header-section-number">7.4</span> Operaciones de Git</h2>
+<p>Desde el punto de vista de un usuario de Git (ej. un programador), Git se utiliza para sincronizar la versión local (i.e.&nbsp;en una computadora personal) de un conjunto de archivos, llamado proyecto o repositorio, con la versión que está alojada en un sistema remoto (ej. GitHub). Cada repositorio se almacena en un directorio (carpeta) del sistema operativo. La sincronización se realiza principalmente a través de dos operaciones:</p>
+<ul>
+<li><strong><em>push</em></strong>: para “subir” al repositorio remoto los cambios realizados en el repositorio local. Esta operación se realiza mediante el comando <a href="https://git-scm.com/docs/git-push">git push</a>. Es probable que el sistema remoto le solicite al usuario algún tipo de autenticación (ej. nombre de usuario y clave).</li>
+<li><strong><em>pull</em></strong>: para “bajar” al repositorio local los cambios realizados en el repositorio remoto. Esta operación se realiza mediante el comando <a href="https://git-scm.com/docs/git-pull">git pull</a>.</li>
+</ul>
+<p>Las operaciones <em>push</em> y <em>pull</em> se ilustran en la <a href="#fig-git-push-pull" class="quarto-xref">Figura&nbsp;<span>7.1</span></a>.</p>
+<div id="fig-git-push-pull" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" alt="Operaciones push y pull" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-git-push-pull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/git-push-pull.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;7.1: Operaciones push y pull. Imagen de Melinda Higgins."><img src="img/git-push-pull.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Operaciones push y pull"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-git-push-pull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;7.1: Operaciones <em>push</em> y <em>pull</em>. Imagen de <a href="https://www.coursera.org/learn/reproducible-templates-analysis/lecture/NGbQv/git-and-github-part-1">Melinda Higgins</a>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ejercicios" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">7.5</span> Ejercicios</h2>
 <ol type="1">
-<li>Aplicar el pensamiento computacional para resolver problemas mediante el lenguaje de programación R.</li>
-<li>Utilizar un enfoque de ciencia de datos para importar, procesar y visualizar datos.</li>
-<li>Desarrollar soluciones reproducibles a problemas computacionales.</li>
-<li>Programar gráficos estadísticos.</li>
-<li>Procesar datos geográficos.</li>
-<li>Desarrollar documentos y aplicaciones interactivas que incluyan visualizaciones como tablas, gráficos estadísticos y mapas, entre otras.</li>
+<li><p>En la interfaz de usuario de GitHub, realice un <strong><em>Fork</em></strong> (bifurcación) del repositorio <a href="https://github.com/gf0604-procesamientodatosgeograficos/2025-i-mundo-mascota">https://github.com/gf0604-procesamientodatosgeograficos/2025-i-mundo-mascota</a> a su cuenta personal. La operación <strong>fork</strong> es una copia de un repositorio a otra cuenta. Así, es posible modificar libremente el repositorio copiado, pero con la posibilidad de integrar cambios del repositorio original, o viceversa. El botón para realizar la operación <strong>fork</strong> se encuentra en la parte superior derecha de la interfaz de usuario de GitHub.</p></li>
+<li><p>Con la opción de menú de RStudio <em>File - New Project - Version Control - Git</em>, realice un <strong>clone</strong> (clonación) del repositorio que bifurcó en el paso 1 a su computadora local. La operación <strong>clone</strong> en Git (y GitHub) sirve para crear una copia completa de un repositorio que está alojado en línea, por ejemplo en GitHub, a una computadora local. Para realizar esta operación, debe haber instalado el sistema Git en su computadora.</p></li>
+<li><p>Realice cambios en el repositorio clonado, súbalos (<strong>push</strong>) a su repostorio en GitHub y publíquelos en un sitio en GitHub Pages, como en los ejercicios que realizó en el capítulo sobre Markdown.</p></li>
 </ol>
 </section>
-<section id="programa" class="level1 unnumbered">
-<h1 class="unnumbered">Programa</h1>
-<p><a href="programa-curso-sigenr-2025-i.pdf">Programa del curso</a></p>
-</section>
-<section id="información-de-contacto" class="level1 unnumbered">
-<h1 class="unnumbered">Información de contacto</h1>
-<p>Si tiene alguna pregunta o comentario sobre este curso, por favor contacte a:</p>
-<blockquote class="blockquote">
-<p>Manuel Vargas - manuel.vargas_d@ucr.ac.cr<br>
-Profesor<br>
-Universidad de Costa Rica,<br>
-Ciudad Universitaria Rodrigo Facio,<br>
-San Pedro de Montes de Oca,<br>
-Costa Rica.</p>
-</blockquote>
-<p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" alt="Licencia de Creative Commons" style="border-width:0"></a><br>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<section id="recursos-de-interés" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="recursos-de-interés"><span class="header-section-number">7.6</span> Recursos de interés</h2>
+<p><em>Git</em>. (s. f.). Recuperado 28 de agosto de 2022, de <a href="https://git-scm.com/">https://git-scm.com/</a></p>
+<p><em>GitHub Archive Program</em>. (s. f.). GitHub Archive Program. Recuperado 10 de abril de 2022, de <a href="https://archiveprogram.github.com/">https://archiveprogram.github.com/</a></p>
+<p>Higgins, M. (s. f.). <em>Reproducible Templates for Analysis and Dissemination</em>. Coursera. Recuperado 11 de abril de 2022, de <a href="https://www.coursera.org/learn/reproducible-templates-analysis">https://www.coursera.org/learn/reproducible-templates-analysis</a></p>
+<p>Klavins, S. (2020). <em>Version Control part 1</em>. Medium. <a href="https://stevenklavins94.medium.com/version-control-part-1-c5f1b43127f6">https://stevenklavins94.medium.com/version-control-part-1-c5f1b43127f6</a></p>
 
 
 </section>
@@ -710,14 +734,49 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./06-markdown.html" class="pagination-link" aria-label="Markdown - lenguaje de marcado">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Markdown - lenguaje de marcado</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./programa-curso-sigenr-2025-i.pdf" class="pagination-link" aria-label="Programa del curso">
-        <span class="nav-page-text">Programa del curso</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-quarto.html" class="pagination-link" aria-label="Quarto - sistema de publicación técnica y científica">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quarto - sistema de publicación técnica y científica</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

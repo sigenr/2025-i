@@ -415,5 +415,225 @@
       "II El lenguaje de programación R",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>dplyr - gramática para manipulación de datos</span>"
     ]
+  },
+  {
+    "objectID": "06-markdown.html",
+    "href": "06-markdown.html",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "",
+    "text": "6.1 Trabajo previo\nEn este capítulo se introduce el lenguaje de marcado ligero Markdown, el cual permite especificar la estructura, los estilos y la semántica de un documento. El Markdown es apropiado para intercalar texto con código fuente y sus salidas (ej. tablas, gráficos y mapas).",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#trabajo-previo",
+    "href": "06-markdown.html#trabajo-previo",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "",
+    "text": "6.1.1 Lecturas\nQuarto - Markdown Basics. (s.f.). Quarto. Recuperado el 1 de marzo de 2024, de https://quarto.org/docs/authoring/markdown-basics.html\n\n\n6.1.2 Tutoriales\nMarkdown Tutorial. (s.f.). Recuperado el 1 de marzo de 2024, de https://www.markdowntutorial.com/",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#introducción",
+    "href": "06-markdown.html#introducción",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "6.2 Introducción",
+    "text": "6.2 Introducción\nMarkdown es un lenguaje de marcado, creado en 2004 por John Gruber y Aaron Swartz. Las “marcas” se utilizan para especificar aspectos de la estructura (ej. títulos, encabezados), estilo (ej. negritas, itálicas) y semántica de un documento. Markdown se caracteriza por ser más sencillo de leer y de usar que otros lenguajes de marcado (ej. Lenguaje de Marcado de Hipertexto o HTML), por lo que se considera un lenguaje de marcado ligero.\nLos documentos escritos en Markdown pueden exportarse a una gran variedad de formatos (ej. HTML, DOC, PDF, LaTex) para ser usados en libros, presentaciones o páginas web, entre otros fines.\nLas variaciones de Markdown, también llamadas flavors, son extensiones o modificaciones de la especificación original. Entre las más populares están:\n\nR Markdown: para el lenguaje R.\nQuarto: es la “siguiente generación” de R Markdown, con soporte para más lenguajes de programación (Python, Julia, Observable, R) y motores de procesamiento (Jupyter, Knitr), entre otras mejoras. Más que una variación de Markdown es un sistema de publicación de documentos técnicos y científicos que utiliza Markdown.\nPython Markdown: para el lenguaje Python.\nGitHub Flavored Markdown: para la plataforma GitHub.\nPandoc’s Markdown: para el programa Pandoc de conversión entre formatos.\n\nPuede encontrarse una lista más extensa de variaciones de Markdown en Markdown Flavors.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#ejemplo-de-documento",
+    "href": "06-markdown.html#ejemplo-de-documento",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "6.3 Ejemplo de documento",
+    "text": "6.3 Ejemplo de documento\nEl siguiente es un ejemplo de documento Markdown. Se muestra primero la sintaxis del documento y luego la manera en la que se visualiza.\n\n6.3.1 Sintaxis\nLa sintaxis del documento incluye marcas para un encabezado, texto en negrita, texto en itálica, hipervínculos y una imagen.\n\n\n### Los satélites galileanos\n\nSe llaman **satélites galileanos** los cuatro satélites de\n[Júpiter](https://es.wikipedia.org/wiki/J%C3%BApiter_(planeta))\ndescubiertos en 1610 por el astrónomo italiano\n[Galileo Galilei](https://es.wikipedia.org/wiki/Galileo_Galilei) (1564 - 1642): \n*Ío*, *Europa*, *Ganimedes* y *Calisto*. \nSon los más grandes de los satélites de Júpiter, \nsiendo visibles incluso con telescopios de baja potencia.\n\n![](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Jupiter_and_the_Galilean_Satellites.jpg/168px-Jupiter_and_the_Galilean_Satellites.jpg)\n\n**Figura 1**. Los cuatro satélites galileanos, \nen una composición que compara sus tamaños con el tamaño de Júpiter. \nEn orden descendente, son *Ío*, *Europa*, *Ganimedes* y *Calisto*.\n\n\n\n\n6.3.2 Visualización\n\n\n\nLos satélites galileanos\nSe llaman satélites galileanos los cuatro satélites de Júpiter descubiertos en 1610 por el astrónomo italiano Galileo Galilei (1564 - 1642): Ío, Europa, Ganimedes y Calisto. Son los más grandes de los satélites de Júpiter, siendo visibles incluso con telescopios de baja potencia.\n\nFigura 1. Los cuatro satélites galileanos, en una composición que compara sus tamaños con el tamaño de Júpiter. En orden descendente, son Ío, Europa, Ganimedes y Calisto.\n\nEl contenido de este ejemplo está basado en Satélite galileano - Wikipedia, la enciclopedia libre.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#sintaxis-1",
+    "href": "06-markdown.html#sintaxis-1",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "6.4 Sintaxis",
+    "text": "6.4 Sintaxis\nEn esta sección, se muestran los principales elementos de sintaxis de Markdown y sus salidas.\n\n\n6.4.1 Encabezados\nHay seis niveles de encabezados en Markdown, siendo el nivel 1 el de letras más grandes y el 6 el de letras más pequeñas. Se especifican mediante símbolos de numeral (#) antes del texto del encabezado (note el espacio entre el último signo de numeral y el inicio del texto).\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n# Encabezado de nivel 1\n\n\n\nEncabezado de nivel 1\n\n\n\n\n\n## Encabezado de nivel 2\n\n\n\nEncabezado de nivel 2\n\n\n\n\n\n### Encabezado de nivel 3\n\n\n\nEncabezado de nivel 3\n\n\n\n\n\n#### Encabezado de nivel 4\n\n\n\nEncabezado de nivel 4\n\n\n\n\n\n##### Encabezado de nivel 5\n\n\n\nEncabezado de nivel 5\n\n\n\n\n\n###### Encabezado de nivel 6\n\n\n\nEncabezado de nivel 6\n\n\n\n\nPara los encabezados de nivel 1 y nivel 2, existe una sintaxis alterna, con símbolos de igual (=====) o guiones (-----) bajo el texto del encabezado.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\nOtro encabezado de nivel 1 ==========================\n\n\n\n\nOtro encabezado de nivel 1\n\n\n\n\n\nOtro encabezado de nivel 2 --------------------------\n\n\n\nOtro encabezado de nivel 2\n\n\n\n\n\n\n6.4.2 Párrafos\nLos párrafos deben separarse mediante (al menos) una línea en blanco.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\nEste es el texto que corresponde al primer párrafo de un documento.\nEste es el texto que corresponde al segundo párrafo de un documento.\n\n\nEste es el texto que corresponde al primer párrafo de un documento.\nEste es el texto que corresponde al segundo párrafo de un documento.\n\n\n\n\n\n6.4.3 Cambios de línea\nSi se requiere un cambio de línea sin una línea en blanco entre párrafos, pueden agregarse dos espacios en blanco al final de la línea () o también un espacio y una barra invertida (\\).\n\n\n6.4.4 Texto en negrita\nHay dos sintaxis para especificar texto en negrita: con dos asteriscos (**) o con dos guiones bajos (__), antes y después del texto.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n**Texto en negrita**\n\n\nTexto en negrita\n\n\n\n\n__Otro texto en negrita__\n\n\nOtro texto en negrita\n\n\n\n\n\n6.4.5 Texto en itálica\nHay dos sintaxis para especificar texto en itálica: con un asterisco (*) o con un guión bajo (_), antes y después del texto.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n*Texto en itálica*\n\n\nTexto en itálica\n\n\n\n\n_Otro texto en itálica_\n\n\nOtro texto en itálica\n\n\n\n\n\n6.4.6 Texto tachado\nEl texto tachado se especifica con dos guiones (--) antes y después del texto.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n--Texto tachado--\n\n\nTexto tachado\n\n\n\n\n\n6.4.7 Superíndices y subíndices\nUn superíndice se especifica con un acento circunflejo (^) antes y después del texto que se desea mostrar como superíndice. Un subíndice se especifica con un guión (-) antes y después del texto que se desea mostrar como subíndice.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\nsuperíndice^2^\n\n\nsuperíndice2\n\n\n\n\nsubíndice-2-\n\n\nsubíndice2\n\n\n\n\n\n6.4.8 Líneas horizontales\nTres o más asteriscos (***) generan una línea horizontal:\n***\n\nTambién puede generarse con tres o más guiones (---):\n---\n\n\n\n6.4.9 Citas textuales\nSe especifican con un símbolo de “mayor que” (&gt;) antes de cada línea.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n&gt; *And on the pedestal these words appear:*\n&gt; *\"My name is Ozymandias, king of kings:*\n&gt; *Look on my works, ye Mighty, and despair!\"*\nPercy Bysshe Shelley, \"Ozymandias\" (1818)\n\n\n\n And on the pedestal these words appear: “My name is Ozymandias, king of kings: Look on my works, ye Mighty, and despair!” \n\nPercy Bysshe Shelley, “Ozymandias” (1818)\n\n\n\n\n\n6.4.10 Enlaces (hipervínculos)\nSe definen con paréntesis cuadrados ([]) seguidos de paréntesis redondos (()). En los paréntesis cuadrados se coloca (opcionalmente) el texto del enlace y en los redondos la dirección del documento al que conduce el enlace.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n[Proyecto Gutenberg](https://www.gutenberg.org/)\n\n\nProyecto Gutenberg\n\n\n\n\n\n6.4.11 Imágenes\nSe definen con un signo de admiración de cierre (!), paréntesis cuadrados ([]) y paréntesis redondos (()). En los paréntesis cuadrados se coloca (opcionalmente) un texto alternativo de la imagen y en los redondos la dirección de la imagen, ya sea local o remota. Una imagen local se encuentra en la misma computadora en la que está el documento que la referencia, mientras que una imagen remota se encuentra en otra computadora a la que se accede mediante un protocolo de redes como el Protocolo de transferencia de hipertexto (HTTP).\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n![Imagen local](img/Jupiter_and_the_Galilean_Satellites.jpg)\n\n\n\n\n\n\n\n![Imagen remota](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Jupiter_and_the_Galilean_Satellites.jpg/168px-Jupiter_and_the_Galilean_Satellites.jpg)\n\n\n\n\n\n\nMarkdown no cuenta con sintaxis para especificar el tamaño de una imagen, pero esto puede lograrse con el Lenguaje de marcado de hipertexto (HTML, HyperText Markup Language), su elemento img y sus atributos height y width, los cuales especifican la altura y el ancho de una imagen (las unidades por defecto son pixeles).\nPor ejemplo, la expresión HTML:\n&lt;img src=\"img/Jupiter_and_the_Galilean_Satellites.jpg\" height=\"100\" alt=\"Imagen local\"&gt;\ngenera como salida una imagen de 100 pixeles de altura:\n\nSi se usa solo el atributo height, width se ajusta automáticamente y viceversa.\n\n\n6.4.12 Listas numeradas\nSe definen con números (1. 2. 3. ...) antes de cada elemento.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n1. Primer elemento.\n2. Segundo elemento.\n3. Tercer elemento.\n\n\n\n\nPrimer elemento.\nSegundo elemento.\nTercer elemento.\n\n\n\n\nLas listas numeradas pueden anidarse para mostrar la información de una forma jerárquica. Para crear un nivel de anidación, deben usarse sangrías con una cantidad de espacios consistente en toda la lista. La numeración se ordena automáticamente (incluso si hay errores).\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n1. Primer elemento\n            1. Elemento anidado\n            2. Elemento anidado\n2. Segundo elemento\n            1. Elemento anidado\n            2. Elemento anidado\n3. Tercer elemento\n            1. Elemento anidado\n            2. Elemento anidado\n\n\n\n\nPrimer elemento\n\nElemento anidado\nElemento anidado\n\nSegundo elemento\n\nElemento anidado\nElemento anidado\n\nTercer elemento\n\nElemento anidado\nElemento anidado\n\n\n\n\n\n\n\n6.4.13 Listas no numeradas\nSe definen con guiones (-), asteriscos (*) o signos de adición (+) antes de cada elemento.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n- Un elemento\n- Otro elemento\n- Otro elemento más\n\n\n\n\nUn elemento\n\nOtro elemento\n\nOtro elemento más\n\n\n\n\n\nLas listas no numeradas también pueden anidarse. Debe utilizarse un mínimo de dos espacios en los elementos anidados.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n- Un elemento\n            + Elemento anidado\n            + Elemento anidado\n- Otro elemento\n            + Elemento anidado\n            + Elemento anidado\n- Otro elemento más\n            + Elemento anidado\n            + Elemento anidado\n\n\n\n\nUn elemento\n\nElemento anidado\nElemento anidado\n\nOtro elemento\n\nElemento anidado\nElemento anidado\n\nOtro elemento más\n\nElemento anidado\nElemento anidado\n\n\n\n\n\nLas listas numeradas y las no numeradas pueden intercalarse.\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\n1. Primer elemento\n            - Elemento anidado\n            - Elemento anidado\n2. Segundo elemento\n            - Elemento anidado\n            - Elemento anidado\n3. Tercer elemento\n            - Elemento anidado\n            - Elemento anidado\n\n\n\n\nPrimer elemento\n\nElemento anidado\nElemento anidado\n\nSegundo elemento\n\nElemento anidado\nElemento anidado\n\nTercer elemento\n\nElemento anidado\nElemento anidado\n\n\n\n\n\n\n\n6.4.14 Notación matemática\nLas expresiones en notación matemática (ej. ecuaciones) se escriben con base en la sintaxis de LaTeX. Se delimitan (al inicio y al final) con:\n\nUn símbolo de dólar ($), para ecuaciones dentro de un renglón (inline math).\nDos símbolos de dólar ($$), para ecuaciones en su propio bloque (display math).\n\n\n\n\nSintaxis Markdown\n\n\nSalida\n\n\n\n\nEquivalencia entre masa y energía: $E = mc^{2}$\n\n\n\nEquivalencia entre masa y energía: \\(E = mc^{2}\\)\n\n\n\n\nEquivalencia entre masa y energía: $$E = mc^{2}$$\n\n\nEquivalencia entre masa y energía:\n\\[E = mc^{2}\\]\n\n\n\nPara más detalles sobre la sintaxis de las expresiones matemáticas, se recomienda consultar:\n\nWriting mathematical expressions - GitHub Docs\nLaTeX/Mathematics\n\n\n\n6.4.15 Bloques de código fuente\nLos documentos Markdown pueden contener bloques de código fuente, ya sea incrustados en una línea de texto (inline) o en líneas separadas.\n\n6.4.15.1 Bloques en línea\nPara mostrar fragmentos cortos de código en una sola línea dentro del texto, se usa una sola comilla invertida o backtick para delimitar el código.\nPor ejemplo, la sintaxis:\nEste es un fragmento de código en línea: `x = 10`\ngenera:\nEste es un fragmento de código en línea: x = 10\n\n\n6.4.15.2 Bloques multilínea\nPara fragmentos de código de múltiples líneas, se utilizan tres comillas invertidas o una sangría de cuatro espacios al inicio de cada línea.\nEl siguiente es un ejemplo de bloque de código delimitado con comillas invertidas (la forma más usada):\n\n```\nfunction sumar(a, b) {\n  return a + b;\n}\n```\n\nSe visualiza como:\nfunction sumar(a, b) {\n  return a + b;\n}\nSi el código es de un lenguaje específico, puede indicarse para resaltar (y colorear) la sintaxis. Por ejemplo, para un bloque de código en R, se escribe r después de las tres comillas invertidas.\nSintaxis de código en R:\n\n```r\n# Gráfico de dispersón del conjunto de datos cars con etiquetas en los ejes x e y\nplot(\n  x=cars$speed,\n  y=cars$dist,\n  xlab=\"Velocidad (mph)\", \n  ylab=\"Distancia requerida para frenar (pies)\"\n)\n```\n\nVisualización de código en R:\n# Gráfico de dispersón del conjunto de datos cars con etiquetas en los ejes x e y\nplot(\n  x=cars$speed,\n  y=cars$dist,\n  xlab=\"Velocidad (mph)\", \n  ylab=\"Distancia requerida para frenar (pies)\"\n)\nEl uso de resaltado de sintaxis con bloques de código lo hace más fácil de leer y comprender. El resultado (colores, fuentes de texto, etc.) de sintaxis depende de la plataforma o editor de Markdown que se utilice. Plataformas como GitHub y algunos editores soportan muchos lenguajes, mientras que otros pueden no reconocer todos.\nPara más información sobre el uso de bloques de código en documentos Markdown, se recomienda consultar:\n\nCreating and highlighting code blocks\nThe languages YAML file\nMarkdown Code Block: Including Code In .md Files - Markdown Land\n\nNótese que los bloques de código en un documento Markdown normal (con extensión .md) no se ejecutan, solo se muestran. Sin embargo, hay sistemas como Quarto y Jupyter Notebooks que permiten combinar narrativa em Markdown con bloques de código ejecutables.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#ejercicios",
+    "href": "06-markdown.html#ejercicios",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "6.5 Ejercicios",
+    "text": "6.5 Ejercicios\n\nEn RStudio, cree un nuevo proyecto con la opción File - New Project - New Directory - New Project de RStudio.\nEn el nuevo proyecto, cree un nuevo documento Markdown con la opción File - New File - Markdown File de RStudio. y escriba en este un breve curriculum académico o profesional (o cualquier otro tema que sea de su interés: su trabajo final de graduación, un proyecto personal, etc).\n\nIncluya información como: nombre, fotografía, datos de contacto, áreas de interés, carrera, cursos aprobados, publicaciones, etc.\nPuede usar información ficticia (no incluya datos confidenciales o sensibles).\nEspecifique la fuente de las imágenes (y de cualquier otra información para la que sea necesario) y no utilice imágenes para las que no tiene autorización. Considere utilizar sitios con imágenes con licencias abiertas (ej. Wikimedia Commons, Unsplash, FreeImages).\nAsegúrese de utilizar los siguientes elementos de sintaxis Markdown:\n\nEncabezados de varios niveles.\nNegritas e itálicas.\nListas.\nEnlaces a sitios web.\nImágenes (al menos una local y una remota).\n\n\nGuarde el documento con el nombre README.md (RStudio asigna la extensión automáticamente).\nCree una cuenta gratuita en la plataforma de desarrollo colaborativo de software GitHub.\nCree un repositorio vacío en su cuenta en GitHub (ej. curriculum-vitae).\nSuba al nuevo repositorio el archivo README.md junto con cualquier otro documento asociado (ej. imágenes).\nGenere un sitio web en el servicio de alojamiento GitHub Pages con la opción Settings - Pages - Branch - main - Save de GitHub.\nRepita los pasos 6 y 7 para cada modificación que realice en el documento Markdown.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "06-markdown.html#recursos-de-interés",
+    "href": "06-markdown.html#recursos-de-interés",
+    "title": "6  Markdown - lenguaje de marcado",
+    "section": "6.6 Recursos de interés",
+    "text": "6.6 Recursos de interés\nDaring Fireball: Markdown. (s. f.). Recuperado 25 de marzo de 2023, de https://daringfireball.net/projects/markdown/\nLaTeX/Mathematics—Wikibooks, open books for an open world. (s. f.). Recuperado 25 de marzo de 2023, de https://en.wikibooks.org/wiki/LaTeX/Mathematics\nMarkdown Guide. (s. f.). Recuperado 10 de abril de 2022, de https://www.markdownguide.org/\nWriting mathematical expressions. (s. f.). GitHub Docs. Recuperado 25 de marzo de 2023, de https://ghdocs-prod.azurewebsites.net/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Markdown - lenguaje de marcado</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html",
+    "href": "07-git.html",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "",
+    "text": "7.1 Resumen\nEn este capítulo se introduce el sistema de control de versiones Git, el cual permite llevar un control de los cambios que se realizan en diversos tipos de archivos, incluyendo los que se efectúan en el código fuente durante el proceso de desarrollo de software.\nUn sistema de control de versiones es una herramienta que ayuda a gestionar y registrar todos los cambios realizados en los archivos de un proyecto a lo largo del tiempo. De esta manera, se puede llevar un historial de modificaciones y, si es necesario, regresar a versiones anteriores, comparar diferentes etapas o ramas del proyecto y coordinar el trabajo de múltiples colaboradores.\nGit es un sistema de control de versiones muy popular que trabaja en forma distribuida. Cada colaborador posee una copia completa del repositorio del proyecto (conteniendo todas las versiones de los archivos) en su propia computadora. Gracias a esta arquitectura distribuida, cada colaborador puede trabajar de forma “desconectada” (ej. sin conexión a una red local o a Internet) y sincronizar sus archivos con un repositorio remoto mediante las operaciones push (para “subir” archivos) y pull (para “bajar” archivos).",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html#trabajo-previo",
+    "href": "07-git.html#trabajo-previo",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "7.2 Trabajo previo",
+    "text": "7.2 Trabajo previo\n\n7.2.1 Instalación de software\nInstale en su computadora el sistema Git\n\n\n7.2.2 Tutoriales\nAbba, Ihechikara Vincent (2021). Git and GitHub Tutorial – Version Control for Beginners. freeCodeCamp.Org. https://www.freecodecamp.org/news/git-and-github-for-beginners/",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html#introducción",
+    "href": "07-git.html#introducción",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "7.3 Introducción",
+    "text": "7.3 Introducción\nGit es un sistema de control de versiones diseñado para “rastrear” cambios en el código fuente durante el proceso de desarrollo de software. Sin embargo, puede ser utilizado para llevar el control de los cambios en cualquier conjunto de archivos (ej. documentación, música).\nUn sistema de control de versiones proporciona, entre otras ventajas:\n\nLa capacidad de recuperar versiones anteriores de los archivos.\nLa capacidad de integrar modificaciones efectuadas por varias personas en el mismo conjunto de archivos.\nLa capacidad de mantener varias “ramas” (branches) de un producto (ej. “estable”, “evaluación”, “inestable”, como en el caso de Debian Linux, GRASS GIS y muchos otros proyectos de software libre).\nFacilidades para mantener redundancia y respaldos de los archivos (ej. Programa de respaldos de GitHub). Esta es una facilidad que implementan algunos servicios en la nube.\n\nGit fue diseñado por Linus Torvalds en 2005 durante del desarrollo del kernel del sistema operativo Linux. Se caracteriza por ser un sistema de control de versiones distribuido, lo que significa que el código fuente puede estar alojado en la estación de trabajo de cualquier miembro del equipo de desarrollo. No requiere un repositorio “central”, pero también puede trabajar de esa forma.\nEl protocolo de Git es utilizado en varios sitios que proveen servicios de alojamiento de software, entre los que están SourceForge, Bitbucket, GitLab y GitHub.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html#operaciones-de-git",
+    "href": "07-git.html#operaciones-de-git",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "7.4 Operaciones de Git",
+    "text": "7.4 Operaciones de Git\nDesde el punto de vista de un usuario de Git (ej. un programador), Git se utiliza para sincronizar la versión local (i.e. en una computadora personal) de un conjunto de archivos, llamado proyecto o repositorio, con la versión que está alojada en un sistema remoto (ej. GitHub). Cada repositorio se almacena en un directorio (carpeta) del sistema operativo. La sincronización se realiza principalmente a través de dos operaciones:\n\npush: para “subir” al repositorio remoto los cambios realizados en el repositorio local. Esta operación se realiza mediante el comando git push. Es probable que el sistema remoto le solicite al usuario algún tipo de autenticación (ej. nombre de usuario y clave).\npull: para “bajar” al repositorio local los cambios realizados en el repositorio remoto. Esta operación se realiza mediante el comando git pull.\n\nLas operaciones push y pull se ilustran en la Figura 7.1.\n\n\n\n\n\n\nFigura 7.1: Operaciones push y pull. Imagen de Melinda Higgins.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html#ejercicios",
+    "href": "07-git.html#ejercicios",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "7.5 Ejercicios",
+    "text": "7.5 Ejercicios\n\nEn la interfaz de usuario de GitHub, realice un Fork (bifurcación) del repositorio https://github.com/gf0604-procesamientodatosgeograficos/2025-i-mundo-mascota a su cuenta personal. La operación fork es una copia de un repositorio a otra cuenta. Así, es posible modificar libremente el repositorio copiado, pero con la posibilidad de integrar cambios del repositorio original, o viceversa. El botón para realizar la operación fork se encuentra en la parte superior derecha de la interfaz de usuario de GitHub.\nCon la opción de menú de RStudio File - New Project - Version Control - Git, realice un clone (clonación) del repositorio que bifurcó en el paso 1 a su computadora local. La operación clone en Git (y GitHub) sirve para crear una copia completa de un repositorio que está alojado en línea, por ejemplo en GitHub, a una computadora local. Para realizar esta operación, debe haber instalado el sistema Git en su computadora.\nRealice cambios en el repositorio clonado, súbalos (push) a su repostorio en GitHub y publíquelos en un sitio en GitHub Pages, como en los ejercicios que realizó en el capítulo sobre Markdown.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "07-git.html#recursos-de-interés",
+    "href": "07-git.html#recursos-de-interés",
+    "title": "7  Git - sistema de control de versiones",
+    "section": "7.6 Recursos de interés",
+    "text": "7.6 Recursos de interés\nGit. (s. f.). Recuperado 28 de agosto de 2022, de https://git-scm.com/\nGitHub Archive Program. (s. f.). GitHub Archive Program. Recuperado 10 de abril de 2022, de https://archiveprogram.github.com/\nHiggins, M. (s. f.). Reproducible Templates for Analysis and Dissemination. Coursera. Recuperado 11 de abril de 2022, de https://www.coursera.org/learn/reproducible-templates-analysis\nKlavins, S. (2020). Version Control part 1. Medium. https://stevenklavins94.medium.com/version-control-part-1-c5f1b43127f6",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Git - sistema de control de versiones</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html",
+    "href": "08-quarto.html",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "",
+    "text": "8.1 Resumen\nEn este capítulo se introduce el sistema de publicación técnica y científica Quarto, el cual permite crear contenido dinámico mediante lenguajes de programación y Markdown.\nQuarto es una herramienta de publicación de documentos y creación de contenido desarrollada por Posit (anteriormente RStudio). Se diseñó para facilitar la elaboración de informes, artículos, libros, páginas web y presentaciones de manera reproducible y dinámica, integrando texto, código y resultados en un solo entorno.\nUn documento Quarto se compone de metadatos, narrativa y código fuente.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#trabajo-previo",
+    "href": "08-quarto.html#trabajo-previo",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.2 Trabajo previo",
+    "text": "8.2 Trabajo previo\n\n8.2.1 Lecturas\nQuarto - Tutorial: Hello, Quarto. (s.f.). Quarto. Recuperado el 1 de marzo de 2024, de https://quarto.org/docs/get-started/hello/rstudio.html",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#introducción",
+    "href": "08-quarto.html#introducción",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.3 Introducción",
+    "text": "8.3 Introducción\nQuarto es un sistema de publicación de documentos técnicos y científicos, basado en código abierto. Entre sus principales capacidades están:\n\nCrear contenido dinámico con los lenguajes R, Python, Julia y Observable.\nCrear documentos Markdown de texto plano o cuadernos de notas de Jupyter.\nPublicar artículos académicos, reportes, presentaciones, sitios web, blogs y libros en HTML, PDF, MS Word, ePub y otros formatos.\nCrear contenido científico, incluyendo ecuaciones, citas bibliográficas, referencias cruzadas, figuras y otros elementos.\n\nQuarto es la siguiente generación de R Markdown, un formato que permite insertar código en R, y sus salidas, en documentos escritos en Markdown. R Markdown fue introducido por Yihui Xie en 2012, junto con el paquete knitr, cuyo propósito es facilitar la investigación reproducible en R a través de la programación literaria (literate programming), un paradigma de programación propuesto por Donald Knuth en 1984.\nLos programas “literarios” (o “letrados”) están escritos como una exposición lógica en un lenguaje humano similar a la explicación de las fórmulas y ecuaciones empleadas para representar y resolver un problema en un texto de física o de matemáticas. En estos programas, se describe el análisis del problema, su solución y su implementación, intercalando código fuente entre los párrafos (y otros contenidos como imágenes, tablas, gráficos estadísticos y mapas), de forma similar a como en los textos de matemáticas se intercalan las fórmulas y las ecuaciones. La programación literaria puede mejorar enormemente un programa, ya que permite documentar ampliamente en qué consiste el problema a resolver, cómo se resuelve, cómo y por qué se adoptó cierto diseño, cómo se optimizó y cómo se implementó en un lenguaje de programación.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#anatomía-de-un-documento-quarto",
+    "href": "08-quarto.html#anatomía-de-un-documento-quarto",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.4 Anatomía de un documento Quarto",
+    "text": "8.4 Anatomía de un documento Quarto\nUn documento Quarto tiene tres tipos de contenido:\n\nMetadatos en YAML.\nNarrativa en Markdown.\nBloques de código fuente.\n\n\n8.4.1 Metadatos en YAML\nTodo documento Quarto inicia con un encabezado en la sintaxis YAML (YAML Ain’t Markup Language), el cual contiene metadatos del documento como el título, el autor, la fecha de creación, el formato de salida y la estructura de la tabla de contenidos, entre muchos otros.\nUn encabezado YAML comienza y termina con tres guiones (---) y contiene un conjunto de campos y valores de la forma:\n---\ncampo01: valor01\ncampo02: valor02\ncampo0n: valor0n\n---\nPor ejemplo, un encabezado YAML típico puede ser el siguiente:\n---\ntitle: Mi primer documento Quarto\nformat:\n  html:\n    toc: true\n    toc_float: true\n---\nLos campos del encabezado que dependen de otros campos se anidan con sangrías de dos espacios.\nLos elementos de metadatos que pueden especificarse en el encabezado, pueden variar de acuerdo al formato de salida, como puede verse en los siguientes enlaces:\n\nElementos de metadatos para HTML\nElementos de metadatos para PDF\nElementos metadatos para MS Word\n\nExisten elementos de metadatos para muchos otros formatos de salida (OpenOffice, ePub, presentaciones, wikis, etc.), como puede apreciarse en la Referencia de Quarto.\n\n\n8.4.2 Narrativa en Markdown\nLa narrativa proporciona estructura y contenido al documento en la forma de encabezados, párrafos, enlaces y otros elementos de la sintaxis de Markdown.\n\n\n8.4.3 Bloques de código fuente\nEn Quarto, los bloques (chunks) de código fuente se delimitan con tres backticks, tanto al inicio como al final del bloque. Los bloques de código en R se identifican con {r} y diferentes opciones identificadas con #|. Los bloques de otros lenguajes de programación se identifican con {python} y {julia}, por ejemplo.\nEl siguiente es un ejemplo de bloque de código en R y su salida:\n```{r}\n#| label: graficacion-cars\n#| include: true\n#| echo: false\n\nplot(\n  x = cars$speed,\n  y = cars$dist,\n  main = \"Velocidad vs distancia de frenado\",\n  xlab = \"Velocidad (MPH)\",\n  ylab = \"Distancia (pies)\"\n)\n```\n\n\n\n\n\n\n\n\n\nLa opción label se utiliza para etiquetar el bloque y la de include para especificar si se desea que el bloque y sus resultados se incluyan en el documento de salida.\nLa documentación de las diferentes opciones disponibles para los bloques de código que utilizan el motor (engine) Knitr (el más utilizado con R) se encuentra en Code Cells: Knitr - Quarto.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#cómo-funciona-quarto",
+    "href": "08-quarto.html#cómo-funciona-quarto",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.5 ¿Cómo funciona Quarto?",
+    "text": "8.5 ¿Cómo funciona Quarto?\nQuarto se apoya en knitr y en Pandoc. knitr ejecuta el código en R (u otro lenguaje) y convierte los documentos a Markdown. Por su parte, Pandoc exporta los documentos Markdown al formato de salida deseado (ej. HTML, PDF, MS Word, MS PowerPoint). Este proceso se ilustra en la Figura 8.1.\n\n\n\n\n\n\nFigura 8.1: Conversión de un documento Quarto (.qmd) a su formato de salida. Imagen de quarto.org.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#ejercicios",
+    "href": "08-quarto.html#ejercicios",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.6 Ejercicios",
+    "text": "8.6 Ejercicios\nCon Quarto, cree un sitio web en GitHub Pages que muestre los gráficos que programó en la tarea 1 de este curso.\nSeguidamente, se sugiere una serie de pasos para elaborar el sitio.\n\nCree un nuevo proyecto con la opción File - New Project - New Directory - New Project de RStudio.\nEn el nuevo proyecto, cree un nuevo documento con la opción File - New File - Quarto Document de RStudio. Llene los metadatos (título, autor, etc.). Elija HTML como formato de salida.\nGuarde el documento con el nombre index.qmd (RStudio asigna la extensión automáticamente).\nAl inicio del documento, agregue narrativa en Markdown que explique el contenido, la fuente de los datos y la dirección del repositorio en GitHub con el código fuente (este repositorio se crea en un paso posterior).\nAgregue los gráficos y los comentarios de la tarea 1 mediante bloques de código en R y narrativa en Markdown. Divida el documento en secciones mediante el uso de encabezados. Se recomienda asignar una etiqueta a cada bloque de código con la opción #| label:. Considere el uso de otras etiquetas Quarto para, por ejemplo, controlar el despliegue de las salidas y del código fuente.\nPresione el botón Render de RStudio para generar el archivo index.html. Este será el arhivo que se desplegará en GitHub Pages.\nCree un repositorio vacío en su cuenta en GitHub (ej. graficos-base-r).\nSuba al nuevo repositorio los archivos index.qmd e index.html.\nGenere el sitio en GitHub Pages con la opción Settings - Pages - Branch - main - Save de GitHub.\nRepita los pasos 6, 8 y 9 para cada modificación que realice en el documento Quarto.",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
+  },
+  {
+    "objectID": "08-quarto.html#recursos-de-interés",
+    "href": "08-quarto.html#recursos-de-interés",
+    "title": "8  Quarto - sistema de publicación técnica y científica",
+    "section": "8.7 Recursos de interés",
+    "text": "8.7 Recursos de interés\nCode Cells: Knitr - Quarto (opciones para bloques de código). (s. f.). Recuperado el 26 de setiembre de 2024, de Code Cells: Knitr - Quarto",
+    "crumbs": [
+      "III Herramientas para investigación reproducible y desarrollo colaborativo",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Quarto - sistema de publicación técnica y científica</span>"
+    ]
   }
 ]
