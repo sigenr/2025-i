@@ -25,6 +25,9 @@ book:
         - 06-markdown.qmd
         - 07-git.qmd
         - 08-quarto.qmd
+    - part: "IV Graficación estadística en R"
+      chapters:
+        - 09-ggplot2-plotly.qmd
 bibliography: referencias.bib
 csl: apa-6th-edition.csl
 

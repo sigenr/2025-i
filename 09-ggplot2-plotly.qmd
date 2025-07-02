@@ -1,0 +1,951 @@
+# ggplot2 y plotly - creación declarativa de gráficos interactivos
+
+En este capítulo se presentan los paquetes de graficación ggplot2 y plotly. El primero permite generar gráficos mediante un enfoque declarativo mientras que el segundo les proporciona interactividad.
+
+## Trabajo previo
+
+### Lecturas
+
+Chang, W. (2018). *R graphics cookbook: Practical recipes for visualizing data*. O'Reilly. <https://r-graphics.org/>
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (s. f.). *R for Data Science (2nd ed.)* (capítulo 2). <https://r4ds.hadley.nz/>
+
+Wickham, H., Navarro, D., & Pedersen, T. L. (s.f.). *ggplot2: Elegant graphics for data analysis*. <https://ggplot2-book.org/>
+
+## Introducción
+
+R proporciona una gran cantidad de funciones para la elaboración de gráficos estadísticos y otros tipos de visualizaciones. El paquete base de R, por ejemplo, contiene un conjunto básico de funciones muy versátiles, especialmente para gráficos simples de conjuntos de datos relativamente pequeños. Sin embargo, para visualizaciones más avanzadas, puede ser conveniente explorar otras bibliotecas.
+
+ggplot2 es una de las bibliotecas más populares de graficación de R. Implementa el concepto de "gramática de gráficos", que permite crear visualizaciones complejas a partir de capas y componentes simples. Forma parte de Tidyverse, por lo que se comunica muy bien con los demás paquetes de esta familia, enfocada en conjuntos de datos grandes y en ciencia de datos en general. 
+
+plotly es una biblioteca para crear gráficos interactivos y dinámicos. Incluye capacidades para agregar controles y mecanismos que le permiten al usuario interactuar con los gráficos y realizar operaciones como filtrados, acercamientos y alejamientos, entre otras.
+
+Adicionalmente, el paquete DT permite presentar conjuntos de datos en tablas interactivas en las que se pueden realizar operaciones como ordenamientos, consultas y filtrados.
+
+## Instalación y carga
+
+Los paquetes necesarios pueden instalarse con la función `install.packages()`. Ya que se usaron en capítulos anteriores, en este punto se asumen instalados los paquetes de Tidyverse.
+
+```{r}
+#| label: instalacion-paquetes
+#| eval: false
+
+# Instalación de plotly
+install.packages("plotly")
+
+# Instalación de DT
+install.packages("DT")
+```
+
+Una vez instalados, los paquetes pueden cargarse con la función `library()`:
+
+```{r}
+#| label: carga-paquetes
+#| message: false
+
+# Carga conjunta de Tidyverse 
+# (incluye ggplot2, dplyr, readr y otros)
+library(tidyverse)
+
+# Carga de plotly
+library(plotly)
+
+# Carga de DT
+library(DT)
+
+# Carga de scales (para formatear ejes y leyendas en los gráficos)
+library(scales)
+```
+
+## Conjuntos de datos de ejemplo
+
+### Países
+
+Se carga un archivo CSV con los datos de países de Natural Earth unidos con los del indicador de esperanza de vida al nacer en 2022 del Banco Mundial (columna `LIFE_EXPECTANCY`). También incluye la columna correspondiente al producto interno bruto per cápita (columna `GDP_PC`).
+
+```{r}
+#| label: carga-paises
+#| message: false
+
+# Carga de los datos de países
+paises <- read_csv(
+  "https://raw.githubusercontent.com/sigenr/2025-i/refs/heads/main/datos/natural-earth/paises.csv"
+)
+```
+
+En el siguiente bloque de código, se utiliza la función [datatable()](https://rdrr.io/cran/DT/man/datatable.html) del paquete [DT](https://rstudio.github.io/DT/), para desplegar las observaciones de países en una tabla.
+
+```{r}
+#| label: tabla-paises
+
+# Tabla de datos de paises
+paises |> datatable(
+  options = list(
+    pageLength = 5,
+    language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+  )
+)
+```
+
+DT es un "envoltorio" (*wrapper*) de la biblioteca [DataTables](https://datatables.net/) de [JavaScript](https://es.wikipedia.org/wiki/JavaScript), un lenguaje ampliamente utilizado en el desarrollo de páginas web interactivas.
+
+## Paquetes de graficación
+
+Se introducen los paquetes de graficación estadística ggplot2 y plotly. Se utiliza ggplot2 para elaborar los gráficos y plotly para hacerlos interactivos.
+
+### ggplot2
+
+[ggplot2](https://ggplot2.tidyverse.org/) es un sistema para la creación declarativa de gráficos, creado por Hadley Wickham en 2005. Está basado en el libro [*The Grammar of Graphics*, de Leland Wilkinson](https://www.springer.com/gp/book/9780387245447), un esquema general para visualización de datos que descompone un gráfico en sus principales componentes semánticos, tales como capas y geometrías.
+
+#### Principales componentes de un gráfico
+
+De acuerdo con *The Grammar of Graphics*, los tres principales componentes de un gráfico son:
+
+1.  Datos (observaciones y variables).
+2.  Conjunto de mapeos de las variables del conjunto de datos a propiedades visuales (*aesthetics*) del gráfico, tales como posición en el eje x, posición en el eje y, color, tamaño y forma, entre otras.
+3.  Al menos una capa, la cual describe como graficar cada observación. Por lo general, las capas se crean con funciones de geometrías (ej. puntos, líneas, barras).
+
+#### Opciones básicas
+
+ggplot2 implementa un gráfico estadístico por medio de la función [ggplot()](https://ggplot2.tidyverse.org/reference/ggplot.html), cuya sintaxis básica puede resumirse de la siguiente forma:
+
+```
+ggplot(data = <DATOS>) + 
+    <FUNCION_GEOMETRIA>(mapping = aes(<MAPEOS>))
+```
+
+El llamado a `ggplot()` crea un sistema de coordenadas (i.e. un "canvas"), al cual se le agregan capas. Su primer argumento es `<DATOS>`, el cual es usualmente un dataframe o un tibble.
+
+La función [aes()](https://ggplot2.tidyverse.org/reference/aes.html) realiza los mapeos (`<MAPEOS>`) de las variables del conjunto de datos a las propiedades visuales del gráfico. Las capas se crean con funciones de geometrías (`<FUNCION_GEOMETRIA>`) como [geom_point()](https://ggplot2.tidyverse.org/reference/geom_point.html), [geom_bar()](https://ggplot2.tidyverse.org/reference/geom_bar.html) o [geom_histogram()](https://ggplot2.tidyverse.org/reference/geom_histogram.html), entre muchas otras. Note el uso del operador `+` para agregar las capas al gráfico.
+
+Como ejemplo, seguidamente se crea un [gráfico de dispersión](https://es.wikipedia.org/wiki/Diagrama_de_dispersi%C3%B3n) que muestra la variable producto interno bruto (PIB) per cápita (`GDP_PC`) en el eje X, y la variable esperanza de vida al nacer (`LIFE_EXPECTANCY`) en el eje Y.
+
+```{r}
+#| label: grafico-dispersion-paises-basico
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de 
+# PIB per cápita vs esperanza de vida al nacer
+ggplot(data = paises) + 
+  geom_point(mapping = aes(x = GDP_PC, y = LIFE_EXPECTANCY))
+```
+
+El bloque de código anterior puede reescribirse mediante un *pipe*, para pasar el conjunto de datos a `ggplot()`. También puede llamarse a `aes()` como un argumento de `ggplot()` y no de la función de geometría. Esto último acostumbra hacerse cuando los mapeos de las variables a las propiedades estéticas son los mismos en todas las capas del gráfico.
+
+```{r}
+#| label: grafico-dispersion-paises-pipe
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY)) +
+  geom_point() +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+La función `scale_x_continuous()` permite usar comas como separadores de miles y establecer los límites del eje X. También evita la notación científica.
+
+El gráfico muestra una relación positiva entre el PIB per cápita y la esperanza de vida al nacer. En otras palabras, mientras mayor es el PIB per cápita de un país, mayor es la esperanza de vida al nacer de sus habitantes.
+
+#### Variables adicionales
+
+Se pueden incluir variables adicionales en el gráfico mediante su mapeo a otras propiedades visuales. En el siguiente bloque de código, la variable correspondiente al continente (`CONTINENT`), se mapea a la propiedad `color`.
+
+```{r}
+#| label: grafico-dispersion-paises-color
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# coloreado por continente
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+La misma variable puede mapearse a la propiedad visual `shape` (forma). 
+
+```{r}
+#| label: grafico-dispersion-paises-shape
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# con formas de puntos correspondientes al continente
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, shape = CONTINENT)) +
+  geom_point() +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+Los últimos continentes de la leyenda no se incluyen en el gráfico debido a que `ggplot()` solo muestra, por defecto, seis formas diferentes cuando se asignan de manera automática. Esto puede solucionarse si se asigna explícitamente una forma a cada categoría. En el siguiente bloque de código, se asignan manualmente tanto formas como colores a cada continente, mediante las funciones [scale_shape_manual()](https://ggplot2.tidyverse.org/reference/scale_shape.html) y [scale_color_manual()](https://ggplot2.tidyverse.org/reference/scale_manual.html).
+
+```{r}
+#| label: grafico-dispersion-paises-shape-color
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# con formas y colores correspondientes al continente
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, shape = CONTINENT, color = CONTINENT)) +
+  geom_point() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_shape_manual(values = c(0, 1, 2, 3, 4, 5, 6, 7)) +
+  scale_color_manual(values = c("red", "blue", "green", "purple", "orange", "brown", "pink", "yellow"))
+```
+
+El siguiente bloque de código mapea la variable de la población estimada (`POP_EST`) con la propiedad visual tamaño (`size`).
+
+```{r}
+#| label: grafico-dispersion-paises-size
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# con tamaño de puntos correspondiente a la población
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, size = POP_EST, color = CONTINENT)) +
+  geom_point() +
+  scale_size_continuous(labels = comma) +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+La función `scale_size_continuous()` permite usar comas como separadores de miles y evitar la notación científica en la leyenda del gráfico.
+
+#### Capas adicionales
+
+Un mismo gráfico puede contener múltiples capas, cada una con su propia función de geometría. El siguiente bloque de código agrega una capa con la función [geom_smooth()](https://ggplot2.tidyverse.org/reference/geom_smooth.html), la cual muestra una curva de tendencia.
+
+```{r}
+#| label: grafico-dispersion-paises-smooth
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# + curva de tendencia
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+**Ejercicios**  
+1. Revise la documentación de `geom_smooth()` para agregar otros tipos de curvas de tendencia al gráfico.
+
+En el siguiente ejemplo, se mapea la variable continente (`CONTINENT`) a la propiedad visual del color, tanto para la capa de puntos como para la de la curva de tendencia.
+
+```{r}
+#| label: grafico-dispersion-paises-smooth-drv
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# en África y Europa coloreado por continente
+# + curva de tendencia
+paises |>
+  filter(CONTINENT == 'Africa' | CONTINENT == 'Europe') |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90))
+```
+
+#### Paneles
+
+Como se mostró anteriormente, una forma de mostrar variables adicionales en un gráfico es mediante propiedades visuales (color, forma, tamaño, etc.). Otra forma es mediante el uso de paneles (*facets*), también llamados facetas o subgráficos, los cuales dividen un gráfico en varios gráficos, de acuerdo con los valores de una variable. Este método es particularmente apropiado cuando la variable adicional es categórica.
+
+La función [facet_wrap()](https://ggplot2.tidyverse.org/reference/facet_wrap.html) divide un gráfico en paneles de acuerdo con una sola variable. El primer argumento es una [fórmula](https://www.datacamp.com/tutorial/r-formula-tutorial), la cual se crea con el caracter `~` (tilde) seguido por el nombre de la variable.
+
+En el siguiente bloque de código, se generan paneles para cada continente con el gráfico de dispersión de PIB per cápita vs esperanza vida. Es decir, un panel (subgráfico) por cada continente.
+
+```{r}
+#| label: grafico-dispersion-paises-facet_wrap
+#| warning: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# + paneles por continente
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY)) +
+  geom_point() +
+  facet_wrap(~ CONTINENT, nrow = 2) +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+La función [facet_grid()](https://ggplot2.tidyverse.org/reference/facet_grid.html) genera paneles con la combinación de dos variables. El primer argumento es también una fórmula, la cual contiene dos variables separadas por `~`.
+
+En el siguiente bloque de código, se generan paneles para el gráfico anterior, organizados por región  de la ONU y grupo de ingresos.
+
+```{r}
+#| label: grafico-dispersion-paises-facet_grid
+#| warning: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# + paneles por región y subregión de la ONU
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY)) +
+  geom_point() +
+  facet_grid(REGION_UN ~ INCOME_GRP) +
+  scale_x_continuous(labels = comma, limits = c(0, NA))
+```
+
+#### Títulos, etiquetas, estilos y colores
+
+##### Titulos, subtítulos y etiquetas
+
+ggplot2 incluye las funciones [ggtitle()](https://ggplot2.tidyverse.org/reference/labs.html), [xlab()](https://ggplot2.tidyverse.org/reference/labs.html), [ylab()](https://ggplot2.tidyverse.org/reference/labs.html) y [labs()](https://ggplot2.tidyverse.org/reference/labs.html), las cuales permiten agregar títulos, subtítulos, etiquetas en los ejes y de otros tipos a un gráfico.
+
+Algunas de las opciones que ofrecen estas funciones se ilustran en el siguiente gráfico.
+
+```{r}
+#| label: grafico-dispersion-paises-etiquetas
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# en África y Europa coloreado por continente
+# + curva de tendencia
+paises |>
+  filter(CONTINENT == 'Africa' | CONTINENT == 'Europe') |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(subtitle = "Datos de África y Europa", 
+       caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente")
+```
+
+El títulos y las etiquetas de los ejes se pueden agregar también mediante argumentos de `labs()`.
+
+##### Estilos
+
+ggplot2 incluye un conjunto de [estilos](https://ggplot2.tidyverse.org/reference/ggtheme.html) (*themes*) que pueden ayudar a mejorar el aspecto visual de los gráficos.
+
+```{r}
+#| label: grafico-dispersion-paises-etiquetas-estilo
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# en África y Europa coloreado por continente
+# + curva de tendencia
+paises |>
+  filter(CONTINENT == 'Africa' | CONTINENT == 'Europe') |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(subtitle = "Datos de África y Europa", 
+       caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  theme_bw() # tema de ggplot2
+```
+
+**Ejercicios**  
+1. Revise la documentación de estilos de ggplot2 y pruebe diferentes opciones en el gráfico anterior.
+
+Existen paquetes que ofrecen estilos adicionales como, por ejemplo, [ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/).
+
+```{r}
+#| label: ggthemes-instalacion
+#| eval: false
+
+# Instalación de ggthemes
+install.packages("ggthemes")
+```
+
+```{r}
+#| label: ggthemes-carga
+
+# Carga de ggthemes
+library(ggthemes)
+```
+
+```{r}
+#| label: grafico-dispersion-paises-ggthemes
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# en África y Europa coloreado por continente
+# + curva de tendencia
+paises |>
+  filter(CONTINENT == 'Africa' | CONTINENT == 'Europe') |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(subtitle = "Datos de África y Europa", 
+       caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  theme_economist() # estilo de ggthemes
+```
+
+Otro paquete de estilos y recursos relacionados (escalas de colores, fuentes, etc.) es [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes). 
+
+```{r}
+#| label: hbrthemes-instalacion
+#| eval: false
+
+# Instalación de hbrthemes
+install.packages("hrbrthemes")
+```
+
+```{r}
+#| label: hbrthemes-carga
+#| warning: false
+#| message: false
+
+# Carga de hbrthemes
+library(hrbrthemes)
+```
+
+```{r}
+#| label: grafico-dispersion-paises-hbrthemes
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+# en África y Europa coloreado por continente
+# + curva de tendencia
+paises |>
+  filter(CONTINENT == 'Africa' | CONTINENT == 'Europe') |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(subtitle = "Datos de África y Europa", 
+       caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  theme_ipsum() # tema de hrbrthemes
+```
+
+##### Colores
+
+ggplot2 incluye múltiples funciones para escalas de colores, entre las que pueden mencionarse:
+
+- [scale_color_brewer()](https://ggplot2.tidyverse.org/reference/scale_brewer.html): para escalas de colores secuenciales, divergentes y cualitativas de [ColorBrewer](https://colorbrewer2.org/).
+- [scale_color_viridis_d()](https://ggplot2.tidyverse.org/reference/scale_viridis.html): para escalas [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html), diseñadas para mejorar la legibilidad de gráficos para lectores con formas comunes de daltonismo y discapacidades relacionadas con la percepción de colores.
+- [scale_color_manual()](https://ggplot2.tidyverse.org/reference/scale_manual.html): para especificar directamente los colores a utilizar.
+
+El siguiente bloque de código genera un gráfico de dispersión para los datos de países. Muestra el PIB per cápita (`GDP_PC`) en el eje X y la esperanza de vida (`LIFE_EXPECTANCY`) en el eje Y. La variable correspondiente al continente (`CONTINENT`) se muestra mediante el color de los puntos, de acuerdo con una escala de ColorBrewer.
+
+```{r}
+#| label: grafico-dispersion--scale_color
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+#  coloreado por continente
+paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  labs(color = "Población estimada") +
+  scale_colour_brewer(palette = "YlOrBr", direction = -1) +
+  theme_ipsum() # estilo de hrbrthemes
+```
+
+Para más información sobre etiquetas, estilos, colores y otros temas relacionados en ggplot2, se recomienda leer [ggplot2: Elegant Graphics for Data Analysis - Themes](https://ggplot2-book.org/themes.html).
+
+#### Opciones avanzadas
+
+En las secciones y ejemplos anteriores, se han estudiado las opciones básicas para crear un gráfico en ggplot2: datos, mapeos de variables a propiedades visuales y capas. También se mostró la forma de implementar paneles, como un mecanismo para visualizar variables adicionales y algunos recursos para mejorar la apariencia de los gráficos.
+
+ggplot2 incluye otras opciones para la creación de gráficos, como transformaciones estadísticas, transformaciones de sistemas de coordenadas y posicionamiento de las geometrías, las cuales pueden esquematizarse de la siguiente forma:
+
+```
+ggplot(data = <DATOS>) + 
+  <FUNCION_GEOMETRIA>(
+    mapping = aes(<MAPEOS>),
+    stat = <ESTADISTICA>,
+    position = <POSICION>
+  ) +
+  <FUNCION_COORDENADAS> +
+  <FUNCION_FACET>
+```
+
+En las secciones siguientes, se explicarán y ejemplificarán alguna de estas opciones.
+
+### plotly
+
+[plotly R](https://plotly.com/r/) es una biblioteca para gráficos interactivos que forma parte del [grupo de bibliotecas de graficación de Plotly](https://plotly.com/graphing-libraries/), el cual también incluye bibliotecas para otros lenguajes como Python, Julia, F# y MATLAB. Plotly fue originalmente escrita en JavaScript, por lo que es particularmente adecuada para gráficos interactivos en la Web.
+
+plotly implementa la función [ggplotly()](https://rdrr.io/cran/plotly/man/ggplotly.html), la cual convierte graficos de ggplot2 a plotly, haciéndolos interactivos.
+
+El siguiente bloque de código muestra un gráfico generado con ggplot2 y convertido a plotly con la función `ggplotly()`.
+
+```{r}
+#| label: grafico-dispersion-paises-plotly
+#| warning: false
+#| message: false
+
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+grafico_ggplot2 <-
+  paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point(aes(
+    # datos que se muestran al colocar el ratón sobre un punto
+    text = paste0(
+      "PIB per cápita: ", GDP_PC, "\n",
+      "Esperanza de vida: ", LIFE_EXPECTANCY
+    )
+  )) +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  labs(color = "Población estimada") +
+  theme_ipsum() # estilo de hrbrthemes
+
+# Gráfico plotly
+ggplotly(grafico_ggplot2, tooltip = "text") |> 
+  config(locale = 'es') # para mostrar los controles en español
+```
+
+## Tipos de gráficos
+
+En esta sección, se ejemplifican varios tipos de gráficos, los cuales se construyen con ggplot2 y luego se convierten a plotly.
+
+### Gráficos de dispersión
+Un [gráfico de dispersión (*scatterplot*)](https://es.wikipedia.org/wiki/Diagrama_de_dispersi%C3%B3n) despliega los valores de dos variables numéricas, como puntos en un sistema de coordenadas. El valor de una variable se despliega en el eje X y el de la otra variable en el eje Y. Variables adicionales pueden ser mostradas mediante atributos de los puntos, tales como su tamaño, color o forma.
+
+En `ggplot2`, los gráficos de dispersión se implementan con la función de geometría [geom_point()](https://ggplot2.tidyverse.org/reference/geom_point.html).
+
+El siguiente bloque de código muestra la relación entre el PIB per cápita y la esperanza de vida de países.
+
+```{r}
+#| label: grafico-dispersion-gdpPercap-lifeExp
+#| warning: false
+
+# Gráfico de dispersión PIB per cápita vs esperanza de vida
+# + línea de tendencia
+grafico_dispersion_ggplot2 <-
+  paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY)) +
+  geom_point(aes(
+    text = paste0(
+      "País: ",
+      NAME,
+      "\n",
+      "PIB per cápita: ",
+      scales::comma(round(GDP_PC, 2)),
+      "\n",
+      "Esperanza de vida: ",
+      round(LIFE_EXPECTANCY, 2)
+    )
+  )) +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer") +
+  xlab("PIB per cápita (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(caption = "Fuentes: Natural Earth y Banco Mundial") +
+  theme_economist()  
+
+# Gráfico de dispersión plotly
+ggplotly(grafico_dispersion_ggplot2, tooltip = "text") |>
+  config(locale = 'es')
+```
+
+Como se explicó anteriormente, se pueden agregar al gráfico variables adicionales mediante su mapeo a propiedades visuales. En el siguiente ejemplo, se agrega la variable de continente al gráfico anterior, mediante su mapeo a la propiedad correspondiente al color.
+
+```{r}
+#| label: grafico-dispersion-gdpPercap-lifeExp-continent
+#| warning: false
+
+# Gráfico de dispersión PIB per cápita vs esperanza de vida
+# + línea de tendencia
+grafico_dispersion_ggplot2 <-
+  paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point(aes(
+    text = paste0(
+      "País: ",
+      NAME,
+      "\n",
+      "PIB per cápita: ",
+      scales::comma(round(GDP_PC, 2)),
+      "\n",
+      "Esperanza de vida: ",
+      round(LIFE_EXPECTANCY, 2)
+    )
+  )) +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer") +
+  xlab("PIB per cápita (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(caption = "Fuentes: Natural Earth y Banco Mundial", color = "Continente") +
+  theme_economist()  
+
+# Gráfico de dispersión plotly
+ggplotly(grafico_dispersion_ggplot2, tooltip = "text") |>
+  config(locale = 'es')
+```
+
+### Histogramas
+
+Un [histograma](https://es.wikipedia.org/wiki/Histograma) es una representación gráfica de la distribución de una variable numérica en forma de barras (en este caso, llamadas en inglés *bins*). La longitud de cada barra representa la frecuencia de un rango de valores de la variable. La graficación de la distribución de las variables es, frecuentemente, una de las primeras tareas que se realiza cuando se explora un conjunto de datos.
+
+En ggplot2, los histogramas se implementan con la función [geom_histogram()](https://ggplot2.tidyverse.org/reference/geom_histogram.html).
+
+El siguiente bloque de código muestra, mediante un histograma, la distribución del [producto interno bruto (PIB) per cápita](https://es.wikipedia.org/wiki/Renta_per_c%C3%A1pita) para el año 2007, entre los países incluídos en gapminder.
+
+```{r}
+#| label: histograma-paises-gdppc
+#| warning: false
+
+# Histograma ggplot2 de distribución del PIB per cápita
+histograma_ggplot2 <- 
+  paises |>
+  ggplot(aes(x = GDP_PC)) +
+  geom_histogram(
+    aes(
+      text = paste0(
+        "PIB per cápita (valor medio del rango): $", round(after_stat(x), 2), "\n",
+        "Frecuencia: ", after_stat(count)
+      )
+    ), 
+    bins = 10
+  )  +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  coord_cartesian(ylim = c(0, 40)) +
+  ggtitle("Distribución del PIB per cápita") +
+  xlab("PIB per cápita ($ EE.UU.)") +
+  ylab("Frecuencia") +
+  labs(subtitle = "Datos de 201 países", caption = "Fuentes: Natural Earth y Banco Mundial") +
+  theme_economist()
+
+# Histograma plotly
+ggplotly(histograma_ggplot2, tooltip = "text") |> 
+  config(locale = 'es')
+```
+
+### Gráficos de pastel
+
+Un [gráfico de pastel](https://es.wikipedia.org/wiki/Gr%C3%A1fico_circular) representa porcentajes y porciones en secciones (*slices*) de un círculo. Son muy populares, pero también criticados debido a la dificultad del cerebro humano de comparar áreas de sectores circulares, por lo que [algunos expertos recomiendan sustituirlos por otros tipos de gráficos como, por ejemplo, gráficos de barras](https://www.data-to-viz.com/caveat/pie.html).
+
+En ggplot2, los gráficos de pastel se implementan con la función de geometría `geom_bar(stat = "identity", width = 1)` y la función [coord_polar()](https://ggplot2.tidyverse.org/reference/coord_polar.html), la cual implementa un sistema de coordenadas polares.
+
+El siguiente gráfico de pastel muestre la distribución de la población según la regiones de la Organización de Naciones Unidas (ONU).
+
+```{r}
+#| label: grafico-pastel-poblacion
+#| warning: false
+
+# Agrupar y resumir los datos
+suma_poblacion_por_region <- paises |>
+  group_by(REGION_UN) |>
+  summarise(POP_TOTAL = sum(POP_EST))
+
+# Calcular porcentajes
+porcentaje_poblacion_por_region <- suma_poblacion_por_region |>
+  mutate(POP_PCT = round(POP_TOTAL / sum(POP_TOTAL) * 100, 1))
+
+# Gráfico de pastel
+grafico_pastel_ggplot2 <-
+  ggplot(porcentaje_poblacion_por_region, aes(x = "", y = POP_TOTAL, fill = REGION_UN)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(
+    aes(label = paste0(POP_PCT, "%")), 
+    position = position_stack(vjust = 0.6) # para ajustar la posición del texto en cada porción
+  ) +
+  labs(title = "Distribución de la población por región de la ONU",
+       x = NULL,
+       y = NULL,
+       fill = "Región de la ONU") +
+  theme_void()
+
+# Despliegue del gráfico
+grafico_pastel_ggplot2
+
+# Gráfico de pastel plotly (está generando un error)
+# ggplotly(grafico_pastel_ggplot2) |>
+#   config(locale = 'es')
+```
+
+El gráfico interactivo no se presenta en este caso, debido a que la función `ggplotly()` produce un error al procesar el gráfico de pastel generado por ggplot2.
+
+### Gráficos de barras
+
+Un [gráfico de barras](https://es.wikipedia.org/wiki/Diagrama_de_barras) se compone de barras rectangulares con longitud proporcional a estadísticas (ej. frecuencias, promedios, mínimos, máximos) asociadas a una variable categórica o discreta. Las barras pueden ser horizontales o verticales y se recomienda que estén ordenadas según su longitud, a menos que exista un orden inherente a la variable (ej. el orden de los días de la semana). Es uno de los tipos de gráficos estadísticos más antiguos y comunes y tiene la ventaja de ser muy fácil de comprender.
+
+En ggplot2, los gráficos de barras se implementan con las funciones [geom_bar()](https://ggplot2.tidyverse.org/reference/geom_bar.html), que se utiliza en gráficos que requieren transformaciones estadísticas, y [geom_col()](https://ggplot2.tidyverse.org/reference/geom_col.html), para gráficos que no requieren estas transformaciones.
+
+#### Barras con transformaciones estadísticas
+
+Los gráficos de barras y otros tipos de gráficos (ej. histogramas, gráficos de caja, líneas de ajuste) pueden requerir de alguna **transformación estadística** antes de presentar la información. Esta transformación estadística puede ser un conteo, el cálculo de un promedio, un mínimo o un máximo, entre otras opciones.
+
+Por ejemplo, el siguiente gráfico muestra la cantidad de países por región de la ONU presentes en el conjunto de datos de países. Nótese que este conteo no está presente en ninguna de las variables del conjunto de datos.
+
+```{r}
+#| label: grafico-barras-gapminder-count-region-ordered
+#| warning: false
+
+# Gráfico de barras con conteo de países por región de la ONU
+grafico_barras_ggplot2 <-
+paises |>
+  ggplot(aes(x = fct_infreq(REGION_UN))) +
+  geom_bar(
+    aes(
+      text = paste0(
+        "Cantidad de países: ", after_stat(count)
+      )
+    )    
+  ) +
+  ggtitle("Cantidad de países por región de la ONU") +
+  xlab("Región de la ONU") +
+  ylab("Cantidad de países") +
+  labs(caption = "Fuente: Natural Earth") +
+  theme_economist()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2, tooltip = "text") |> 
+  config(locale = 'es')
+```
+
+La función [fct_infreq()](https://forcats.tidyverse.org/reference/fct_inorder.html) del paquete [forcats](https://forcats.tidyverse.org/index.html) se usa para ordenar las barras. Si se prefiere el orden inverso, puede utilizarse la función [fct_rev()](https://forcats.tidyverse.org/reference/fct_rev.html) (ej. `fct_rev(fct_infreq(REGION_UN))`). Para más información sobre el ordenamiento en gráficos, se recomienda consultar [FAQ: Reordering - ggplot2](https://ggplot2.tidyverse.org/articles/faq-reordering.html).
+
+El cálculo de la cantidad de países por continente o el de la cantidad de diamantes por corte, son ejemplos de transformaciones estadísticas. La @fig-ggplot2-transformacion-estadistica muestra como se realiza este proceso para el gráfico anterior.
+
+```{r}
+#| label: fig-ggplot2-transformacion-estadistica
+#| fig.cap: Transformación estadística para un gráfico de barras de ggplot2. Imagen de [Hadley Wickham](https://r4ds.had.co.nz/data-visualisation.html).
+#| echo: false
+
+knitr::include_graphics(rep("img/ggplot2-transformacion-estadistica.png"))
+```
+
+Las barras pueden mostrar otras transformaciones estadísticas a través del uso de los argumentos `stat` y `fun.y` de `geom_bar()`. Por ejemplo, `stat = "summary"` y `fun.y = "mean"`generan un gráfico que muestra el promedio de esperanza de vida (`LIFE_EXPECTANCY`) para cada región de la ONU.
+
+```{r}
+#| label: grafico-barras-paises-mean-lifeexp-region
+#| warning: false
+#| message: false
+
+# Gráfico de barras con promedio de esperanza de vida
+# para cada región de la ONU
+grafico_barras_ggplot2 <-
+  paises |>
+  ggplot(aes(x = fct_infreq(REGION_UN), y = LIFE_EXPECTANCY)) +
+  geom_bar(
+    stat = "summary", 
+    fun.y = "mean",
+    aes(
+      text = paste0(
+        "Promedio de esperanza de vida: ", round(after_stat(y), 2)
+      )
+    )
+  ) +
+  ggtitle("Promedio de esperanza de vida por región de la ONU") +
+  xlab("Región de la ONU") +
+  ylab("Promedio de esperanza de vida") +
+  labs(caption = "Fuente: ") +
+  theme_economist()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2, tooltip = "text") |>
+  config(locale = 'es')
+```
+
+**Nota: ** la función `fct_infreq()` no está ordenando en este caso las columnas. El ordenamiento aún puede conseguirse si se realiza primero el cálculo del promedio y luego se grafica la columna correspondiente, como en el siguiente bloque de código.
+
+```{r}
+# Cálculo del promedio de esperanza de vida por región
+promedio_esperanza_vida_por_region <-
+  paises |>
+  group_by(REGION_UN) |>
+  summarize(LIFE_EXPECTANCY_MEAN = mean(LIFE_EXPECTANCY, na.rm = TRUE))
+
+# Despliegue por orden descendente del promedio de esperanza de vida
+promedio_esperanza_vida_por_region |>
+  arrange(desc(LIFE_EXPECTANCY_MEAN))
+
+```
+
+Luego se dibuja luego el gráfico con `geom_col()` y se ordenan las barras con la función [reorder()](https://rdrr.io/cran/gplots/man/reorder.html).
+
+```{r}
+#| label: grafico-barras-paises-mean-lifeexp-region-ordered
+#| warning: false
+
+# Gráfico de barras con promedio de esperanza de vida
+# para cada región de la ONU
+grafico_barras_ggplot2 <-
+  promedio_esperanza_vida_por_region |>
+  ggplot(aes(x = reorder(REGION_UN,-LIFE_EXPECTANCY_MEAN), y = LIFE_EXPECTANCY_MEAN)) +
+  geom_col(
+    aes(
+      text = paste0(
+        "Promedio de esperanza de vida: ", round(after_stat(y), 2)
+      )
+    )    
+  ) +
+  ggtitle("Promedio de esperanza de vida por región de la ONU") +
+  xlab("Región de la ONU") +
+  ylab("Promedio de esperanza de vida") +
+  labs(caption = "Fuente: Natural Earth") +
+  theme_economist()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2, tooltip = "text") |>
+  config(locale = 'es')
+```
+
+El uso de `geom_col()` se ampliará en la sección siguiente.
+
+#### Barras sin transformaciones estadísticas
+
+En algunos conjuntos de datos, el valor que se quiere representar en la longitud de las barras ya está presente como una variable en el conjunto de datos, por lo que no es necesario que `ggplot2` realice una transformación estadística. En estos casos, se utiliza la función [geom_col()](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+
+**Nota: ** para dibujar barras sin transformaciones estadísticas, tambien es posible utilizar la función `geom_bar()`. En este caso, al argumento `stat` se le asigna el valor `"identity"` y al argumento `y` de `aes()` la variable que contiene el valor que quiere mostrarse en las barras.
+
+El siguiente gráfico de barras muestra la población de los países de los países de América. Nótese que este valor se puede tomar directamente de la variable `POP_EST`, después de realizar los filtros correspondientes.
+
+```{r}
+#| label: grafico-barras-paises-pop-america
+#| warning: false
+
+# Gráfico de barras con población de países 
+# de América
+grafico_barras_ggplot2 <-
+paises |>
+  filter(REGION_UN == "Americas") |>
+  ggplot(aes(x = reorder(ADM0_ISO, POP_EST), y = POP_EST/1000000)) +
+  geom_col(
+    aes(
+      text = paste0(
+        "País: ", NAME, "\n",
+        "Población (millones de habitantes): ", round(POP_EST/1000000, 2)
+      )
+    )
+  ) +
+  scale_y_discrete(expand = expansion(mult = c(0.2, 0.2))) + # agrega un 20% de espacio al inicio y al final del eje y
+  coord_flip() + # para mostrar barras horizontales
+  ggtitle("Población de países de América") +
+  xlab("País") +
+  ylab("Población (millones de habitantes)") +
+  labs(caption = "Fuente: Natural Earth") +
+  theme_economist()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2, tooltip = "text") |> 
+  config(locale = 'es')
+```
+
+#### Barras apiladas
+
+Al usar el argumento `fill` de `aes()`, las barras de un gráfico pueden dividirse de acuerdo con una variable adicional, produciendo el efecto de barras apiladas (i.e. unas sobre otras).
+
+En el siguiente bloque de código, se genera un gráfico de barras apiladas que, para el conjunto de datos de países, muestra las cantidades de países por región de la ONU (`REGION_UN`) subdivididas por nivel de economía (`ECONOMY`). 
+
+```{r}
+#| label: grafico-barras-apiladas-paises
+#| warning: false
+
+# Gráfico de barras apiladas por región de la ONU y nivel de economía
+grafico_barras_ggplot2 <-
+paises |>
+  ggplot(aes(x = REGION_UN, fill = ECONOMY)) +
+  geom_bar() +
+  ggtitle("Cantidad de países por región de la ONU y nivel de economía") +
+  xlab("Región de la ONU") +
+  ylab("Cantidad de países") +
+  labs(fill = "Nivel de economía") +
+  theme_minimal()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2) |> 
+  config(locale = 'es')
+```
+
+El argumento `position = "fill"` de `geom_bar()` también genera barras apiladas, pero le asigna a todas las barras la misma longitud, facilitando así la comparación de proporciones.
+
+```{r}
+#| label: grafico-barras-apiladas-paises-proporcion
+#| warning: false
+
+# Gráfico de barras apiladas por región de la ONU y nivel de economía
+grafico_barras_ggplot2 <-
+paises |>
+  ggplot(aes(x = REGION_UN, fill = ECONOMY)) +
+  geom_bar(position = "fill") +
+  ggtitle("Proporción de niveles de economía en regiones de la ONU") +
+  xlab("Región de la ONU") +
+  ylab("Proporción") +
+  labs(fill = "Nivel de economía") +
+  theme_minimal()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2) |> 
+  config(locale = 'es')
+```
+
+#### Barras agrupadas
+
+El argumento `position = "dodge"` de `geom_bar()` genera barras agrupadas (i.e. unas al lado de otras), facilitando así la comparación de valores individuales.
+
+```{r}
+#| label: grafico-barras-agrupadas-paises
+#| warning: false
+
+# Gráfico de barras agrupadas por región de la ONU y nivel de economía
+grafico_barras_ggplot2 <-
+paises |>
+  ggplot(aes(x = REGION_UN, fill = ECONOMY)) +
+  geom_bar(position = "dodge") +
+  ggtitle("Cantidad de países por región de la ONU y nivel de economía") +
+  xlab("Región de la ONU") +
+  ylab("Cantidad de países") +
+  labs(fill = "Nivel de economía") +
+  theme_minimal()
+
+# Gráfico de barras plotly
+ggplotly(grafico_barras_ggplot2) |> 
+  config(locale = 'es')
+```
+
+## Recursos de interés
+*DT: An R interface to the DataTables library*. (s. f.). Recuperado 21 de mayo de 2022, de [https://rstudio.github.io/DT/](https://rstudio.github.io/DT/)
+
+Healy, Y. H. and C. (s. f.). *From data to Viz | Find the graphic you need*. Recuperado 20 de marzo de 2022, de [https://www.data-to-viz.com/](https://www.data-to-viz.com/)
+
+RStudio. (2017). *Data visualization with ggplot2::Cheat Sheet*. [https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf)
+
+Wickham, H. (2010). *A Layered Grammar of Graphics. Journal of Computational and Graphical Statistics, 19*(1), 3-28. [https://doi.org/10.1198/jcgs.2009.07098](https://doi.org/10.1198/jcgs.2009.07098)
