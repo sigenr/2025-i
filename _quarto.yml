@@ -28,6 +28,9 @@ book:
     - part: "IV Graficación estadística en R"
       chapters:
         - 09-ggplot2-plotly.qmd
+    - part: "V El ecosistema espacial de R"
+      chapters:
+        - 10-introduccion-manejo-datos-geoespaciales.qmd
 bibliography: referencias.bib
 csl: apa-6th-edition.csl
 
