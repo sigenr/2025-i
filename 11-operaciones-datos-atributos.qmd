@@ -1,0 +1,508 @@
+# Operaciones con datos de atributos
+
+## Resumen
+
+Se les llama atributos a los elementos de datos no espaciales o geométricos de un conjunto de datos geoespaciales. Estos datos pueden ser de tipos numéricos o textuales, entre otros. Un conjunto de datos vectoriales puede tener asociados varios campos de atributos, mientras que un conjunto de datos raster tiene solamente uno.
+
+Las operaciones con atributos en datos vectoriales incluyen creación de subconjuntos, agregación y unión (*join*). Estas operaciones pueden ejecutarse con funciones del paquete base de R o con las de paquetes de Tidyverse, como dplyr. Por su parte, las operaciones con atributos en datos raster incluyen creación de subconjuntos y resumen de información.
+
+## Trabajo previo
+
+### Lecturas
+
+Lovelace, R., Nowosad, J., & Münchow, J. (2019). *Geocomputation with R* (capítulo 3). CRC Press. <https://geocompr.robinlovelace.net/>
+
+## Carga de bibliotecas
+
+```{r}
+#| label: carga-bibliotecas
+#| warning: false
+#| message: false
+
+# Cargar bibliotecas
+library(tidyverse)
+library(DT)
+library(sf)
+library(terra)
+library(tmap)
+```
+
+## Carga de datos
+
+### Cantones de Costa Rica
+
+Este archivo proviene de un [geoservicio de tipo Web Feature Service (WFS)](http://geos.snitcr.go.cr/be/IGN_5/wfs) publicado por el Instituto Geográfico Nacional (IGN). Se utiliza una versión del año 2020 (con 82 cantones), debido a que esa es la que corresponde a los datos de COVID-19 que publicó el Ministerio de Salud durante la pandemia.
+
+[Archivo GPKG de cantones de Costa Rica (del año 2020 y con geometrías simplificadas)](https://github.com/sigenr/2025-i/blob/main/datos/ign/cantones-2020-simplificados.gpkg)
+
+```{r}
+#| label: carga-datos-cantones
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Cargar datos de cantones de Costa Rica
+cantones <- st_read(
+  "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/ign/cantones-2020-simplificados.gpkg",
+  quiet = TRUE
+)
+```
+
+::: {#mapa-tabla-cantones layout-ncol=2}
+
+```{r}
+#| label: mapa-ggplot2-cantones
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para generar el mapa y la tabla"
+
+# Mapa interactivo de cantones
+
+# Activar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_cantones <-
+  tm_basemap("OpenStreetMap.Mapnik") +            # capa base OSM
+  tm_basemap("OpenTopoMap") +                     # capa base OpenTopoMap 
+  tm_view(set.view = c(
+    lon = -84.19452,
+    lat =  9.572735,
+    zoom = 7
+  )) +                                            # centro y zoom
+  tm_shape(cantones, name = "Cantones") +         # capa de cantones
+    tm_fill(
+      # relleno transparente
+      col = NA,
+      alpha = 0,
+      id = "canton",                              # texto que se ve al pasar el ratón
+      popup.vars = c(# ventana emergente
+        "Código de cantón" = "cod_canton", "Cantón" = "canton")
+    ) +
+    tm_borders(col = "black", lwd = 1) +          # contorno negro, grosor 1
+    tm_scale_bar(position = c("left", "bottom"))  # barra de escala
+  
+# Mostrar el mapa
+mapa_cantones
+```
+
+```{r}
+#| label: tabla-dt-cantones
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Tabla interactiva de cantones
+
+# Definir y mostrar tabla
+cantones |>
+  st_drop_geometry() |>                  # remover columna de geometrías
+  dplyr::select(cod_canton, canton) |>   # seleccionar columnas
+  arrange(cod_canton) |>                 # ordenar filas
+  datatable(                             # crear tabla
+    rownames = FALSE,                      # omitir identificadores de filas
+    options = list(                 
+      dom = 'ft',                          # configuración de la interfaz
+      pageLength = 8,                      # cantidad de filas por página
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )    
+  )
+```
+
+Mapa y tabla de cantones de Costa Rica
+:::
+
+### Casos positivos de COVID-19 en cantones de Costa Rica
+
+Estos datos fueron publicados por el Ministerio de Salud de Costa Rica en <https://geovision.uned.ac.cr/oges/> (a la fecha de escritura de este documento, el enlace no está funcionando). Se distribuyen en archivos CSV, incluyendo un archivo de datos generales para todo el país y varios archivos con datos por cantón. La fecha de la última actualización es 2022-05-30.
+
+[Archivo CSV de casos positivos de COVID-19 en cantones de Costa Rica](https://github.com/sigenr/2025-i/blob/main/datos/ministerio-salud/05_30_22_CSV_POSITIVOS.csv)
+
+El archivo contiene una columna por cada fecha en la que se tomaron datos en el nivel de cantón. En este caso, Se carga solamente la columna de la última fecha (2022-05-30).
+
+```{r}
+#| label: carga-datos-covid-cantones-positivos
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Cargar datos de casos positivos de COVID-19 en cantones
+covid_positivos_cantones <-
+  read_delim(
+    "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/ministerio-salud/05_30_22_CSV_POSITIVOS.csv",
+    delim = ";",
+    locale = locale(encoding = "WINDOWS-1252"), # para desplegar correctamente acentos y otros caracteres
+    col_select = c("cod_provin", "provincia", "cod_canton", "canton", "30/05/2022") # 30/05/2022 contiene los datos para la última fecha disponible
+)
+
+# Remover la fila con canton == "Otros"
+covid_positivos_cantones <-
+  covid_positivos_cantones |>
+  filter(canton != "Otros")
+
+# Cambiar nombres de columnas
+covid_positivos_cantones <-
+  covid_positivos_cantones |>
+  rename(positivos_20220530 = '30/05/2022')
+```
+
+::: {#tabla-covid layout-ncol=1}
+
+```{r}
+#| label: tabla-dt-covid
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Tabla DT de casos positivos de COVID-19 en cantones
+covid_positivos_cantones |>
+  arrange(cod_canton) |>
+  datatable(
+    rownames = FALSE,
+    options = list(
+      pageLength = 7,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )    
+  )
+```
+
+Tabla de casos positivos de COVID-19 en cantones de Costa Rica
+:::
+
+## Introducción
+
+Se les llama atributos a los elementos de datos no espaciales o geométricos de un conjunto de datos geográficos. Estos datos pueden ser de tipos numéricos o textuales, entre otros. Un conjunto de datos vectoriales puede tener asociados varios campos de atributos, mientras que un conjunto de datos raster tiene solamente uno.
+
+## Datos vectoriales
+
+Las operaciones con atributos en datos vectoriales incluyen:
+
+- Creación de subconjuntos (*subsetting*).  
+- Agregación (*aggregation*).  
+- Unión (*joining*). 
+
+Seguidamente, se explica como maneja estas operaciones el paquete sf.
+
+### Manejo de datos de atributos con el paquete sf
+
+Como se mencionó en capítulos anteriores, el paquete sf define una clase, llamada `sf`, la cual extiende la clase `data.frame` del paquete base de R. Los objetos de la clase sf tienen una fila (o *feature*) por cada observación y una columna por cada atributo. También tienen una columna especial para almacenar las geometrías (puntos, líneas, polígonos, etc.), la cual generalmente se denomina `geometry` o `geom` (pero puede tener cualquier otro nombre). Esto permite que sf utilice métodos (i.e. funciones) de la clase `data.frame`, tales como `plot()` y `summary()`, entre otros.
+
+Además de `data.frame`, `sf` es compatible con la clase [tibble](https://tibble.tidyverse.org/reference/tibble.html), la cual también puede manipularse mediante los métodos de [dplyr](https://dplyr.tidyverse.org/). Esto permite un manejo *tidy* (i.e. ordenado, organizado) de los datos geoespaciales, de acuerdo con el enfoque de [Tidyverse](https://www.tidyverse.org/).
+
+En la secciones siguientes, se explicará el manejo de datos de atributos en conjuntos de datos geoespaciales, mediante Tidyverse.
+
+#### El método `st_drop_geometry()`
+
+[`st_drop_geometry()`](https://rdrr.io/cran/sf/man/st_geometry.html) es un método que remueve las geometrías de un objeto sf. Esto puede ser útil cuando se desea operar solamente con las variables no espaciales.
+
+```{r}
+#| label: sin-st_drop_geometry()
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Desplegar datos de cantones, incluyendo las geometrías
+# (este es el funcionamiento por defecto)
+cantones |>
+  dplyr::select(canton, area) |>
+  filter(area >= 2000)
+```
+
+```{r}
+#| label: con-st_drop_geometry()
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Desplegar datos de cantones, removiendo las geometrías con st_drop_geometry()
+cantones |>
+  st_drop_geometry() |>
+  dplyr::select(canton, area) |>
+  filter(area >= 2000)
+```
+
+Como puede verse, la columna de geometrías se incluye como resultado de cualquier operación, a menos que se remueva explícitamente.
+
+#### Creación de subconjuntos (filtrado)
+
+Frecuentemente, es necesario extrer subconjuntos del conjunto de datos original, para facilidad de manejo y para atender requerimientos específicos de un análisis. 
+
+El paquete dplyr permite crear flujos de trabajo intuitivos y rápidos. Esto es útil, por ejemplo, cuando se trabaja con conjuntos de datos grandes (_big data_) y cuando se necesita integración con bases de datos. Los principales métodos de dplyr para creación de subconjuntos son `select()`, `slice()` y `filter()`.
+
+##### El método `select()`
+
+[`select()`](https://dplyr.tidyverse.org/reference/select.html) permite seleccionar y renombrar columnas de un conjunto de datos.
+
+```{r}
+#| label: seleccion-renombramiento-columnas
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Seleccionar las columnas canton, area (renombrada a area_km2) y provincia
+cantones |>
+  head(10) |>           # mostrar solo las 10 primeras filas
+  st_drop_geometry() |> # remover la columna de geometrías
+  dplyr::select(canton, area_km2 = area, provincia)
+```
+
+##### El método `slice()`
+
+[`slice()`](https://dplyr.tidyverse.org/reference/slice.html) crea un subconjunto con base en las posiciones de las filas.
+
+```{r}
+#| label: slice
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Crear un subconjunto de las filas entre la 1 y la 10
+# del conjunto de datos de COVID-19
+covid_positivos_cantones |>
+  slice(1:10)
+```
+
+##### El método `filter()`
+
+[`filter()`](https://dplyr.tidyverse.org/reference/filter.html) filtra filas que cumplen una expresión lógica.
+
+```{r}
+#| label: filter
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Filtrar cantones de la provincia de Heredia
+cantones |>
+  st_drop_geometry() |>
+  dplyr::select(provincia, canton) |>
+  filter(provincia == "Heredia")
+```
+
+#### Agregación
+
+Las operaciones de agregación realizan cálculos (ej. sumas, promedios, mínimos, máximos) a partir de la agrupaciones de datos. En Tidyverse y dplyr, las agregaciones de datos se realizan con las funciones `group_by()` y `summarize()`.
+
+##### Las funciones `group_by()` y `summarize()`
+
+[`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) crea grupos de filas de un conjunto de datos, de acuerdo con los valores de una o varias columnas. [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html) crea columnas adicionales con cálculos para cada grupo, tales como promedios, sumas, mínimos, máximos y otros. Si `summarize()` se ejecuta sin `group_by()`, crea una única fila para todo el conjunto de datos.
+
+Por ejemplo, en un conjunto de datos de ventas de una cadena de tiendas, se podría usar `group_by()` para hacer un grupo por cada ciudad en la que una o varias tiendas. Luego con `summarize()`, se podría crear una columna con el total de ventas para cada ciudad (i.e. para cada grupo).
+
+**Agrupación y sumarización**
+
+```{r}
+#| label: agrupacion-sumarizacion
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Sumar áreas de cantones por provincia
+cantones |>
+  st_drop_geometry() |>
+  group_by(provincia) |>
+  summarize(area_km2 = sum(area, na.rm = TRUE))
+
+# Sumar áreas de todos los cantones
+cantones |>
+  st_drop_geometry() |>
+  summarize(area_km2 = sum(area, na.rm = TRUE))
+
+# Sumar áreas y contar cantones de las 3 provincias más grandes
+cantones |>
+  st_drop_geometry() |>
+  dplyr::select(area, provincia) |>
+  group_by(provincia) %>%
+  summarize(
+    area = sum(area, na.rm = TRUE),
+    cantidad_cantones = n()
+  ) |>
+  arrange(desc(area)) |> # orden descendente por área
+  top_n(n = 3, wt = area) # se separan los primeros 3
+
+# Sumar casos positivos de COVID-19 por provincia
+covid_positivos_cantones |>
+  group_by(provincia) |>
+  summarize(positivos_20220530 = sum(positivos_20220530, na.rm = TRUE))
+```
+
+#### Unión (*join*)
+
+La unión (en inglés, *join*) de datos ubicados en diferentes fuentes (ej. archivos) es una tarea común en análisis de información. Este tipo de operaciones se realizan con base en columnas que son comunes en los conjuntos de datos que se desea unir.
+
+El paquete dplyr implementa varios tipos de uniones, los cuales se ilustran en la @fig-join.
+
+```{r}
+#| label: fig-join
+#| fig.cap: Tipos de uniones (*join*) de datos. Imagen de [hostingplus](https://www.hostingplus.com.co/blog/tipos-de-join-en-sql-cuales-son-los-principales/).
+#| out-width: "100%"
+#| echo: false
+
+knitr::include_graphics(rep("img/join.jpg"))
+```
+
+Los [métodos que implementan las uniones](https://dplyr.tidyverse.org/reference/mutate-joins.html) son:
+
+- `left_join()`: mantiene todas las filas del conjunto de datos del lado izquierdo y les agrega las columnas del conjunto de datos del lado derecho, en las filas en las que hay coincidencia.
+- `inner_join()`: incluye las filas que coinciden en ambos conjuntos de datos.
+- `right_join()`: mantiene todas las filas del conjunto de datos del lado derecho y agrega las columnas del conjunto de datos del lado izquierdo, en las filas en las que hay coincidencia.
+- `full_join()`: incluye todas las filas de ambos conjuntos de datos.
+
+Todos los tipos de *joins* requieren de una o varias columnas que sean comunes a ambos conjuntos de datos, llamadas llaves de unión o *join keys*, en inglés. Esas columnas se especifican con el argumento `by`. Por ejemplo, `by = codigo`, si la columna común se llama `codigo` en ambos conjuntos de datos. Si tienen diferentes nombres, se utiliza un vector (ej. `by = c("codigo_1" = "codigo_2")`, en donde `codigo_1` es el nombre de la columna en el conjunto de datos de la izquierda y `codigo_2` en el de la derecha. Si hay columnas con nombres iguales en ambos conjuntos de datos, `by` utiliza esos nombres por defecto.
+
+##### Ejemplo: unión de los datos geoespaciales de cantones con los datos tabulares de COVID-19
+
+Se desea crear un [mapa de coropletas](https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico) de los cantones de Costa Rica, coloreado de acuerdo con la cantidad de casos positivos de COVID-19 acumulados al 2022-05-30. Para esto se necesita unir, a través de (por ejemplo) un *left join*, el conjunto de datos `cantones` (con las geometrías y otros datos de los cantones) con el conjunto de datos de `covid_positivos_cantones` (con la cantidad de casos positivos para cada cantón). Para ambas tablas, la llave de unión es un campo llamado `cod_canton`, que contiene el código de cantón asignado por el IGN. Se utiliza un *left join* porque se desea incluir en la unión todos las filas del conjunto de datos de cantones, ya sea que tengan o no tengan datos de COVID-19 asociados.
+
+El siguiente bloque de código realiza el *left join* y almacena el resultado en un objeto `sf` llamado `cantones_union_covid`, el cual se usa como fuente de datos para generar el mapa de coropletas.
+
+```{r}
+#| label: cantones-join-covid
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Unir cantones con datos de COVID 19
+cantones_union_covid <-
+  cantones |>
+  left_join(
+    dplyr::select(covid_positivos_cantones, cod_canton, positivos_20220530), # este select() es para no llevar columnas innecesarias a la unión
+    by = "cod_canton" # llave para realizar la unión
+  )
+```
+
+```{r}
+#| label: mapa-cantones-join-covid
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para generar el mapa"
+
+# Mapa interactivo de casos positivos de COVID 19 en cantones
+
+# Activar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_cantones_covid <-
+  tm_basemap("OpenStreetMap.Mapnik") +
+  tm_view(set.view = c(
+    lon = -84.19452,
+    lat =  9.572735,
+    zoom = 7
+  )) +
+  tm_shape(cantones_union_covid, name = "Casos positivos de COVID") +
+    tm_fill(
+      fill = "positivos_20220530",
+      fill.scale = tm_scale_intervals(
+      style  = "quantile",
+      values = "Reds"
+    ),
+    fill.legend = tm_legend(title = "Cantidad de casos"),
+    id = "canton",
+    popup.vars  = c(
+      "Cantón" = "canton",
+      "Casos" = "positivos_20220530"
+    )
+  ) +
+  tm_borders(col = "black", lwd = 0.5) +
+  tm_scale_bar(position = c("left", "bottom"))
+
+
+# Mostrar el mapa
+mapa_cantones_covid
+```
+
+### Ejercicios
+
+1. Cree un mapa leaflet de coropletas de las provincias de Costa Rica, coloreado de acuerdo con la cantidad de casos positivos de COVID-19 acumulados al 2022-05-30. Se sugiere seguir los siguientes pasos:
+
+a. Cree un data frame con la suma, por provincia, de casos positivos de cantones (para realizar la agrupación, use el código de la provincia, no el nombre).
+b. Con un *left join*, una la [capa de provincias (del año 2020)](https://github.com/sigenr/2023-i/blob/main/datos/ign/delimitacion-territorial-administrativa/provincias_2020.geojson) y el dataframe que creó en el punto a.
+c. Genere el mapa leaflet de coropletas con el objeto sf que creó en el punto b.
+
+## Datos raster
+
+Las operaciones con atributos en datos raster incluyen:
+
+- Creación de subconjuntos (_subsetting_).  
+- Resumen de información (_summarizing_).
+
+Seguidamente, se explicará como maneja estas operaciones el paquete terra.
+
+### Manejo de datos de atributos con el paquete terra
+
+Para ejemplificar las operaciones, se utilizarán datos de temperatura de [WorldClim](https://www.worldclim.org/) para Costa Rica.
+
+```{r}
+#| label: rast
+#| warning: false
+#| message: false
+
+# Cargar datos de temperatura
+temperatura <- rast(
+  "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/worldclim/temperatura.tif"
+)
+```
+
+```{r}
+#| label: mapa-temperatura
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Código para generar el mapa"
+
+# Especificar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_temperatura <-
+  tm_view(set.view = c(
+    lon = -84.19452,
+    lat =  9.572735,
+    zoom = 7
+  )) +
+  tm_shape(temperatura, name = "Temperatura") +
+  tm_raster(
+    palette = c("lightblue", "brown", "orange", "red"), 
+    title = "Temperatura (°C)"
+  ) +
+  tm_scalebar(position = c("left", "bottom"))
+
+# Mostrar el mapa
+mapa_temperatura
+```
+
+#### Resumen y sumarización de información
+
+La escritura del nombre de un objeto `SpatRaster` en la consola imprime información general sobre ese objeto. La función `summary()` proporciona algunas estadísticas descriptivas (mínimo, máximo, cuartiles, etc.).
+
+```{r}
+#| label: global
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Desplegar información general
+temperatura
+
+# Desplegar resumen
+summary(temperatura)
+```
+
+Las estadísticas pueden ser visualizadas con funciones como `hist()` y `density()`.
+
+```{r}
+#| label: hist-density
+#| warning: false
+#| message: false
+#| code-fold: false
+
+# Desplegar histograma
+hist(temperatura)
+
+# Desplegar gráfico de densidad
+density(temperatura)
+```
+

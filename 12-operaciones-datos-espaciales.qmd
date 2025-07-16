@@ -1,0 +1,860 @@
+# Operaciones con datos espaciales
+
+## Resumen
+
+Las operaciones espaciales, tales como las basadas en relaciones topológicas (ej. intersección, traslape, contención, cobertura), en el caso de los datos vectoriales, y el álgebra de mapas, en el caso de los datos raster, constituyen un componente esencial del procesamiento de datos geoespaciales. Varias de las operaciones con datos de atributos estudiadas en el capítulo anterior tienen contrapartes espaciales.
+
+Las operaciones espaciales para datos vectoriales incluyen creación de subconjuntos espaciales, unión de datos espaciales, agregación de datos espaciales y relaciones de distancia, entre otras. Por su parte, las operaciones espaciales para datos raster incluyen creación de subconjuntos espaciales y álgebra de mapas, entre otras.
+
+## Trabajo previo
+
+### Lecturas
+
+Lovelace, R., Nowosad, J., & Münchow, J. (2019). *Geocomputation with R* (capítulo 4). CRC Press. <https://geocompr.robinlovelace.net/>
+
+## Carga de bibliotecas
+
+```{r}
+#| label: carga-bibliotecas
+#| warning: false
+#| message: false
+
+# Cargar bibliotecas
+library(tidyverse)
+library(DT)
+library(sf)
+library(terra)
+library(tmap)
+```
+
+## Carga de datos
+
+### Cantones de Costa Rica
+
+Este archivo proviene de un [geoservicio de tipo Web Feature Service (WFS)](https://geos.snitcr.go.cr/be/IGN_5_CO/wfs) publicado por el Instituto Geográfico Nacional (IGN). Las geometrías se simplificaron para reducir el tamaño del archivo.
+
+[Archivo GPKG de cantones de Costa Rica para mayo de 2025 (con geometrías simplificadas)](https://github.com/sigenr/2025-i/blob/main/datos/ign/cantones-simplificados.gpkg)
+
+```{r}
+#| label: carga-datos-cantones
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para cargar datos de cantones"
+
+# Cargar datos de cantones de Costa Rica
+cantones <- st_read(
+  "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/ign/cantones-simplificados.gpkg",
+  quiet = TRUE
+)
+```
+
+### Registros de presencia de félidos de Costa Rica
+
+Este archivo, con registros de presencia de especies silvestres de la familia [*Felidae*](https://es.wikipedia.org/wiki/Felidae) en Costa Rica, proviene de una [consulta al portal de datos de la Infraestructura Mundial de Información en Biodiversidad (GBIF)](https://doi.org/10.15468/dl.qgqpe2).
+
+[Archivo CSV de registros de presencia de félidos silvestres de Costa Rica](https://github.com/sigenr/2025-i/blob/main/datos/gbif/felidos.csv)
+
+```{r}
+#| label: carga-datos-felidos
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para cargar datos de félidos"
+
+# Lectura de un archivo CSV con registros de presencia de félidos en Costa Rica
+felidos <- st_read(
+  "https://raw.githubusercontent.com/sigenr/2025-i/refs/heads/main/datos/gbif/felidos.csv",
+  options = c(
+    "X_POSSIBLE_NAMES=decimalLongitude", # columna de longitud decimal
+    "Y_POSSIBLE_NAMES=decimalLatitude"   # columna de latitud decimal
+  ),
+  quiet = TRUE
+)
+
+# Asignar CRS WGS84
+st_crs(felidos) <- 4326
+```
+
+::: {#mapa-cantones-felidos layout-ncol=1}
+
+```{r}
+#| label: mapa-cantones-felidos
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para generar el mapa de cantones y registros de presencia de félidos"
+
+# Crear columna con el enlace a los detalles del registro original
+felidos <- felidos |>
+  mutate(
+    registro = paste0(
+      "<a href='", occurrenceID,
+      "' target='_blank'>Detalle&nbsp;del&nbsp;registro</a>"
+    )
+  )
+
+# Especificar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa de cantones y registros de félidos
+mapa_cantones_felidos <-
+  
+  # Centro y nivel inicial de zoom
+  tm_view(
+    set_view = c(lon = -84.2, lat = 9.6, zoom = 7)
+  ) +
+  
+  # Capas base
+  tm_basemap(c("OpenStreetMap", "Esri.WorldImagery")) +
+  
+  # Capa de cantones (polígonos)
+  tm_shape(cantones, name = "Cantones") +
+  tm_borders() +
+  
+  # Capa de félidos (puntos)
+  tm_shape(felidos, name = "Félidos") +
+  tm_dots(
+    fill = "species",
+    fill.scale = tm_scale(values = "brewer.set1"),  # paleta Set1
+    fill.legend = tm_legend(title = "Especie"),     # título de la leyenda
+    
+    # Otras propiedades visuales
+    size = 0.5,
+    id = "species",
+    popup.vars = c(
+      "Localidad" = "locality",
+      "Fecha" = "eventDate",
+      "Fuente" = "institutionCode",
+      "Registro"  = "registro" # enlace al detalle del registro de presencia
+    ),
+    popup.format = list(html.escape = FALSE) # para hacer "clicables" los enlaces HTML 
+  ) +
+  
+  # Definir la escala gráfica
+  tm_scalebar(position = c("left", "bottom"))
+
+# Mostrar el mapa
+mapa_cantones_felidos
+```
+
+Mapa de cantones y registros de presencia de félidos de Costa Rica
+:::
+
+## Introducción
+
+Este capítulo brinda una visión general de las operaciones espaciales para datos vectoriales implementadas en el paquete sf, y para datos raster implementadas en el paquete terra.
+
+## Datos vectoriales
+
+Las operaciones espaciales para datos vectoriales incluyen:
+
+- Creación de subconjuntos espaciales (*spatial subsetting*).
+- Unión de datos espaciales (*spatial joining*).
+- Agregación de datos espaciales (*spatial aggregation*).
+- Relaciones de distancia.
+
+Seguidamente, se explica como maneja estas operaciones el paquete sf. Antes, se cubre el tema de las relaciones topológicas, el cual es importante en varias operaciones espaciales.
+
+### Relaciones topológicas
+
+Las *relaciones topológicas* o *relaciones topológicas binarias* son expresiones lógicas (verdaderas o falsas) sobre las relaciones espaciales entre dos objetos. Por ejemplo, si `a` y `b` son dos objetos espaciales (ej. puntos, líneas, polígonos), se pueden considerar relaciones topológicas como las siguientes:
+
+`a` interseca a `b`  
+`a` es adyacente a `b`  
+`a` está dentro de `b`  
+`b` está contenido en `a`
+
+Los diferentes tipos de relaciones topológicas están estandarizados en el modelo [DE-9IM (*Dimensionally Extended 9-Intersection Model*)](https://en.wikipedia.org/wiki/DE-9IM) y se ilustran en la @fig-relaciones-topologicas-vectoriales. Esta figura muestra también los métodos del paquete sf que implementan las relaciones topológicas (ej. `st_intersects()`, `st_overlaps()`, `st_winthin()`, `st_contains()`).
+
+```{r}
+#| label: fig-relaciones-topologicas-vectoriales
+#| fig.cap: Relaciones topológicas entre geometrías vectoriales. Imagen de [Robin Lovelace et al.](https://r.geocompx.org/spatial-operations.html#topological-relations), basada en Egenhofer and Herring (1990).
+#| echo: false
+
+knitr::include_graphics(rep("img/relaciones-topologicas-vectoriales.png"))
+```
+
+Nótese que para algunas relaciones topológicas (ej. intersección, traslape), el orden no es importante, mientras que para otras sí lo es (ej. contención).
+
+A las relaciones topológicas se les conoce también como *predicados espaciales* y así se les denomina en la [documentación de sf](https://r-spatial.github.io/sf/articles/sf3.html). 
+
+### Manejo de datos espaciales con el paquete sf
+
+#### Creación de subconjuntos espaciales
+
+La creación de subconjuntos espaciales consiste en retornar objetos espaciales que cumplen con algún predicado espacial. Es análoga a la creación de subconjuntos por datos de atributos. Puede realizarse a través de los operadores `[` y `$` del paquete base de R o por medio de la función `filter()` de dplyr. Esta última opción es la que se usa en los siguiente ejemplos.
+
+En este caso, la función [filter()](https://dplyr.tidyverse.org/reference/filter.html) usa tres argumentos: `x`, `y` y `.predicate`, en donde `x` e `y` son dos conjuntos de datos espaciales y `.predicate` el predicado espacial que los relaciona.
+
+##### Ejemplo: registros de presencia de félidos en el cantón Sarapiquí y sus alrededores
+
+El siguiente bloque de código crea dos subconjuntos espaciales del conjunto de registros de presencia de félidos, al relacionarlo con el polígono del cantón Sarapiquí mediante los predicados espaciales [st_within()](https://r-spatial.github.io/sf/reference/geos_binary_pred.html) y [st_is_within_distance()](https://r-spatial.github.io/sf/reference/geos_binary_pred.html).
+
+```{r}
+#| label: ejemplos-creacion-subconjuntos
+#| warning: false
+#| message: false
+#| code-fold: show
+
+# Polígono del cantón de Sarapiquí
+sarapiqui <- filter(cantones, CANTÓN == "Sarapiquí")
+
+# Puntos de félidos ubicados dentro del cantón Sarapiquí
+felidos_dentro_sarapiqui <- st_filter(
+  x = felidos,
+  y = sarapiqui, 
+  .predicate = st_within
+)
+
+# Puntos de félidos ubicados dentro de una distancia
+# de hasta 10 km del cantón Sarapiquí
+felidos_10km_sarapiqui <- st_filter(
+  x = felidos, 
+  y = sarapiqui, 
+  .predicate = function(a, b) st_is_within_distance(a, b, 10000)
+)
+```
+
+Los subconjuntos espaciales creados se despliegan en los mapas que se muestran seguidamente.
+
+::: {#mapas-felidos-sarapiqui layout-ncol=2}
+
+```{r}
+#| label: mapa-felidos-dentro-sarapiqui
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Especificar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_felidos_dentro_sarapiqui <-
+  
+  # Capas base
+  tm_basemap(c("OpenStreetMap", "Esri.WorldImagery")) +
+  
+  # Capa de Sarapiquí (polígonos)
+  tm_shape(sarapiqui, name = "Sarapiquí") +
+  tm_borders() +
+  
+  # Capa de félidos (puntos)
+  tm_shape(felidos_dentro_sarapiqui, name = "Félidos") +
+  tm_dots(
+    fill = "species",
+    fill.scale = tm_scale(values = "brewer.set1"),
+    fill.legend = tm_legend(title = "Especie"),
+    
+    # Otras propiedades visuales
+    size = 0.5,
+    id = "species",
+    popup.vars = c(
+      "Localidad" = "locality",
+      "Fecha" = "eventDate",
+      "Fuente" = "institutionCode",
+      "Registro"  = "registro"
+    ),
+    popup.format = list(html.escape = FALSE)
+  ) +
+  
+  # Definir la escala gráfica
+  tm_scalebar(position = c("left", "bottom"))
+
+# Mostrar el mapa
+mapa_felidos_dentro_sarapiqui
+```
+
+```{r}
+#| label: mapa-felidos-10km-sarapiqui
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Especificar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_felidos_10km_sarapiqui <-
+  
+  # Capas base
+  tm_basemap(c("OpenStreetMap", "Esri.WorldImagery")) +
+  
+  # Capa de Sarapiquí (polígonos)
+  tm_shape(sarapiqui, name = "Sarapiquí") +
+  tm_borders() +
+  
+  # Capa de félidos (puntos)
+  tm_shape(felidos_10km_sarapiqui, name = "Félidos") +
+  tm_dots(
+    fill = "species",
+    fill.scale = tm_scale(values = "brewer.set1"),
+    fill.legend = tm_legend(title = "Especie"),
+    
+    # Otras propiedades visuales
+    size = 0.5,
+    id = "species",
+    popup.vars = c(
+      "Localidad" = "locality",
+      "Fecha" = "eventDate",
+      "Fuente" = "institutionCode",
+      "Registro"  = "registro"
+    ),
+    popup.format = list(html.escape = FALSE)
+  ) +
+  
+  # Definir la escala gráfica
+  tm_scalebar(position = c("left", "bottom"))
+
+# Mostrar el mapa
+mapa_felidos_10km_sarapiqui
+```
+
+Mapa de registros de presencia de félidos localizados dentro del cantón Sarapiquí.
+
+Mapa de registros de presencia de félidos localizados dentro de una distancia de hasta 10 km del cantón Sarapiquí.
+:::
+
+#### Unión (*join*) de datos espaciales
+
+Como se estudió en el capítulo sobre operaciones de datos de atributos, la unión (*join*) “no espacial” de dos conjuntos de datos se basa en una o varias columnas (llamadas llaves o *keys*) que están presentes en ambos conjuntos. Las uniones espaciales se basan en un principio similar pero, en lugar de columnas, la relación entre los conjuntos se realiza a través de un predicado espacial. 
+
+En sf, la unión de datos espaciales se implementa a través de la función [st_join()](https://r-spatial.github.io/sf/reference/st_join.html), la cual tiene tres argumentos principales: `x`, `y` y `join`, en donde `x` e `y` son dos conjuntos de datos espaciales y `join` un predicado espacial que, por defecto, es `st_intersects`. `st_join()` agrega una o varias columnas a `x`, provenientes de `y`, para las filas que satisfacen el predicado.
+
+##### Ejemplo: riqueza de especies de félidos en los cantones de Costa Rica
+
+Los siguientes bloques de código calculan la [riqueza de especies](https://es.wikipedia.org/wiki/Riqueza_de_especies) de félidos en los cantones de Costa Rica, esto es, la cantidad de especies en cada cantón.
+
+El proceso se divide en los siguientes pasos:
+
+1. Unión espacial de félidos y cantones (esto le agrega a cada registros de félidos el código de cantón correspondiente a su ubicación).
+2. Conteo de la cantidad de especies de félidos en cada cantón (por código de cantón).
+3. Unión no espacial de cantones con el dataframe con el conteo de especies en cantones (esto le agrega a cada cantón la cantidad de especies de félidos).
+4. Generación del mapa de riqueza de especies.
+
+**1. Unión espacial de félidos y cantones**  
+Con `st_join()`, al conjunto de registros de presencia de félidos, se le agrega la columna `cod_canton` del conjunto de cantones, mediante el predicado espacial `st_within()`.
+
+```{r}
+#| label: union-felidos-cantones
+#| warning: false
+#| message: false
+#| code-fold: show
+
+# Unión espacial de félidos y cantones (solo la columna CÓDIGO_CANTÓN),
+# mediante el predicado st_within().
+# Como resultado, CÓDIGO_CANTÓN se une al conjunto de datos de félidos.
+felidos_union_cantones <- st_join(
+  x = felidos,
+  y = dplyr::select(cantones, CÓDIGO_CANTÓN), # selección de columna CÓDIGO_CANTÓN
+  join = st_within
+)
+
+# Despliegue de los datos unidos de félidos y la columna CÓDIGO_CANTÓN de cantones
+felidos_union_cantones |>
+  st_drop_geometry() |>
+  dplyr::select(species, locality, CÓDIGO_CANTÓN) |>
+  datatable(
+    colnames = c("Especie", "Localidad", "Código de cantón"),
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+**2. Conteo de la cantidad de especies de félidos en cada cantón**  
+Se realiza una agrupación por código de cantón con `group_by(cod_canton)` y se crea la columna `riqueza_especies_felidos` con `summarize(riqueza_especies_felidos = n_distinct(species, na.rm = TRUE))`. La función [n_distinct()](https://dplyr.tidyverse.org/reference/n_distinct.html) cuenta la cantidad de valores diferentes de una columna; en este caso, la cantidad de especies en cada cantón.
+
+```{r}
+#| label: conteo-especies-felidos-cantones
+#| warning: false
+#| message: false
+#| code-fold: show
+
+# Conteo de la cantidad de especies de félidos en cantones
+riqueza_especies_felidos_cantones <-
+  felidos_union_cantones |>
+  st_drop_geometry() |>
+  group_by(CÓDIGO_CANTÓN) |>
+  summarize(riqueza_especies_felidos = n_distinct(species, na.rm = TRUE))
+
+# Despliegue de la cantidad de especies de félidos en cada cantón
+riqueza_especies_felidos_cantones |>
+  arrange(desc(riqueza_especies_felidos)) |>
+  datatable(
+    colnames = c("Código de cantón", "Riqueza de especies de félidos"),
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+Nótese que hay registros que no están dentro del polígono de ningún cantón y tienen un valor `NA` en `cod_canton`. Esto puede deberse a errores de georreferenciación o a políticas de los publicadores de datos para no revelar la ubicación exacta de especies amenazadas.
+
+**3. Unión no espacial de cantones con el dataframe de riqueza de especies en cantones**  
+Con [left_join()](https://dplyr.tidyverse.org/reference/mutate-joins.html), al conjunto de datos de cantones (incluyendo sus geometrías), se le agrega la columna `riqueza_especies_felidos`, con el conteo de especies por cantón. La función [replace_na()](https://tidyr.tidyverse.org/reference/replace_na.html) se utiliza para reemplazar con 0 los registros de `riqueza_especies_felidos` que contienen `NA`.
+
+```{r}
+#| label: riqueza-felidos-cantones
+#| warning: false
+#| message: false
+#| code-fold: show
+
+# Unión (no espacial) de cantones y riqueza de especies
+cantones_union_riqueza <-
+  left_join(
+    x = cantones,
+    y = dplyr::select(riqueza_especies_felidos_cantones, CÓDIGO_CANTÓN, riqueza_especies_felidos),
+    by = "CÓDIGO_CANTÓN"
+  ) |>
+  replace_na(list(riqueza_especies_felidos = 0))
+
+# Despliegue de los datos de riqueza de especies en cantones
+cantones_union_riqueza |>
+  st_drop_geometry() |>
+  dplyr::select(CANTÓN, riqueza_especies_felidos) |>
+  arrange(desc(riqueza_especies_felidos)) |>
+  datatable(
+    colnames = c("Cantón", "Riqueza de especies de félidos"),
+    options = list(
+      pageLength = 5,
+      language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json')
+    )
+  )
+```
+
+**4. Generación del mapa de riqueza de especies**  
+Con las geometrías de cantones y la riqueza de especies en el mismo conjunto de datos, puede generarse un mapa de coropletas.
+
+::: {#mapa-riqueza-especies-felidos-cantones layout-ncol=1}
+
+```{r}
+#| label: mapa-riqueza-especies-felidos-cantones
+#| warning: false
+#| message: false
+#| code-fold: true
+#| code-summary: "Código para generar el mapa de riqueza de especies de félidos en cantones"
+
+# Activar el modo interactivo
+tmap_mode("view")
+
+# Definir el mapa
+mapa_riqueza_felidos_cantones <-
+  tm_view(
+    set_view = c(lon = -84.2, lat = 9.6, zoom = 7)
+  ) +  
+  tm_basemap("OpenStreetMap", "Esri.WorldImagery") +
+  tm_shape(cantones_union_riqueza, name = "Riqueza de especies de félidos") +
+    tm_fill(
+      fill = "riqueza_especies_felidos",
+      fill.scale = tm_scale_intervals(
+      style  = "quantile",
+      values = "Reds"
+    ),
+    fill.legend = tm_legend(title = "Riqueza"),
+    id = "CANTÓN",
+    popup.vars  = c(
+      "Cantón" = "CANTÓN",
+      "Riqueza" = "riqueza_especies_felidos"
+    )
+  ) +
+  tm_borders(col = "black", lwd = 0.5) +
+  tm_scale_bar(position = c("left", "bottom"))
+
+
+# Mostrar el mapa
+mapa_riqueza_felidos_cantones
+```
+
+Mapa de riqueza de especies de félidos en cantones de Costa Rica
+:::
+
+### Ejercicios
+
+1. Elabore un mapa de riqueza de especies de [vipéridos](https://es.wikipedia.org/wiki/Viperidae) en las provincias de Costa Rica. Impleméntelo como un mapa de coropletas en Leaflet.
+
+Utilice las siguientes fuentes de datos:
+
+- [Archivo GPKG de provincias de Costa Rica con geometrías simplificadas](https://github.com/sigenr/2025-i/blob/main/datos/ign/provincias-simplificadas.gpkg)
+- [Archivo CSV de registros de presencia de vipéridos de Costa Rica](https://github.com/sigenr/2025-i/blob/main/datos/gbif/viperidos.csv)
+
+
+## Datos raster
+
+Las operaciones espaciales para datos raster incluyen:
+
+- Creación de subconjuntos espaciales (_spatial subsetting_).  
+- Álgebra de mapas (_map algebra_). 
+
+### Manejo de datos espaciales con el paquete terra
+
+#### Creación de subconjuntos espaciales
+
+Para ejemplificar las operaciones, se utilizarán datos de temperatura media anual de [WorldClim](https://www.worldclim.org/) para Costa Rica.
+
+```{r}
+#| label: carga-datos-temperatura
+#| warning: false
+#| message: false
+
+# Cargar datos de temperatura media anual
+temperatura <- rast(
+  "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/worldclim/temperatura.tif"
+)
+
+# Desplegar datos
+plot(temperatura)
+```
+
+El método [extract()](https://rdrr.io/cran/terra/man/extract.html) extrae valores de un objeto raster.
+
+```{r}
+#| label: ejemplo-extract
+#| warning: false
+#| message: false
+
+# Temperatura media anual del Cerro Chirripó
+extract(
+  temperatura,
+  cbind(-83.488667, 9.484083)   # matriz de 1 fila (x, y)
+)
+
+# Temperatura media anual en la Catedral Metropolitana de San José
+extract(
+  temperatura,
+  cbind(-84.078758, 9.932684)
+)
+```
+
+El método [crop()](https://rdrr.io/cran/terra/man/crop.html) recorta un objeto `SpatRaster` de acuerdo con el contorno de otro objeto espacial, raster o vectorial. 
+
+El siguiente bloque de código recorta la capa de temperatura media anual de Costa Rica de acuerdo con el objeto vectorial del cantón Sarapiquí.
+
+```{r}
+#| label: ejemplo-crop-mask
+#| warning: false
+#| message: false
+
+# Recorte de la capa de temperatura
+temperatura_sarapiqui <-
+  temperatura |>
+  crop(sarapiqui) |>
+  mask(sarapiqui)
+
+# Despliegue de la capa recortada
+plot(temperatura_sarapiqui)
+```
+
+La función [mask()](https://rdrr.io/cran/terra/man/mask.html) "enmascara" (asigna `NA`) las celdas que el polígono no cubre. Es decir, respeta exactamente la forma del polígono y “borra” todo lo demás.
+
+#### Álgebra de mapas
+
+El [álgebra de mapas](https://en.m.wikipedia.org/wiki/Map_algebra) permite crear nuevas capas espaciales al combinar y transformar capas existentes mediante operaciones matemáticas y lógicas aplicadas celda por celda, como es muestra en la @fig-algebra-mapas.
+
+```{r}
+#| label: fig-algebra-mapas
+#| fig.cap: Álgebra de mapas. Imagen de Bplewe compartida a través de [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:MapAlgebra.png).
+#| echo: false
+
+knitr::include_graphics(rep("img/algebra-mapas.png"))
+```
+
+Cada capa se trata como una matriz en la que cada celda (o píxel) representa una propiedad geográfica específica (ej. elevación, temperatura, uso del suelo), de modo que operaciones simples (suma, resta, multiplicación, división) o funciones más complejas (estadísticas focales, reescalamientos, condicionales y funciones de vecindad) se ejecutan de forma sistemática sobre conjuntos de celdas análogas. El álgebra de mapas raster permite modelar procesos ambientales, evaluar idoneidad territorial, analizar riesgos y realizar simulaciones espaciales de manera reproducible y eficiente.
+
+##### Ejemplo: cálculo del NDVI
+
+El [Índice de vegetación de diferencia normalizada](https://es.wikipedia.org/wiki/%C3%8Dndice_de_vegetaci%C3%B3n_de_diferencia_normalizada) (NDVI, en inglés, *Normalized Difference Vegetation Index*) es un indicador espectral que cuantifica la densidad y el vigor de la vegetación. Puede calcularse a partir de datos recopilados mediante teledetección.
+
+###### Teledetección
+
+La teledetección es la disciplina que trata sobre la adquisición de información sobre la superficie terrestre sin contacto físico directo, registrando la energía electromagnética (EM) reflejada o emitida por los objetos. Las formas más comunes de teledetección se basan en energía electromagnética reflejada. Cuando la energía (luz) del sol u otra fuente golpea un objeto, se refleja una parte de la energía. Diferentes materiales reflejan diferentes cantidades de energía entrante, lo que permite identificar los objetos. Por ejemplo, la energía que refleja una zona boscosa es diferente a la que refleja un cultivo o una ciudad, como se ilustra en la @fig-teledeteccion.
+
+```{r}
+#| label: fig-teledeteccion
+#| fig.cap: Proceso de teledetección. Imagen de Natural Resources Canada.
+#| echo: false
+
+knitr::include_graphics(rep("img/teledeteccion.gif"))
+```
+Los sensores instalados en satélites (y aviones o drones) “observan” distintas porciones del [espectro electromagnético](https://es.wikipedia.org/wiki/Espectro_electromagn%C3%A9tico), mediante bandas discretas. Cada banda registra la intensidad de la señal en un rango de longitudes de onda y, por tanto, resalta propiedades físicas particulares. Así, los satélites orbitan la Tierra con cámaras multiespectrales (ej. Landsat 8/9 OLI, Sentinel-2 MSI) o hiperespectrales (ej. EnMAP, PRISMA) que dividen el espectro en decenas o cientos de bandas, además de sensores térmicos (ej. Landsat TIRS, MODIS) y de radar de apertura sintética (SAR) activos en microondas (ej. Sentinel-1, SAOCOM). Cada banda cumple un papel específico: distinguir vegetación sana (rojo + NIR), identificar humedad del suelo (SWIR), estimar temperatura (térmico), penetrar nubes y medir estructura (SAR), etc. La combinación de estas bandas mediante álgebra de mapas raster, índices espectrales o clasificación multibanda permite cartografiar uso del suelo, monitorear cultivos, evaluar desastres y estudiar procesos planetarios con un nivel de detalle y cobertura imposible de lograr *in situ*.
+
+Por ejemplo, los satélites [Sentinel-2](https://es.wikipedia.org/wiki/Sentinel-2) (Sentinel-2A y Sentinel-2B) de la Agencia Espacial Europea constituyen una constelación multiespectral equipada con el instrumento MultiSpectral Instrument (MSI), capaz de registrar 13 bandas distribuidas en el espectro visible, el infrarrojo cercano (NIR) y el infrarrojo de onda corta (SWIR), con resoluciones espaciales de 10 m, 20 m y 60 m según la banda, lo que les permite monitorizar con alta frecuencia y detalle procesos terrestres tan diversos como la salud de la vegetación, la humedad del suelo, la presencia de aerosoles o las nubes cirros.
+
+Las siguientes son las bandas de los satélites Sentinel-2:
+
+<style>
+  /* Estilo sencillo para alternar colores de fila */
+  table.s2-bandas {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  table.s2-bandas th,
+  table.s2-bandas td {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  table.s2-bandas thead {
+    background-color: #3f51b5;      /* encabezado en tono azul */
+    color: #fff;
+  }
+  table.s2-bandas tbody tr:nth-child(odd)  { background-color: #ffffff; }
+  table.s2-bandas tbody tr:nth-child(even) { background-color: #f2f5ff; } /* fila alterna más clara */
+</style>
+
+<table class="s2-bandas">
+  <caption style="caption-side: bottom; text-align: left; padding-top: 8px;">
+    Fuentes:&nbsp;
+    <a href="https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l1c/" target="_blank">
+      ESA&nbsp;Sentinel-2&nbsp;MSI&nbsp;documentation
+    </a>
+    &nbsp;y&nbsp;
+    <a href="https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/" target="_blank">
+      Sentinel&nbsp;Hub&nbsp;Technical&nbsp;Guide
+    </a>.
+  </caption>
+  <thead>
+    <tr>
+      <th>Banda</th>
+      <th>Longitud de onda central&nbsp;(nm)</th>
+      <th>Ancho de banda&nbsp;(nm)</th>
+      <th>Resoluci&oacute;n&nbsp;(m)</th>
+      <th>Uso principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>B01 (aerosoles)</td>
+      <td>443</td>
+      <td>20</td>
+      <td>60</td>
+      <td>Detecci&oacute;n de aerosoles, calibraci&oacute;n atmosf&eacute;rica</td>
+    </tr>
+    <tr>
+      <td>B02 (azul)</td>
+      <td>490</td>
+      <td>65</td>
+      <td>10</td>
+      <td>Diferenciaci&oacute;n suelo–vegetaci&oacute;n, penetraci&oacute;n agua clara</td>
+    </tr>
+    <tr>
+      <td>B03 (verde)</td>
+      <td>560</td>
+      <td>35</td>
+      <td>10</td>
+      <td>Contraste agua limpia/turbia, realce de vegetaci&oacute;n</td>
+    </tr>
+    <tr>
+      <td>B04 (rojo)</td>
+      <td>665</td>
+      <td>30</td>
+      <td>10</td>
+      <td>&Iacute;ndices de vegetaci&oacute;n (con NIR), usos/coberturas</td>
+    </tr>
+    <tr>
+      <td>B05 (borde rojo&nbsp;1)</td>
+      <td>705</td>
+      <td>15</td>
+      <td>20</td>
+      <td>Fluorescencia clorof&iacute;lica, estr&eacute;s vegetal</td>
+    </tr>
+    <tr>
+      <td>B06 (borde rojo&nbsp;2)</td>
+      <td>740</td>
+      <td>15</td>
+      <td>20</td>
+      <td>Clasificaci&oacute;n de vegetaci&oacute;n, contenido de clorofila</td>
+    </tr>
+    <tr>
+      <td>B07 (borde rojo&nbsp;3)</td>
+      <td>783</td>
+      <td>20</td>
+      <td>20</td>
+      <td>Biomasa, estructura foliar</td>
+    </tr>
+    <tr>
+      <td>B08 (NIR)</td>
+      <td>842</td>
+      <td>115</td>
+      <td>10</td>
+      <td>NDVI/EVI, biomasa, delineaci&oacute;n de costas</td>
+    </tr>
+    <tr>
+      <td>B8A (NIR estrecho)</td>
+      <td>865</td>
+      <td>20</td>
+      <td>20</td>
+      <td>Fotofisiolog&iacute;a, discriminaci&oacute;n de tipos de cultivo</td>
+    </tr>
+    <tr>
+      <td>B09 (vapor de agua)</td>
+      <td>945</td>
+      <td>20</td>
+      <td>60</td>
+      <td>Contenido atmosf&eacute;rico de H<sub>2</sub>O</td>
+    </tr>
+    <tr>
+      <td>B10 (cirros)</td>
+      <td>1375</td>
+      <td>30</td>
+      <td>60</td>
+      <td>Detecci&oacute;n de nubes cirros</td>
+    </tr>
+    <tr>
+      <td>B11 (SWIR&nbsp;1)</td>
+      <td>1610</td>
+      <td>90</td>
+      <td>20</td>
+      <td>Humedad de vegetaci&oacute;n y suelo, separaci&oacute;n nieve/nube</td>
+    </tr>
+    <tr>
+      <td>B12 (SWIR&nbsp;2)</td>
+      <td>2190</td>
+      <td>180</td>
+      <td>20</td>
+      <td>Incendios, mineralog&iacute;a, humedad del suelo</td>
+    </tr>
+  </tbody>
+</table>
+
+
+###### NDVI
+
+El NDVI mide el estado de la vegetación mediante la combinación matemática de la reflectancia registrada en las bandas rojo (R) e infrarrojo cercano (NIR) de una imagen satelital o aérea, de acuerdo con la fórmula NDVI = (NIR − R) / (NIR + R). 
+
+$$
+\text{NDVI} \;=\; \frac{\text{NIR} - \text{R}}{\text{NIR} + \text{R}}
+$$
+
+Los pigmentos clorofílicos absorben gran parte de la luz roja para la fotosíntesis, mientras que la estructura interna de las hojas refleja intensamente el NIR; por ello, valores altos de NDVI (cercanos a +1) se asocian con vegetación densa y saludable, valores cercanos a 0 indican cobertura escasa o suelos expuestos, y valores negativos reflejan superficies como agua, nieve o nubes. Esta métrica, ampliamente utilizada en teledetección y monitoreo ambiental, permite evaluar la productividad de cultivos, detectar estrés hídrico, seguir la fenología de ecosistemas y analizar cambios en la cobertura vegetal a diversas escalas temporales y espaciales, constituyéndose en una herramienta clave para la gestión de recursos naturales y la investigación climática.
+
+Seguidamente, se calcula el NDVI para una imagen Sentinel-2, tomada en 
+[Gandoca-Manzanillo](https://www.nacion.com/el-pais/politica/imagenes-satelitales-muestran-tamano-de-tala-en/ALIXTFSZZNHDTP37J4Z5XFLBS4/story/) el 2024-01-05.
+
+Primero, se carga la imagen y se despliega en "color real" (*true color*).
+
+```{r}
+#| label: carga-imagen-gandoca-t1
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Cargar imagen
+imagen_gandoca_t1 = rast(
+  "https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/sentinel/gandoca-20240105.tif"
+)
+
+# Desplegar la imagen en "color real": bandas 4 (R), 3 (G) y 2 (B)
+plotRGB(
+  imagen_gandoca_t1,
+  r = 4,  # banda roja
+  g = 3,  # banda verde
+  b = 2,  # banda azul
+  stretch = "lin", # "lin" = estiramiento lineal; "hist" proporciona más contraste
+  main = "NDVI – Gandoca (2024-01-05)"
+)
+```
+
+Luego se calcula el NDVI y se despliega el resultado.
+
+```{r}
+#| label: calcular-ndvi-gandoca-t1
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Función para calcular el NDVI (red = banda roja, nir = banda infraroja cercana)
+calcular_ndvi <- function(nir, red) {
+  (nir - red) / (nir + red)
+}
+
+ndvi_pal <- function(n = 100) {
+  colorRampPalette(
+    c("#b2182b",   # rojo intenso   (-1)
+      "#ffffbf",   # amarillo       ( 0)
+      "#1a9850")   # verde profundo (+1)
+  )(n)
+}
+
+# Aplicar calcular_ndvi() sobre todas las celdas de la capa raster
+imagen_gandoca_t1_ndvi <- lapp(
+  imagen_gandoca_t1[[c(8, 4)]], 
+  fun = calcular_ndvi
+)
+
+# Desplegar NDVI
+plot(
+  imagen_gandoca_t1_ndvi,
+  col        = ndvi_pal(20),                   # 20 colores
+  breaks     = seq(-1, 1, length.out = 21),    # 20 clases iguales
+  zlim       = c(-1, 1),                       # escala fija
+  legend     = TRUE,
+  axes       = FALSE,                          # como plotRGB()
+  box        = FALSE,
+  main       = "NDVI – Gandoca (2024-01-05)"
+)
+```
+
+Ambas capas se muestran en el siguiente mapa interactivo:
+
+```{r}
+#| label: leaflet-gandoca-t1
+#| warning: false
+#| message: false
+#| code-fold: true
+
+# Biblioteca para mapas interactivos
+library(leaflet)
+
+# Paleta continua de 10 colores
+ndvi_colors <- colorRampPalette(c("#b2182b", "#ffffbf", "#1a9850"))(10)
+pal_ndvi    <- colorNumeric(
+  palette  = ndvi_colors,
+  domain   = c(-1, 1),
+  na.color = "transparent"
+)
+
+# Mapa leaflet 
+leaflet(options = leafletOptions(minZoom = 5)) |>
+  # Capas base
+  addProviderTiles("OpenStreetMap",     group = "OpenStreetMap") |>
+  addProviderTiles("Esri.WorldImagery", group = "Esri World Imagery") |>
+  
+  # Capa NDVI
+  addRasterImage(
+    imagen_gandoca_t1_ndvi,
+    colors   = pal_ndvi,
+    opacity  = 0.8,
+    project  = FALSE,
+    group    = "NDVI"
+  ) |>
+  
+  ## Leyenda
+  addLegend(
+    pal       = pal_ndvi,
+    values    = c(-1, 1),
+    title     = "NDVI",
+    position  = "bottomright",
+    labFormat = labelFormat(digits = 1),
+    opacity   = 1
+  ) |>
+  
+  ## Escala métrica
+  addScaleBar(
+    position = "bottomleft",
+    options  = scaleBarOptions(imperial = FALSE)
+  ) |>
+  
+  ## Control de capas
+  addLayersControl(
+    baseGroups    = c("OpenStreetMap", "Esri World Imagery"),
+    overlayGroups = c("NDVI"),
+    options       = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+**Ejercicio:**
+
+Genere una capa con el cálculo del NDVI para la [imagen de Gandoca-Manzanillo tomada el 2024-06-18](https://github.com/sigenr/2025-i/raw/refs/heads/main/datos/sentinel/gandoca-20240618.tif). Inclúyala en un mapa interactivo que permita comparar el cambio en la vegetación desde el 2024-01-05.

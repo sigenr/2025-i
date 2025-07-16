@@ -31,6 +31,8 @@ book:
     - part: "V El ecosistema espacial de R"
       chapters:
         - 10-introduccion-manejo-datos-geoespaciales.qmd
+        - 11-operaciones-datos-atributos.qmd
+        - 12-operaciones-datos-espaciales.qmd
 bibliography: referencias.bib
 csl: apa-6th-edition.csl
 
