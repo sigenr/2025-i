@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Manuel Vargas">
 
-<title>Sistemas de Información Geográfica en R</title>
+<title>13&nbsp; Tableros de control – Sistemas de Información Geográfica en R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./programa-curso-sigenr-2025-i.pdf" rel="next">
+<link href="./12-operaciones-datos-espaciales.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-72d6f479b1bbd4b353ed65bf78bcf884.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -81,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Bienvenida</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-introduccion-manejo-datos-geoespaciales.html">V El ecosistema espacial de R</a></li><li class="breadcrumb-item"><a href="./13-tableros-control.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Tableros de control</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -108,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bienvenida</span></a>
   </div>
 </li>
@@ -245,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-tableros-control.html" class="sidebar-item-text sidebar-link">
+  <a href="./13-tableros-control.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Tableros de control</span></span></a>
   </div>
 </li>
@@ -261,38 +263,35 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#bienvenida" id="toc-bienvenida" class="nav-link active" data-scroll-target="#bienvenida">Bienvenida</a></li>
-  <li><a href="#objetivos" id="toc-objetivos" class="nav-link" data-scroll-target="#objetivos">Objetivos</a></li>
-  <li><a href="#programa" id="toc-programa" class="nav-link" data-scroll-target="#programa">Programa</a></li>
-  <li><a href="#información-de-contacto" id="toc-información-de-contacto" class="nav-link" data-scroll-target="#información-de-contacto">Información de contacto</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link active" data-scroll-target="#resumen"><span class="header-section-number">13.1</span> Resumen</a></li>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link" data-scroll-target="#trabajo-previo"><span class="header-section-number">13.2</span> Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas"><span class="header-section-number">13.2.1</span> Lecturas</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción"><span class="header-section-number">13.3</span> Introducción</a></li>
+  <li><a href="#quarto-dashboards" id="toc-quarto-dashboards" class="nav-link" data-scroll-target="#quarto-dashboards"><span class="header-section-number">13.4</span> Quarto Dashboards</a>
+  <ul class="collapse">
+  <li><a href="#componentes" id="toc-componentes" class="nav-link" data-scroll-target="#componentes"><span class="header-section-number">13.4.1</span> Componentes</a></li>
+  <li><a href="#configuración" id="toc-configuración" class="nav-link" data-scroll-target="#configuración"><span class="header-section-number">13.4.2</span> Configuración</a></li>
+  </ul></li>
+  <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo"><span class="header-section-number">13.5</span> Ejemplo</a></li>
+  <li><a href="#recursos-adicionales" id="toc-recursos-adicionales" class="nav-link" data-scroll-target="#recursos-adicionales"><span class="header-section-number">13.6</span> Recursos adicionales</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-introduccion-manejo-datos-geoespaciales.html">V El ecosistema espacial de R</a></li><li class="breadcrumb-item"><a href="./13-tableros-control.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Tableros de control</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Sistemas de Información Geográfica en R</h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Tableros de control</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Autor/a</div>
-    <div class="quarto-title-meta-contents">
-             <p>Manuel Vargas </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Fecha de publicación</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">3 de junio de 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -302,42 +301,87 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="bienvenida" class="level1 unnumbered">
-<h1 class="unnumbered">Bienvenida</h1>
-<p>Este es un curso introductorio al procesamiento de datos geográficos mediante el lenguaje de programación R. También se estudian herramientas para facilitar la reproducibilidad de los procedimientos y la comunicación de las soluciones a través de Internet y otros medios.</p>
-<p>Los estudiantes no requieren experiencia previa en programación de computadoras. Se recomienda que cuenten con conocimentos básicos de datos geoespaciales y sistemas de información geográfica.</p>
-<p>El enfoque del curso es teórico-práctico, con lecciones magistrales combinadas con ejercicios de programación en las que los estudiantes aplican en diversos escenarios de procesamiento de datos las habilidades y conocimientos aprendidos. Tanto las lecciones teóricas como las prácticas se imparten virtualmente.</p>
-<p>Además de este sitio, los contenidos del curso y los recursos relacionados se comparten en la plataforma <a href="https://global.ucr.ac.cr">UCR Global</a> de la <a href="https://www.ucr.ac.cr/">Universidad de Costa Rica</a>.</p>
-<p>Este curso forma parte del <a href="https://geografia.fcs.ucr.ac.cr/index.php/es/accion-social/procadi">Programa de Capacitación, Actualización y Divulgación de la Escuela de Geografía (PROCADI)</a>, iniciativa orientada a fortalecer el vínculo entre la universidad y la sociedad mediante la extensión docente.</p>
+<section id="resumen" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="resumen"><span class="header-section-number">13.1</span> Resumen</h2>
+<p>Un tablero de control presenta diversas visualizaciones de datos (tablas, gráficos, mapas, etc.) de manera conjunta, distribuidas en arreglos de filas y columnas. Pueden contar con barras de navegación, barras de herramientas, páginas y pestañas (<em>tabs</em>).</p>
 </section>
-<section id="objetivos" class="level1 unnumbered">
-<h1 class="unnumbered">Objetivos</h1>
-<p>Al finalizar el curso, el estudiantado será capaz de:</p>
+<section id="trabajo-previo" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="trabajo-previo"><span class="header-section-number">13.2</span> Trabajo previo</h2>
+<section id="lecturas" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="lecturas"><span class="header-section-number">13.2.1</span> Lecturas</h3>
+<p>Quarto - Quarto Dashboards. (s.f.). <a href="https://quarto.org/docs/dashboards/" class="uri">https://quarto.org/docs/dashboards/</a><br>
+Quarto - Dashboard Layout. (s.f.). <a href="https://quarto.org/docs/dashboards/layout.html" class="uri">https://quarto.org/docs/dashboards/layout.html</a></p>
+</section>
+</section>
+<section id="introducción" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="introducción"><span class="header-section-number">13.3</span> Introducción</h2>
+<p>Un <a href="https://es.wikipedia.org/wiki/Cuadro_de_mando">tablero de control</a>, también llamado cuadro de mando o <em>dashboard</em>, es un tipo de interfaz gráfica de usuario que reúne visualizaciones de datos e información resumida relevantes para una temática, objetivo o proceso particular. Estas visualizaciones se presentan principalmente en formato de tablas, gráficos estadísticos y mapas. El término <em>dashboard</em> hace referencia al tablero de indicadores de un automóvil, el cual le permite al conductor monitorear rápidamente las funciones principales del vehículo (velocidad, combustible, etc.).</p>
+<p>Los tableros de control son usualmente accesibles mediante un navegador web y pueden estar vinculados a fuentes de datos que se actualizan regularmente. Se caracterizan por ser interactivos y facilitar la exploración de datos a los usuarios.</p>
+<p>Quarto facilita el desarrollo de tableros de control a través de <a href="https://quarto.org/docs/dashboards/">Quarto Dashboards</a>.</p>
+</section>
+<section id="quarto-dashboards" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="quarto-dashboards"><span class="header-section-number">13.4</span> Quarto Dashboards</h2>
+<p><a href="https://quarto.org/docs/dashboards/">Quarto Dashboards</a> es una capacidad de Quarto que permite crear tableros de control mediante los lenguajes de programación R, Python, Julia y Observable. Estos tableros de control pueden incluir componentes desarrollados en DT, Ggplot2, Plotly y Leaflet, entre otros paquetes de R. Pueden publicarse como páginas estáticas (ej. en GitHub Pages) o en un <a href="https://quarto.org/docs/dashboards/interactivity/">servidor Shiny para proporcionar mayor interactividad al usuario</a>.</p>
+<p>La <a href="#fig-dashboards-gapminder" class="quarto-xref">Figura&nbsp;<span>13.1</span></a> muestra un tablero de control desarrollado con Quarto Dashboards.</p>
+<div id="fig-dashboards-gapminder" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Tablero de control desarrollado con Quarto Dashboards">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dashboards-gapminder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="img/dashboards-gapminder.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;13.1: Tablero de control desarrollado con Quarto Dashboards. Fuente: Quarto Dashboards."><img src="img/dashboards-gapminder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Tablero de control desarrollado con Quarto Dashboards"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dashboards-gapminder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.1: Tablero de control desarrollado con Quarto Dashboards. Fuente: <a href="https://quarto.org/docs/dashboards/">Quarto Dashboards</a>.
+</figcaption>
+</figure>
+</div>
+<section id="componentes" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="componentes"><span class="header-section-number">13.4.1</span> Componentes</h3>
+<p>Un tablero de control desarrollado con Quarto Dashboards tiene los siguientes componentes:</p>
 <ol type="1">
-<li>Aplicar el pensamiento computacional para resolver problemas mediante el lenguaje de programación R.</li>
-<li>Utilizar un enfoque de ciencia de datos para importar, procesar y visualizar datos.</li>
-<li>Desarrollar soluciones reproducibles a problemas computacionales.</li>
-<li>Programar gráficos estadísticos.</li>
-<li>Procesar datos geográficos.</li>
-<li>Desarrollar documentos y aplicaciones interactivas que incluyan visualizaciones como tablas, gráficos estadísticos y mapas, entre otras.</li>
+<li><p><strong>Barra de navegación</strong>: incluye el título, íconos y autor junto con enlaces a páginas (si se definen más de una página).</p></li>
+<li><p><strong>Páginas, filas, columnas y pestañas (<em>tabs</em>)</strong>: Las páginas, filas y columnas se definen utilizando encabezados de Markdown (con atributos opcionales para controlar la altura, el ancho y otras propiedades). Las pestañas pueden usarse para dividir aún más el contenido de una fila o columna.</p></li>
+<li><p><strong>Tarjetas, barras laterales y barras de herramientas</strong>: Las tarjetas son contenedores para visualizaciones de datos como tablas, gráficos estadísticos, mapas y otras. Las barras laterales y barras de herramientas se utilizan para el ingreso de datos en tableros de control interactivos.</p></li>
 </ol>
 </section>
-<section id="programa" class="level1 unnumbered">
-<h1 class="unnumbered">Programa</h1>
-<p><a href="programa-curso-sigenr-2025-i.pdf">Programa del curso</a></p>
+<section id="configuración" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="configuración"><span class="header-section-number">13.4.2</span> Configuración</h3>
+<p>Los tableros de control son arreglos de componentes que se utilizan para proporcionar navegación y presentar datos. A continuación, se describen los elementos que se utilizan para estructurar la navegación y el diseño de los tableros de control.</p>
+<section id="navegación" class="level4" data-number="13.4.2.1">
+<h4 data-number="13.4.2.1" class="anchored" data-anchor-id="navegación"><span class="header-section-number">13.4.2.1</span> Navegación</h4>
+<p>Todos los tableros de control tienen una barra de navegación que muestra el título y, opcionalmente, un logotipo, el nombre del autor e íconos con enlaces a redes sociales y otros sitios de interés. Los tableros de control con <a href="https://quarto.org/docs/dashboards/layout.html#pages">múltiples páginas</a> también contienen un enlace a cada página en la barra de navegación.</p>
 </section>
-<section id="información-de-contacto" class="level1 unnumbered">
-<h1 class="unnumbered">Información de contacto</h1>
-<p>Si tiene alguna pregunta o comentario sobre este curso, por favor contacte a:</p>
-<blockquote class="blockquote">
-<p>Manuel Vargas - manuel.vargas_d@ucr.ac.cr<br>
-Profesor<br>
-Universidad de Costa Rica,<br>
-Ciudad Universitaria Rodrigo Facio,<br>
-San Pedro de Montes de Oca,<br>
-Costa Rica.</p>
-</blockquote>
-<p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" alt="Licencia de Creative Commons" style="border-width:0"></a><br>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<section id="organización" class="level4" data-number="13.4.2.2">
+<h4 data-number="13.4.2.2" class="anchored" data-anchor-id="organización"><span class="header-section-number">13.4.2.2</span> Organización</h4>
+<p>Dentro de una página, los componentes del tablero de control se organizan mediante conjuntos alternos de filas y columnas. Las filas y columnas, a su vez, se definen mediante encabezados de Markdown y celdas computacionales (bloques de código).</p>
+</section>
+<section id="páginas" class="level4" data-number="13.4.2.3">
+<h4 data-number="13.4.2.3" class="anchored" data-anchor-id="páginas"><span class="header-section-number">13.4.2.3</span> Páginas</h4>
+<p>Para introducir múltiples páginas, se utilizan encabezados de nivel 1 sobre los encabezados de nivel 2, los cuales se usan para definir filas y columnas. El texto de los encabezados de nivel 1 se usa para enlazar a las páginas en la barra de navegación.</p>
+</section>
+<section id="pestañas" class="level4" data-number="13.4.2.4">
+<h4 data-number="13.4.2.4" class="anchored" data-anchor-id="pestañas"><span class="header-section-number">13.4.2.4</span> Pestañas</h4>
+<p>Las pestañas (<em>tabs</em>) se utilizan para incluir múltiples vistas de datos o contenido de importancia secundaria sin que interfiera con la visualización principal. Las pestañas se crean añadiendo la clase <code>.tabset</code> a una fila o columna.</p>
+</section>
+<section id="tarjetas" class="level4" data-number="13.4.2.5">
+<h4 data-number="13.4.2.5" class="anchored" data-anchor-id="tarjetas"><span class="header-section-number">13.4.2.5</span> Tarjetas</h4>
+<p>Las tarjetas son la unidad fundamental de visualización en un tablero de control. Constituyen el contenido de las filas y las columnas.</p>
+<p>Para más información sobre la configuración de los tableros de control, se recomienda consultar <a href="https://quarto.org/docs/dashboards/layout.html">Dashboard Layout</a>.</p>
+</section>
+</section>
+</section>
+<section id="ejemplo" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="ejemplo"><span class="header-section-number">13.5</span> Ejemplo</h2>
+<p>El siguiente es un tablero de control relacionado con el <a href="https://www.undp.org/es/costa-rica/publicaciones/atlas-de-desarrollo-humano-cantonal-2024">Atlas de Desarrollo Humano Cantonal 2024</a>.</p>
+<ul>
+<li><a href="https://gf0604-procesamientodatosgeograficos.github.io/2025-i-atlas-desarrollo-humano/">Tablero de control publicado en GitHub Pages</a></li>
+<li><a href="https://github.com/gf0604-procesamientodatosgeograficos/2025-i-atlas-desarrollo-humano">Código fuente</a></li>
+</ul>
+<p><strong>Ejercicio</strong></p>
+<p>Agregue al mapa la capa raster de densidad de población de Costa Rica compartida por <a href="https://www.worldpop.org/">WorldPop</a> en <a href="https://data.worldpop.org/GIS/Population/Global_2021_2022_1km_UNadj/unconstrained/2022/CRI/">https://data.worldpop.org/GIS/Population/Global_2021_2022_1km_UNadj/unconstrained/2022/CRI/</a>.</p>
+</section>
+<section id="recursos-adicionales" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="recursos-adicionales"><span class="header-section-number">13.6</span> Recursos adicionales</h2>
+<p><a href="https://www.youtube.com/watch?v=_VGJIPRGTy4">Quarto Dashboards | Charles Teague | Posit</a><br>
+<a href="https://quarto.org/docs/gallery/#dashboards">Ejemplos de tableros de control desarrollados con Quarto Dashboards</a></p>
 
 
 </section>
@@ -762,14 +806,46 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./12-operaciones-datos-espaciales.html" class="pagination-link" aria-label="Operaciones con datos espaciales">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Operaciones con datos espaciales</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./programa-curso-sigenr-2025-i.pdf" class="pagination-link" aria-label="Programa del curso">
-        <span class="nav-page-text">Programa del curso</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

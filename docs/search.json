@@ -921,5 +921,71 @@
       "V El ecosistema espacial de R",
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>Operaciones con datos espaciales</span>"
     ]
+  },
+  {
+    "objectID": "13-tableros-control.html",
+    "href": "13-tableros-control.html",
+    "title": "13  Tableros de control",
+    "section": "",
+    "text": "13.1 Resumen\nUn tablero de control presenta diversas visualizaciones de datos (tablas, gráficos, mapas, etc.) de manera conjunta, distribuidas en arreglos de filas y columnas. Pueden contar con barras de navegación, barras de herramientas, páginas y pestañas (tabs).",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
+  },
+  {
+    "objectID": "13-tableros-control.html#trabajo-previo",
+    "href": "13-tableros-control.html#trabajo-previo",
+    "title": "13  Tableros de control",
+    "section": "13.2 Trabajo previo",
+    "text": "13.2 Trabajo previo\n\n13.2.1 Lecturas\nQuarto - Quarto Dashboards. (s.f.). https://quarto.org/docs/dashboards/\nQuarto - Dashboard Layout. (s.f.). https://quarto.org/docs/dashboards/layout.html",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
+  },
+  {
+    "objectID": "13-tableros-control.html#introducción",
+    "href": "13-tableros-control.html#introducción",
+    "title": "13  Tableros de control",
+    "section": "13.3 Introducción",
+    "text": "13.3 Introducción\nUn tablero de control, también llamado cuadro de mando o dashboard, es un tipo de interfaz gráfica de usuario que reúne visualizaciones de datos e información resumida relevantes para una temática, objetivo o proceso particular. Estas visualizaciones se presentan principalmente en formato de tablas, gráficos estadísticos y mapas. El término dashboard hace referencia al tablero de indicadores de un automóvil, el cual le permite al conductor monitorear rápidamente las funciones principales del vehículo (velocidad, combustible, etc.).\nLos tableros de control son usualmente accesibles mediante un navegador web y pueden estar vinculados a fuentes de datos que se actualizan regularmente. Se caracterizan por ser interactivos y facilitar la exploración de datos a los usuarios.\nQuarto facilita el desarrollo de tableros de control a través de Quarto Dashboards.",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
+  },
+  {
+    "objectID": "13-tableros-control.html#quarto-dashboards",
+    "href": "13-tableros-control.html#quarto-dashboards",
+    "title": "13  Tableros de control",
+    "section": "13.4 Quarto Dashboards",
+    "text": "13.4 Quarto Dashboards\nQuarto Dashboards es una capacidad de Quarto que permite crear tableros de control mediante los lenguajes de programación R, Python, Julia y Observable. Estos tableros de control pueden incluir componentes desarrollados en DT, Ggplot2, Plotly y Leaflet, entre otros paquetes de R. Pueden publicarse como páginas estáticas (ej. en GitHub Pages) o en un servidor Shiny para proporcionar mayor interactividad al usuario.\nLa Figura 13.1 muestra un tablero de control desarrollado con Quarto Dashboards.\n\n\n\n\n\n\nFigura 13.1: Tablero de control desarrollado con Quarto Dashboards. Fuente: Quarto Dashboards.\n\n\n\n\n13.4.1 Componentes\nUn tablero de control desarrollado con Quarto Dashboards tiene los siguientes componentes:\n\nBarra de navegación: incluye el título, íconos y autor junto con enlaces a páginas (si se definen más de una página).\nPáginas, filas, columnas y pestañas (tabs): Las páginas, filas y columnas se definen utilizando encabezados de Markdown (con atributos opcionales para controlar la altura, el ancho y otras propiedades). Las pestañas pueden usarse para dividir aún más el contenido de una fila o columna.\nTarjetas, barras laterales y barras de herramientas: Las tarjetas son contenedores para visualizaciones de datos como tablas, gráficos estadísticos, mapas y otras. Las barras laterales y barras de herramientas se utilizan para el ingreso de datos en tableros de control interactivos.\n\n\n\n13.4.2 Configuración\nLos tableros de control son arreglos de componentes que se utilizan para proporcionar navegación y presentar datos. A continuación, se describen los elementos que se utilizan para estructurar la navegación y el diseño de los tableros de control.\n\n13.4.2.1 Navegación\nTodos los tableros de control tienen una barra de navegación que muestra el título y, opcionalmente, un logotipo, el nombre del autor e íconos con enlaces a redes sociales y otros sitios de interés. Los tableros de control con múltiples páginas también contienen un enlace a cada página en la barra de navegación.\n\n\n13.4.2.2 Organización\nDentro de una página, los componentes del tablero de control se organizan mediante conjuntos alternos de filas y columnas. Las filas y columnas, a su vez, se definen mediante encabezados de Markdown y celdas computacionales (bloques de código).\n\n\n13.4.2.3 Páginas\nPara introducir múltiples páginas, se utilizan encabezados de nivel 1 sobre los encabezados de nivel 2, los cuales se usan para definir filas y columnas. El texto de los encabezados de nivel 1 se usa para enlazar a las páginas en la barra de navegación.\n\n\n13.4.2.4 Pestañas\nLas pestañas (tabs) se utilizan para incluir múltiples vistas de datos o contenido de importancia secundaria sin que interfiera con la visualización principal. Las pestañas se crean añadiendo la clase .tabset a una fila o columna.\n\n\n13.4.2.5 Tarjetas\nLas tarjetas son la unidad fundamental de visualización en un tablero de control. Constituyen el contenido de las filas y las columnas.\nPara más información sobre la configuración de los tableros de control, se recomienda consultar Dashboard Layout.",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
+  },
+  {
+    "objectID": "13-tableros-control.html#ejemplo",
+    "href": "13-tableros-control.html#ejemplo",
+    "title": "13  Tableros de control",
+    "section": "13.5 Ejemplo",
+    "text": "13.5 Ejemplo\nEl siguiente es un tablero de control relacionado con el Atlas de Desarrollo Humano Cantonal 2024.\n\nTablero de control publicado en GitHub Pages\nCódigo fuente\n\nEjercicio\nAgregue al mapa la capa raster de densidad de población de Costa Rica compartida por WorldPop en https://data.worldpop.org/GIS/Population/Global_2021_2022_1km_UNadj/unconstrained/2022/CRI/.",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
+  },
+  {
+    "objectID": "13-tableros-control.html#recursos-adicionales",
+    "href": "13-tableros-control.html#recursos-adicionales",
+    "title": "13  Tableros de control",
+    "section": "13.6 Recursos adicionales",
+    "text": "13.6 Recursos adicionales\nQuarto Dashboards | Charles Teague | Posit\nEjemplos de tableros de control desarrollados con Quarto Dashboards",
+    "crumbs": [
+      "V El ecosistema espacial de R",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Tableros de control</span>"
+    ]
   }
 ]
